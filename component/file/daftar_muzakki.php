@@ -26,9 +26,9 @@
 					</thead>
 					<tbody>
 						<?php
-						$query = mysql_query("SELECT * FROM user WHERE level = 1");
+						$query = mysqli_query($mysqli, "SELECT * FROM user WHERE level = 1");
 						$k=0;
-						while($parse=mysql_fetch_array($query)){
+						while($parse=mysqli_fetch_array($query)){
 							$k++;
 							echo "<tr class='grade'>
 								<td width=\"100px\">$k</td>

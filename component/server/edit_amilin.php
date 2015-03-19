@@ -21,13 +21,13 @@
 		$user = clear_injection($_POST['user']);
 		
 		$level = clear_injection($_POST['level']);
-		$sql = mysql_query("UPDATE user SET username = '$user', $pas nama = '$nama', tempat_lahir = '$tmp_lahir', tanggal_lahir = '$tgl_lahir' , alamat = '$alamat', kota = '$kota', hp = '$hp' , email = '$email' WHERE id_user = '$id'");
+		$sql = mysqli_query($mysqli, "UPDATE user SET username = '$user', $pas nama = '$nama', tempat_lahir = '$tmp_lahir', tanggal_lahir = '$tgl_lahir' , alamat = '$alamat', kota = '$kota', hp = '$hp' , email = '$email' WHERE id_user = '$id'");
 		
 		if($sql){
 			$_SESSION['success'] = "Data Amilin Berhasil Diubah";
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=edit_amilin&id=$id\">";
 		}else{
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=edit_amilin&id=$id\">";
 		}
 	}else{

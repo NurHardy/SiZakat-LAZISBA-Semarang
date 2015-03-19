@@ -12,17 +12,17 @@
 		
 		$val = $a1."#".$a2."#".$a3."#".$a4."#".$a5."#".$a6;
 		
-		$sql2 = mysql_query("UPDATE opsi SET value='$val' WHERE name='general'");
+		$sql2 = mysqli_query($mysqli, "UPDATE opsi SET value='$val' WHERE name='general'");
 		
 			if($sql2){
 				$_SESSION['success'] = "Berhasil"; 
 			}else{
-				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".mysql_error();
+				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			}
 	}
 	
-	$sql = mysql_query("SELECT * FROM opsi WHERE name='general'");
-	$d = mysql_fetch_array($sql);
+	$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name='general'");
+	$d = mysqli_fetch_array($sql);
 	$d = explode('#',$d['value']);
 	$fb = @$d[0];
 	$tw = @$d[1];

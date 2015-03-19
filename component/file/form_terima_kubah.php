@@ -46,8 +46,8 @@
 					<select name='donatur' class="input-small" style='width:80%;' data-placeholder="-- Pilih Muzakki --" required='required'>
 						<option></option>
 					<?php
-						$q3 = mysql_query("SELECT * FROM user WHERE level = '1'");
-						while($p3 = mysql_fetch_array($q3)){
+						$q3 = mysqli_query($mysqli, "SELECT * FROM user WHERE level = '1'");
+						while($p3 = mysqli_fetch_array($q3)){
 							echo "
 								<option value='$p3[id_user]'>$p3[nama]</option>
 								";
@@ -64,8 +64,8 @@
 						<option></option>
 					<?php
 						//include "component/config/koneksi.php";
-								$sql = mysql_query("SELECT * FROM user WHERE level = '99'");
-								while( $pecah = mysql_fetch_array($sql)){
+								$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE level = '99'");
+								while( $pecah = mysqli_fetch_array($sql)){
 									echo"<option value=\"$pecah[id_user]\">$pecah[nama]</option>";
 								}
 					?>

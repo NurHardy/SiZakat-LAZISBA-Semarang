@@ -8,14 +8,14 @@
 	header("Pragma: no-cache");
 	header("Expires: 0");
 	
-	$sql = mysql_query("SELECT DISTINCT a.namaakun, p.id_akun FROM penerimaan p, akun a WHERE p.id_akun=a.kode AND MONTH(tanggal) = '$_GET[bln]' AND YEAR(tanggal) = '$_GET[th]'");
+	$sql = mysqli_query($mysqli, "SELECT DISTINCT a.namaakun, p.id_akun FROM penerimaan p, akun a WHERE p.id_akun=a.kode AND MONTH(tanggal) = '$_GET[bln]' AND YEAR(tanggal) = '$_GET[th]'");
 	
 ?>
 
 <h3>Laporan Transaksi Per Akun Bulan <?php echo $month1[$_GET['bln']]." $_GET[th]";?></h3>
 
 <?php 
-	while($d = mysql_fetch_array($sql)){
+	while($d = mysqli_fetch_array($sql)){
 		
 ?>
 <h4><?php echo $d['namaakun'];?></h4>
@@ -28,7 +28,7 @@
 		<th>PJ</th>
 	</tr>
 	<?php 
-		$sql1 = mysql_query("SELECT p.tanggal, p.no_nota, u.nama as donatur, p.jumlah, v.nama as pj
+		$sql1 = mysqli_query($mysqli, "SELECT p.tanggal, p.no_nota, u.nama as donatur, p.jumlah, v.nama as pj
 							FROM penerimaan p 
 							LEFT JOIN user u 
 							ON p.id_donatur = u.id_user
@@ -38,7 +38,7 @@
 							AND MONTH(p.tanggal) = '$_GET[bln]' 
 							AND YEAR(p.tanggal) = '$_GET[th]'");
 		$total = 0;
-		while($r = mysql_fetch_array($sql1)){
+		while($r = mysqli_fetch_array($sql1)){
 			echo "<tr>
 					<td>$r[tanggal]</td>
 					<td>$r[no_nota]</td>

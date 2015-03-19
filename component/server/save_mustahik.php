@@ -18,7 +18,7 @@
 		$aSekolah 		= clear_injection($_POST['aSekolah']);*/
 		
 		
-		$sql = mysql_query("
+		$sql = mysqli_query($mysqli, "
 			INSERT INTO mustahik (IdMustahik,Nama,Tmp_Lahir,Tgl_Lahir,Alamat,Kota,Telepon, Hp, Email, Pekerjaan,Penghasilan) VALUES 
 			('','$nama','$tempat','$tanggal','$alamat','$kota','$telepon','$hp','$email','$pekerjaan','$penghasilan')
 		");
@@ -27,7 +27,7 @@
 			$_SESSION['success'] = "Data Mustahik Berhasil Ditambah";
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_mustahik\">";
 		}else{
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_mustahik\">";
 		}
 	}else{

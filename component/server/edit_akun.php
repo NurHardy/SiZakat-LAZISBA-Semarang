@@ -9,12 +9,12 @@
 		$induk			= clear_injection($_POST['induk']);
 		$keterangan		= clear_injection($_POST['keterangan']);
 		
-		$sql = mysql_query("UPDATE akun SET namaakun = '$nama' , keterangan = '$keterangan' , idParent = '$induk' WHERE idakun = '$id'");
+		$sql = mysqli_query($mysqli, "UPDATE akun SET namaakun = '$nama' , keterangan = '$keterangan' , idParent = '$induk' WHERE idakun = '$id'");
 		if($sql){
 				$_SESSION['success'] = "Ubah Akun Berhasil";
 				
 		}else{
-				$_SESSION['error'] = "Terjadi Kelasahan : ".mysql_error();
+				$_SESSION['error'] = "Terjadi Kelasahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 		}
 	}else{
 		$_SESSION['error'] = "Proses Dibatalkan";

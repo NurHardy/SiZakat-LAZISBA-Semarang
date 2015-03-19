@@ -15,20 +15,20 @@
 		
 		
 		
-		$q = mysql_query("SELECT * FROM persamaan_akun WHERE id_persamaan = '$pers' ");
-		$fetch1 = mysql_fetch_array($q);
+		$q = mysqli_query($mysqli, "SELECT * FROM persamaan_akun WHERE id_persamaan = '$pers' ");
+		$fetch1 = mysqli_fetch_array($q);
 		$id_penerimaan = $fetch1['id_penerimaan'];
 		
-		$q = mysql_query("SELECT * FROM saldo_awal WHERE id_akun = '$id_penerimaan' ");
-		$fetch1 = mysql_fetch_array($q);
+		$q = mysqli_query($mysqli, "SELECT * FROM saldo_awal WHERE id_akun = '$id_penerimaan' ");
+		$fetch1 = mysqli_fetch_array($q);
 		$saldo_awal = $fetch1['saldo'];
 		
-		$q2 = mysql_query("SELECT SUM(jumlah) as jum FROM penerimaan WHERE id_akun = '$id_penerimaan'");
-		$fetch2 = mysql_fetch_array($q2);
+		$q2 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jum FROM penerimaan WHERE id_akun = '$id_penerimaan'");
+		$fetch2 = mysqli_fetch_array($q2);
 		$jumlah2 = $fetch2['jum'];
 		
-		$q = mysql_query("SELECT SUM(jumlah) as jum FROM penyaluran WHERE id_akun  LIKE '%4.%' ");
-		$fetch = mysql_fetch_array($q);
+		$q = mysqli_query($mysqli, "SELECT SUM(jumlah) as jum FROM penyaluran WHERE id_akun  LIKE '%4.%' ");
+		$fetch = mysqli_fetch_array($q);
 		$jumlah3 = $fetch['jum'];
 		
 		
@@ -42,7 +42,7 @@
 			";
 			//echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_pengeluaran\">";
 		}else{
-			$sql = mysql_query("
+			$sql = mysqli_query($mysqli, "
 				INSERT INTO penyaluran(id_penyaluran,tanggal,id_akun,jumlah,keterangan,id_teller) VALUES 
 				('','$tgl','$jenis_transaksi','$jumlah','$ket','$amilin')
 			");
@@ -50,9 +50,9 @@
 			if($sql){
 				$_SESSION['success'] = "Data Transaksi Pengeluaran"; 
 				echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_pengeluaran\">";
-				echo mysql_error();
+				echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			}else{
-				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".mysql_error();
+				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 				echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_pengeluaran\">";
 			}
 		}

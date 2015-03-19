@@ -23,7 +23,7 @@
 						
 						include "component/config/koneksi.php";
 		
-						$query = mysql_query("SELECT *, CASE  
+						$query = mysqli_query($mysqli, "SELECT *, CASE  
 												WHEN Status = 1 THEN 'Tentang Lazisba' 
 												WHEN Status = 2 THEN 'Artikel/Berita'
 												WHEN Status = 3 THEN 'Event/Kegiatan'
@@ -31,7 +31,7 @@
 												END AS statusstr 
 												FROM informasi");
 												$k=0;
-						while($parse=mysql_fetch_array($query)){
+						while($parse=mysqli_fetch_array($query)){
 						$k++;
 							echo "<tr class='grade'>
 								<td>$k.</td>

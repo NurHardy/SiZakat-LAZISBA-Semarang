@@ -40,33 +40,33 @@
 						include "component/config/koneksi.php";
 						
 						
-						$query = mysql_query("select * from user WHERE id_user='$_SESSION[iduser]'");
-						$user = mysql_fetch_array($query);
+						$query = mysqli_query($mysqli, "select * from user WHERE id_user='$_SESSION[iduser]'");
+						$user = mysqli_fetch_array($query);
 						
 						
 						
-						$sql1 = mysql_query("SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='2.1.$user[wilayah_bus].' AND MID(tanggal,7,4) ='".date('Y')."' ");
-						$dd = mysql_fetch_array($sql1);
+						$sql1 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='2.1.$user[wilayah_bus].' AND MID(tanggal,7,4) ='".date('Y')."' ");
+						$dd = mysqli_fetch_array($sql1);
 						
-						$sql2 = mysql_query("SELECT SUM(jumlah) as jumlah_keluar, jenjang FROM penyaluran_bus WHERE YEAR(tanggal) = '".date('Y')."' AND wilayah='$user[wilayah_bus]'");
-						$dd2 = mysql_fetch_array($sql2);
+						$sql2 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah_keluar, jenjang FROM penyaluran_bus WHERE YEAR(tanggal) = '".date('Y')."' AND wilayah='$user[wilayah_bus]'");
+						$dd2 = mysqli_fetch_array($sql2);
 						
 						$saldo = $dd['jumlah'] - $dd2['jumlah_keluar'];					
 						//$saldo = 0;
 						
 						
 						
-						$quera = mysql_query("select * from opsi WHERE name='dana_bus_jenjang'");
+						$quera = mysqli_query($mysqli, "select * from opsi WHERE name='dana_bus_jenjang'");
 		
-						$jenjang = mysql_fetch_array($quera);
+						$jenjang = mysqli_fetch_array($quera);
 						$j = explode('#',$jenjang['value']);
 						
 						
 						for($i=0;$i<count($bulan);$i++){
-							$sql1 = mysql_query("SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='2.1.$user[wilayah_bus].' AND ".($i+1)." = MID(tanggal,4,2)");
-							$dd = mysql_fetch_array($sql1);
+							$sql1 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='2.1.$user[wilayah_bus].' AND ".($i+1)." = MID(tanggal,4,2)");
+							$dd = mysqli_fetch_array($sql1);
 							
-							$sqlaa = mysql_query(
+							$sqlaa = mysqli_query($mysqli, 
 										"SELECT jenjang, count(jenjang) jml 
 										FROM penerima_bus 
 										WHERE 
@@ -79,7 +79,7 @@
 							
 							
 							$sd = $smp = $sma = 0;
-							while($qj = mysql_fetch_array($sqlaa)){
+							while($qj = mysqli_fetch_array($sqlaa)){
 								if($qj['jenjang'] == 1){
 									$sd  = $qj['jml']*$j[0];
 								}elseif($qj['jenjang'] == 2){
@@ -89,8 +89,8 @@
 								}
 							}
 							$sd1 = $smp1 = $sma1 = 0;
-							$sqlo = mysql_query("SELECT SUM(jumlah) as jumlah_keluar, jenjang FROM penyaluran_bus WHERE bulan = '".($i+1)."' AND YEAR(tanggal) = '".date('Y')."' AND wilayah='$user[wilayah_bus]' GROUP BY jenjang");
-							while($qj1 = mysql_fetch_array($sqlo)){
+							$sqlo = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah_keluar, jenjang FROM penyaluran_bus WHERE bulan = '".($i+1)."' AND YEAR(tanggal) = '".date('Y')."' AND wilayah='$user[wilayah_bus]' GROUP BY jenjang");
+							while($qj1 = mysqli_fetch_array($sqlo)){
 								//echo $qj1['jenjang'].' '.$qj1['jml'];
 								if($qj1['jenjang'] == 1){
 									$sd1  = $qj1['jumlah_keluar'];
@@ -132,11 +132,11 @@
 		<br />
 		<h4>Rekap Keuangan</h4>
 		<?php 
-			$sql1 = mysql_query("SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='2.1.$user[wilayah_bus].' AND MID(tanggal,7,4) ='".date('Y')."' ");
-			$dd = mysql_fetch_array($sql1);
+			$sql1 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='2.1.$user[wilayah_bus].' AND MID(tanggal,7,4) ='".date('Y')."' ");
+			$dd = mysqli_fetch_array($sql1);
 			
-			$sql2 = mysql_query("SELECT SUM(jumlah) as jumlah_keluar, jenjang FROM penyaluran_bus WHERE YEAR(tanggal) = '".date('Y')."' AND wilayah='$user[wilayah_bus]'");
-			$dd2 = mysql_fetch_array($sql2);
+			$sql2 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah_keluar, jenjang FROM penyaluran_bus WHERE YEAR(tanggal) = '".date('Y')."' AND wilayah='$user[wilayah_bus]'");
+			$dd2 = mysqli_fetch_array($sql2);
 		?>
 		<table style='width:50%;'>
 			<tr>

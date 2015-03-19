@@ -19,14 +19,14 @@
 		$aSekolah 		= clear_injection($_POST['aSekolah']);*/
 		
 		
-		$sql = mysql_query("
+		$sql = mysqli_query($mysqli, "
 			UPDATE mustahik SET Nama='$nama',Tmp_Lahir='$tempat',Tgl_Lahir='$tanggal',Alamat='$alamat',Kota='$kota',Telepon='$telepon', Hp='$hp', Email='$email', Pekerjaan='$pekerjaan',Penghasilan='$penghasilan' WHERE IdMustahik='$id'");
 		
 		if($sql){
 			$_SESSION['success'] = "Data Mustahik Berhasil Ditambah";
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=editmustahik&id=$id\">";
 		}else{
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=editmustahik&id=$id\">";
 		}
 	}else{

@@ -31,8 +31,8 @@
                 <div class="controls span5">
                   <select name='wilayah'>
 					<?php 
-						$sql = mysql_query("SELECT DISTINCT wilayah FROM penerima_bus");
-						while($s = mysql_fetch_array($sql)){
+						$sql = mysqli_query($mysqli, "SELECT DISTINCT wilayah FROM penerima_bus");
+						while($s = mysqli_fetch_array($sql)){
 							echo "<option value='$s[wilayah]'>$s[wilayah]</option>";
 						};
 					?>

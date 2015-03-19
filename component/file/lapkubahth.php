@@ -31,8 +31,8 @@
                 <div class="controls span5">
                   <select name='th'>
 					<?php 
-						$sql = mysql_query("SELECT DISTINCT th_kubah FROM penyaluran WHERE id_akun='2.10.'");
-						while($s = mysql_fetch_array($sql)){
+						$sql = mysqli_query($mysqli, "SELECT DISTINCT th_kubah FROM penyaluran WHERE id_akun='2.10.'");
+						while($s = mysqli_fetch_array($sql)){
 							echo "<option value='$s[th_kubah]'>$s[th_kubah]</option>";
 						};
 					?>

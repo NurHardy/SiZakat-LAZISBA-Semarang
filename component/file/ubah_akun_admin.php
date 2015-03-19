@@ -2,8 +2,8 @@
 	include "component/config/koneksi.php";
 	//include "../libraries/injection.php";
 	
-	$query = mysql_query("SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
-	$d= mysql_fetch_array($query);
+	$query = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
+	$d= mysqli_fetch_array($query);
 	$nama = $d['nama'];
 	$user = $d['username'];
 	$pass = $d['password'];
@@ -31,14 +31,14 @@
 			$email = $_POST['email'];
 			$user = $_POST['user'];
 			
-			$sql = mysql_query("UPDATE user SET username = '$user', $pas nama = '$nama', tempat_lahir = '$tmp_lahir', tanggal_lahir = '$tgl_lahir' , alamat = '$alamat', kota = '$kota', hp = '$hp' , email = '$email' WHERE id_user = '$_SESSION[iduser]'");
+			$sql = mysqli_query($mysqli, "UPDATE user SET username = '$user', $pas nama = '$nama', tempat_lahir = '$tmp_lahir', tanggal_lahir = '$tgl_lahir' , alamat = '$alamat', kota = '$kota', hp = '$hp' , email = '$email' WHERE id_user = '$_SESSION[iduser]'");
 			
 			if($sql){
 					if($_SESSION['level'] == 99){
 						$_SESSION['success'] = "Data Admin Berhasil Diubah";
 						//echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=ubah_akun_pribadi&id=$_SESSION[iduser]\">";
 					}else{
-						$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+						$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 						//echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=ubah_akun_pribadi&id=$_SESSION[iduser]\">";
 					}
 				

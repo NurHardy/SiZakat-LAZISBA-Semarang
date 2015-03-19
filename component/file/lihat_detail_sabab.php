@@ -5,8 +5,8 @@
 		}else{
 			$id = $_GET['id'];
 		}
-		$query = mysql_query("SELECT * FROM user WHERE id_user = '$id'");
-		$d= mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$id'");
+		$d= mysqli_fetch_array($query);
 		$nama = $d['nama'];
 		$tmp = $d['tempat_lahir'];
 		$tgl = $d['tanggal_lahir'];

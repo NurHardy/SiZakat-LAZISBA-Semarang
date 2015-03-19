@@ -2,7 +2,7 @@
 	session_start();
 	include "../config/koneksi.php";
 	$tanggal = date('d-m-Y');
-	$query = mysql_query("INSERT INTO Informasi VALUES(
+	$query = mysqli_query($mysqli, "INSERT INTO Informasi VALUES(
 							'',
 							'IdAdmin',
 							'$_POST[judul]',
@@ -15,7 +15,7 @@
 		echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_info_baru\">";
 	}
 	else{
-		$_SESSION['error'] = "Proses memasukkan informasi ketakmiran gagal, karena ".mysql_error();
+		$_SESSION['error'] = "Proses memasukkan informasi ketakmiran gagal, karena ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 		echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_info_baru\">";
 	}
 ?>

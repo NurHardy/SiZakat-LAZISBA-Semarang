@@ -4,11 +4,11 @@
 	if(ISSET($_POST['login'])){
 		$username = $_POST['username'];
 		$password = sha1(sha1(md5($_POST['password'])));
-		$sql = mysql_query("SELECT * FROM user WHERE username='$username' AND password = '$password'");
-		$csql = mysql_num_rows($sql);
+		$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE username='$username' AND password = '$password'");
+		$csql = mysqli_num_rows($sql);
 		
 		if($csql >= 1){
-			$r = mysql_fetch_array($sql);
+			$r = mysqli_fetch_array($sql);
 			/*inisialisasi sesi*/
 			$_SESSION['level']=$r['level'];
 			$_SESSION['username']=$r['username'];
@@ -19,11 +19,11 @@
 			echo"<meta http-equiv=\"refresh\" content=\"0; url=../../main.php\">";
 		}else{
 			
-		echo mysql_error();
+		echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 		echo"<meta http-equiv=\"refresh\" content=\"0; url=../../login.php\">";
 		}
 	}else{
-		echo mysql_error();
+		echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 		echo"<meta http-equiv=\"refresh\" content=\"0; url=../../login.php\">";
 	}
 	

@@ -23,9 +23,9 @@
 					</thead>
 					<tbody>
 						<?php
-						$query = mysql_query("SELECT * FROM user WHERE level = '2'");
+						$query = mysqli_query($mysqli, "SELECT * FROM user WHERE level = '2'");
 						$k=0;
-						while($parse=mysql_fetch_array($query)){
+						while($parse=mysqli_fetch_array($query)){
 							$k++;
 							echo "
 								<tr class='grade'>

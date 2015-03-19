@@ -4,8 +4,8 @@
 	$level="";
 	if(ISSET($_GET['s']) && ISSET($_GET['id']) && ($_GET['s'] == 'editbus')){
 		$id = $_GET['id'];
-		$query = mysql_query("SELECT * FROM penerima_bus WHERE id_penerima = '$id'");
-		$d= mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM penerima_bus WHERE id_penerima = '$id'");
+		$d= mysqli_fetch_array($query);
 		$nama = $d['nama'];
 		$alamat = $d['alamat'];
 		$ayah = $d['ayah'];
@@ -21,8 +21,8 @@
 		$status = $d['status'];
 		$hobi = $d['hobi'];
 		
-		$query1 = mysql_query("SELECT * FROM prestasi WHERE id_penerima = '$id'");
-		$d1= mysql_fetch_array($query1);
+		$query1 = mysqli_query($mysqli, "SELECT * FROM prestasi WHERE id_penerima = '$id'");
+		$d1= mysqli_fetch_array($query1);
 		$doa = $d1['doa'];
 		$alquran = $d1['alquran'];
 		$minat = $d1['minat'];

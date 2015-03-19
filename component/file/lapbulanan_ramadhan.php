@@ -1,7 +1,7 @@
 <?php
 	include "component/config/koneksi.php";
-$sql = mysql_query("SELECT * FROM opsi WHERE name = 'ramadhan' ");
-$opsi_ramadhan = mysql_fetch_array($sql);
+$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'ramadhan' ");
+$opsi_ramadhan = mysqli_fetch_array($sql);
 
 if($opsi_ramadhan['value'] != 1){
 	echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=home\">";
@@ -37,8 +37,8 @@ if($opsi_ramadhan['value'] != 1){
 					<div class="controls span5">
 					  <select name='th'>
 						<?php 
-							$sql1 = mysql_query("SELECT DISTINCT thn_ramadhan FROM penerimaan WHERE is_ramadhan='1'");
-							while($d = mysql_fetch_array($sql1)){
+							$sql1 = mysqli_query($mysqli, "SELECT DISTINCT thn_ramadhan FROM penerimaan WHERE is_ramadhan='1'");
+							while($d = mysqli_fetch_array($sql1)){
 								echo "<option value='$d[thn_ramadhan]'>$d[thn_ramadhan]</option>";
 							}
 						?>

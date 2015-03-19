@@ -24,9 +24,9 @@
 					<tbody>
 					<?php
 						include "component/config/koneksi.php";
-						$query = mysql_query("select * from user WHERE level = 1 and MID(tanggal_lahir,4,2) = MONTH(CURDATE())");
+						$query = mysqli_query($mysqli, "select * from user WHERE level = 1 and MID(tanggal_lahir,4,2) = MONTH(CURDATE())");
 						$i = 1;
-						while($pecah = mysql_fetch_array($query)){
+						while($pecah = mysqli_fetch_array($query)){
 						echo"	
 							<tr class=\"gradeA\">
 						

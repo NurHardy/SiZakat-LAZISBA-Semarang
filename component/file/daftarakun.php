@@ -1,10 +1,10 @@
 <?php
 	include"component/config/koneksi.php";
 	function setTree($idParent){
-		$sql = mysql_query("SELECT * FROM akun WHERE idParent='$idParent' ORDER BY idakun ASC");
-		if(mysql_num_rows($sql) > 0){
+		$sql = mysqli_query($mysqli, "SELECT * FROM akun WHERE idParent='$idParent' ORDER BY idakun ASC");
+		if(mysqli_num_rows($sql) > 0){
 			echo "<ul>";
-			while($dd = mysql_fetch_array($sql)){
+			while($dd = mysqli_fetch_array($sql)){
 				if($idParent != 0){
 					$edit = "<a href='main.php?s=editakun&id=$dd[idakun]'><i class='glyphicon glyphicon-pencil'></i></a>";
 				}else{

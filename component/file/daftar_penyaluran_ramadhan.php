@@ -1,7 +1,7 @@
 <?php
 	include "component/config/koneksi.php";
-$sql = mysql_query("SELECT * FROM opsi WHERE name = 'ramadhan' ");
-$opsi_ramadhan = mysql_fetch_array($sql);
+$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'ramadhan' ");
+$opsi_ramadhan = mysqli_fetch_array($sql);
 
 if($opsi_ramadhan['value'] != 1){
 	echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=home\">";
@@ -29,16 +29,16 @@ if($opsi_ramadhan['value'] != 1){
 					</thead>
 					<tbody>
 						<?php
-						$query = mysql_query("SELECT * FROM penyaluran WHERE is_ramadhan = 1");
+						$query = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE is_ramadhan = 1");
 						$k=0;
-						while($parse=mysql_fetch_array($query)){
+						while($parse=mysqli_fetch_array($query)){
 							$k++;
 							
-							$sql2 = mysql_query("SELECT * FROM user WHERE id_user = '$parse[id_teller]' ");
-							$s2 = mysql_fetch_array($sql2);
+							$sql2 = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$parse[id_teller]' ");
+							$s2 = mysqli_fetch_array($sql2);
 							
-							$sql3 = mysql_query("SELECT * FROM akun WHERE kode = '$parse[id_akun]'");
-							$s3 = mysql_fetch_array($sql3);
+							$sql3 = mysqli_query($mysqli, "SELECT * FROM akun WHERE kode = '$parse[id_akun]'");
+							$s3 = mysqli_fetch_array($sql3);
 							
 							echo "<tr class='grade'>
 								<td width=\"100px\">$k</td>

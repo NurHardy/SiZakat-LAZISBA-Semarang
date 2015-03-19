@@ -84,9 +84,9 @@
 							<option></option>
 							<?php
 								include "component/config/koneksi.php";
-								$sql = mysql_query("SELECT * FROM akun Where Jenis = '2' AND idakun NOT IN (SELECT idParent FROM akun)");
-								echo mysql_error();
-								while( $pecah = mysql_fetch_array($sql)){
+								$sql = mysqli_query($mysqli, "SELECT * FROM akun Where Jenis = '2' AND idakun NOT IN (SELECT idParent FROM akun)");
+								echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
+								while( $pecah = mysqli_fetch_array($sql)){
 									echo"<option value=\"$pecah[kode]\">$pecah[kode] - $pecah[namaakun]</option>";
 								}
 							?>
@@ -113,8 +113,8 @@
 							<option ></option>
 							<?php
 								include "component/config/koneksi.php";
-								$sql = mysql_query("SELECT * FROM user WHERE level = 1");
-								while( $pecah = mysql_fetch_array($sql)){
+								$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE level = 1");
+								while( $pecah = mysqli_fetch_array($sql)){
 									echo"<option value=\"$pecah[id_user]\">$pecah[id_user] - $pecah[nama]</option>";
 								}
 							?>
@@ -129,8 +129,8 @@
 						  <option ></option>
 							<?php
 								include "component/config/koneksi.php";
-								$sql = mysql_query("SELECT * FROM user WHERE level = 99");
-								while( $pecah = mysql_fetch_array($sql)){
+								$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE level = 99");
+								while( $pecah = mysqli_fetch_array($sql)){
 									echo"<option value=\"$pecah[id_user]\">$pecah[id_user] - $pecah[nama]</option>";
 								}
 							?>

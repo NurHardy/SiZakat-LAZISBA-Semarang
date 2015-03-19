@@ -24,8 +24,8 @@
 					<tbody>
 						<?php
 						
-						$query = mysql_query("SELECT p.*, a.namaakun FROM penyaluran p left join akun a on p.id_akun = a.kode WHERE p.tanggal like '%-$_GET[bulan]-%'");
-						while($parse=mysql_fetch_array($query)){
+						$query = mysqli_query($mysqli, "SELECT p.*, a.namaakun FROM penyaluran p left join akun a on p.id_akun = a.kode WHERE p.tanggal like '%-$_GET[bulan]-%'");
+						while($parse=mysqli_fetch_array($query)){
 							echo "<tr class='grade'>
 								<td>$parse[id_penyaluran]</td>
 								<td>$parse[tanggal]</td>

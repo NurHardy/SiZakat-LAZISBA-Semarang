@@ -48,11 +48,11 @@
 					<?php
 						include "../config/koneksi.php";
 						$wilayah = $_GET['wilayah'];
-						$query = mysql_query("select * from penerima_bus WHERE wilayah = $wilayah");
+						$query = mysqli_query($mysqli, "select * from penerima_bus WHERE wilayah = $wilayah");
 						$i = 1;
 						
 						
-						while($pecah = mysql_fetch_array($query)){
+						while($pecah = mysqli_fetch_array($query)){
 						if($pecah['jenjang'] == 1){
 							$j = "SD";
 						}else if($pecah['jenjang'] == 2){

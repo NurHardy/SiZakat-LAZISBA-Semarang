@@ -25,8 +25,8 @@
 						<?php 
 							$k=0;
 							$jml=0;
-							$sql = mysql_query("SELECT * FROM penerimaan p LEFT JOIN akun a ON p.id_akun=a.kode WHERE p.id_donatur = '$_SESSION[iduser]'");
-							while($s = mysql_fetch_array($sql)){
+							$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan p LEFT JOIN akun a ON p.id_akun=a.kode WHERE p.id_donatur = '$_SESSION[iduser]'");
+							while($s = mysqli_fetch_array($sql)){
 								$k++;
 								$jml = $jml + $s['jumlah'];
 								echo "

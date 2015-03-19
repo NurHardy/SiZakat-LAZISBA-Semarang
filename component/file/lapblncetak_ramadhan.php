@@ -1,7 +1,7 @@
 <?php 
 include "../config/koneksi.php";
-$sql = mysql_query("SELECT * FROM opsi WHERE name = 'ramadhan' ");
-$opsi_ramadhan = mysql_fetch_array($sql);
+$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'ramadhan' ");
+$opsi_ramadhan = mysqli_fetch_array($sql);
 
 if($opsi_ramadhan['value'] != 1){
 	echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=home\">";
@@ -23,37 +23,37 @@ if($opsi_ramadhan['value'] != 1){
 	
 	$th = $_GET['th'];
 	
-	$sql = mysql_query("SELECT * FROM penerimaan WHERE thn_ramadhan < '$th'");
-	$sql1 = mysql_query("SELECT * FROM penyaluran WHERE thn_ramadhan < '$th'");
+	$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE thn_ramadhan < '$th'");
+	$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE thn_ramadhan < '$th'");
 	$error = 0;
-	if((mysql_num_rows($sql) > 0) || (mysql_num_rows($sql1) > 0)){
+	if((mysqli_num_rows($sql) > 0) || (mysqli_num_rows($sql1) > 0)){
 		//jika ada transaksi sebelum bulan yang dipilih
 		
 		//ambil saldo awal
-		$sqla = mysql_query("SELECT SUM(saldo) as saldo FROM saldo_awal");
-		$d = mysql_fetch_array($sqla);
+		$sqla = mysqli_query($mysqli, "SELECT SUM(saldo) as saldo FROM saldo_awal");
+		$d = mysqli_fetch_array($sqla);
 		$saldo_awal = $d['saldo']; //saldo awal;
 		
 		//ambil penerimaan
-		$sqla = mysql_query("SELECT SUM(jumlah) as jumlah FROM penerimaan WHERE thn_ramadhan < '$th'");
-		$d = mysql_fetch_array($sqla);
+		$sqla = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penerimaan WHERE thn_ramadhan < '$th'");
+		$d = mysqli_fetch_array($sqla);
 		$penerimaan = $d['jumlah'];
 		
 		//ambil penyaluran
-		$sqla = mysql_query("SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE thn_ramadhan < '$th'");
-		$d = mysql_fetch_array($sqla);
+		$sqla = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE thn_ramadhan < '$th'");
+		$d = mysqli_fetch_array($sqla);
 		$penyaluran = $d['jumlah'];
 		
 		$saldo_bulan_lalu = ($saldo_awal + $penerimaan) - $penyaluran;
 	}else{
 		//jika tidak ada transaksi sebelum bulan yang dipilih
-		$sqla = mysql_query("SELECT * FROM opsi WHERE name='bln_th_saldo'");
-		$d = mysql_fetch_array($sqla);
+		$sqla = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name='bln_th_saldo'");
+		$d = mysqli_fetch_array($sqla);
 		$d = explode('#',$d['value']);
 		if(($d[0] <= $bln) && ($d[1] <= $th)){
 			//ambil saldo awal
-			$sqla = mysql_query("SELECT SUM(saldo) as saldo FROM saldo_awal");
-			$d = mysql_fetch_array($sqla);
+			$sqla = mysqli_query($mysqli, "SELECT SUM(saldo) as saldo FROM saldo_awal");
+			$d = mysqli_fetch_array($sqla);
 			$saldo_bulan_lalu = $d['saldo']; //saldo awal;
 		}else{
 			$error = 1;
@@ -80,10 +80,10 @@ if($opsi_ramadhan['value'] != 1){
 						<td></td>
 					</tr>
 					<?php 
-						$sqls = mysql_query("SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penerimaan p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan LIKE '$th' AND id_akun LIKE '3.1%' GROUP BY p.id_akun");
+						$sqls = mysqli_query($mysqli, "SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penerimaan p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan LIKE '$th' AND id_akun LIKE '3.1%' GROUP BY p.id_akun");
 						$i=0;
 						$total_masuk = 0;
-						while($q = mysql_fetch_array($sqls)){
+						while($q = mysqli_fetch_array($sqls)){
 							$i++;
 							$total_masuk = $total_masuk + $q['jumlah'];
 							
@@ -114,10 +114,10 @@ if($opsi_ramadhan['value'] != 1){
 						<td></td>
 					</tr>
 					<?php 
-						$sqls = mysql_query("SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penyaluran p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan LIKE '$th' AND id_akun LIKE '3.2%' GROUP BY p.id_akun");
+						$sqls = mysqli_query($mysqli, "SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penyaluran p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan LIKE '$th' AND id_akun LIKE '3.2%' GROUP BY p.id_akun");
 						$i=0;
 						$total_keluar = 0;
-						while($q = mysql_fetch_array($sqls)){
+						while($q = mysqli_fetch_array($sqls)){
 							$i++;
 							$total_keluar = $total_keluar + $q['jumlah'];
 							

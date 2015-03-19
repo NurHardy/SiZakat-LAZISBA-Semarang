@@ -2,8 +2,8 @@
 <?php 
 include "../config/koneksi.php";
 
-$sql = mysql_query("SELECT * FROM opsi WHERE name = 'ramadhan' ");
-$opsi_ramadhan = mysql_fetch_array($sql);
+$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'ramadhan' ");
+$opsi_ramadhan = mysqli_fetch_array($sql);
 
 if($opsi_ramadhan['value'] != 1){
 	echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=home\">";
@@ -31,7 +31,7 @@ if($opsi_ramadhan['value'] != 1){
 	<?php
 		
 		
-		$sql = mysql_query("SELECT p.tanggal, p.id_akun, a.namaakun, p.jumlah, u.nama, p.keterangan
+		$sql = mysqli_query($mysqli, "SELECT p.tanggal, p.id_akun, a.namaakun, p.jumlah, u.nama, p.keterangan
 							FROM penerimaan p 
 							LEFT JOIN akun a 
 								ON p.id_akun = a.kode 
@@ -39,7 +39,7 @@ if($opsi_ramadhan['value'] != 1){
 								ON p.id_donatur = u.id_user
 							WHERE thn_ramadhan LIKE '$_GET[th]'");
 		$i = $totalMasuk = 0;
-		while($f = mysql_fetch_array($sql)){
+		while($f = mysqli_fetch_array($sql)){
 			$i++;
 			$totalMasuk  = $totalMasuk + $f['jumlah'];
 			$tanggal = explode('-',$f['tanggal']);
@@ -77,7 +77,7 @@ if($opsi_ramadhan['value'] != 1){
 					</thead>
 	<?php
 						
-						$sql = mysql_query("SELECT p.tanggal, p.id_akun, a.namaakun as namaakun, p.jumlah, p.keterangan, l.namaakun as nama_akun
+						$sql = mysqli_query($mysqli, "SELECT p.tanggal, p.id_akun, a.namaakun as namaakun, p.jumlah, p.keterangan, l.namaakun as nama_akun
 											FROM penyaluran p 
 											LEFT JOIN akun a 
 												ON p.id_akun = a.kode
@@ -85,7 +85,7 @@ if($opsi_ramadhan['value'] != 1){
 												ON p.id_akun = l.kode
 											WHERE thn_ramadhan LIKE '$_GET[th]'");
 						$i = $totalKeluar = 0;
-						while($f = mysql_fetch_array($sql)){
+						while($f = mysqli_fetch_array($sql)){
 							$i++;
 							$totalKeluar  = $totalKeluar + $f['jumlah'];
 							$tanggal = explode('-',$f['tanggal']);

@@ -20,14 +20,14 @@
 		$sql = "INSERT INTO user(id_user,username,password,nama,tempat_lahir,tanggal_lahir,alamat,kota,hp,email,keterangan,level) VALUES
 		('','$user','$pass','$nama','$tmp_lahir','$tgl_lahir','$alamat','$kota','$hp','$email','$ket','4')";
 		
-		$aksi= mysql_query($sql);
+		$aksi= mysqli_query($mysqli, $sql);
 		//$aksi
 		if($aksi){
 			$_SESSION['success'] = "Data Sabab Berhasil Ditambah";
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_sabab\">";
 		}
 		else {
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_sabab\">";
 		}
 	

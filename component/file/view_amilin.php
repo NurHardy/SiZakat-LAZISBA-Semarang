@@ -35,9 +35,9 @@
 					<tbody>
 					<?php
 						include "component/config/koneksi.php";
-						$query = mysql_query("select * from user WHERE level = 99 or level = 3");
+						$query = mysqli_query($mysqli, "select * from user WHERE level = 99 or level = 3");
 						$i = 1;
-						while($pecah = mysql_fetch_array($query)){
+						while($pecah = mysqli_fetch_array($query)){
 						echo"	
 							<tr class=\"gradeA\">
 						

@@ -3,7 +3,7 @@
 $host = "127.0.0.1";
 $username = "root";
 $password = "";
-$database = "db_siz_lazisba";
+$database = "lazisba1_siz";
 
 global $mysqli;
 $mysqli = new mysqli($host, $username, $password, $database);

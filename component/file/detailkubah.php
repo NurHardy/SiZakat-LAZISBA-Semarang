@@ -5,19 +5,19 @@
 				<i class="glyphicon glyphicon-th"></i>
 			</span>
 			<?php
-				$q0 = mysql_query("SELECT * FROM opsi WHERE id_opsi = '4'");
-				$p0 = mysql_fetch_array($q0);
+				$q0 = mysqli_query($mysqli, "SELECT * FROM opsi WHERE id_opsi = '4'");
+				$p0 = mysqli_fetch_array($q0);
 			?>
 			<h5>Detail penyaluran dan cicilan KUBAH tahun <?php echo $p0['value']?></h5>
 		</div>
 		<div class="widget-content nopadding">
 			<div style='padding:20px;' class='col-12'>
 				<?php
-					$q0 = mysql_query("SELECT * FROM opsi WHERE id_opsi = '4'");
-					$p0 = mysql_fetch_array($q0);
-					$q1 = mysql_query("SELECT * FROM penyaluran p, user u WHERE YEAR(p.tanggal) = '$p0[value]' AND p.id_akun = '2.10.' AND p.id_ukm = '$_SESSION[iduser]' AND p.id_ukm = u.id_user");
-						echo mysql_error();
-					$p1 = mysql_fetch_array($q1);
+					$q0 = mysqli_query($mysqli, "SELECT * FROM opsi WHERE id_opsi = '4'");
+					$p0 = mysqli_fetch_array($q0);
+					$q1 = mysqli_query($mysqli, "SELECT * FROM penyaluran p, user u WHERE YEAR(p.tanggal) = '$p0[value]' AND p.id_akun = '2.10.' AND p.id_ukm = '$_SESSION[iduser]' AND p.id_ukm = u.id_user");
+						echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
+					$p1 = mysqli_fetch_array($q1);
 					$date = explode("-",$p1['tanggal']);
 					$tahun = $date[0]+1;
 					echo "
@@ -25,7 +25,7 @@
 						Total dana : <strong>Rp. $p1[jumlah],- </strong><br/>
 						Tanggal jatuh tempo : <strong>$date[2]-$date[1]-$tahun</strong";
 					
-					$q2 = mysql_query("SELECT * FROM penerimaan WHERE id_donatur = '$_SESSION[iduser]'");
+					$q2 = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE id_donatur = '$_SESSION[iduser]'");
 					$i = 1;
 					echo "
 						<p>
@@ -39,7 +39,7 @@
 							</thead>
 							<tbody>
 					";
-					while($p2 = mysql_fetch_array($q2)){
+					while($p2 = mysqli_fetch_array($q2)){
 						echo 
 							"<tr>
 								<td>$i</td>
@@ -50,8 +50,8 @@
 					}
 					echo "</tbody></table>";
 					
-					$q3 = mysql_query("SELECT SUM(jumlah) as cicilan FROM penerimaan WHERE id_donatur = '$_SESSION[iduser]'");
-					$p3 = mysql_fetch_array($q3);
+					$q3 = mysqli_query($mysqli, "SELECT SUM(jumlah) as cicilan FROM penerimaan WHERE id_donatur = '$_SESSION[iduser]'");
+					$p3 = mysqli_fetch_array($q3);
 					echo "<br/>Total Cicilan : ".$p3['cicilan']."<br/>";
 					$sisa = $p1['jumlah']-$p3['cicilan'];
 					echo "Sisa Tanggungan UKM : Rp.".$sisa.",-";

@@ -21,7 +21,7 @@
 	<?php
 		include "../config/koneksi.php";
 		
-		$sql = mysql_query("SELECT p.tanggal, p.id_akun, a.namaakun, p.jumlah, u.nama, p.keterangan
+		$sql = mysqli_query($mysqli, "SELECT p.tanggal, p.id_akun, a.namaakun, p.jumlah, u.nama, p.keterangan
 							FROM penerimaan p 
 							LEFT JOIN akun a 
 								ON p.id_akun = a.kode 
@@ -29,7 +29,7 @@
 								ON p.id_donatur = u.id_user
 							WHERE tanggal LIKE '$_GET[th]-$_GET[bln]-__'");
 		$i = $totalMasuk = 0;
-		while($f = mysql_fetch_array($sql)){
+		while($f = mysqli_fetch_array($sql)){
 			$i++;
 			$totalMasuk  = $totalMasuk + $f['jumlah'];
 			$tanggal = explode('-',$f['tanggal']);
@@ -67,7 +67,7 @@
 					</thead>
 	<?php
 						
-						$sql = mysql_query("SELECT p.tanggal, p.id_akun, a.namaakun as namaakun, p.jumlah, p.keterangan, l.namaakun as nama_akun
+						$sql = mysqli_query($mysqli, "SELECT p.tanggal, p.id_akun, a.namaakun as namaakun, p.jumlah, p.keterangan, l.namaakun as nama_akun
 											FROM penyaluran p 
 											LEFT JOIN akun a 
 												ON p.id_akun = a.kode
@@ -75,7 +75,7 @@
 												ON p.id_akun = l.kode
 											WHERE tanggal LIKE '$_GET[th]-$_GET[bln]-__'");
 						$i = $totalKeluar = 0;
-						while($f = mysql_fetch_array($sql)){
+						while($f = mysqli_fetch_array($sql)){
 							$i++;
 							$totalKeluar  = $totalKeluar + $f['jumlah'];
 							$tanggal = explode('-',$f['tanggal']);

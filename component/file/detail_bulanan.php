@@ -25,8 +25,8 @@
 					<tbody>
 						<?php
 						
-						$query = mysql_query("SELECT p.*, m.nama as namamuzakki, a.namaakun FROM penerimaan p left join user m ON p.id_donatur = m.id_user left join akun a on p.id_akun = a.kode WHERE p.tanggal like '%-$_GET[bulan]-%'");
-						while($parse=mysql_fetch_array($query)){
+						$query = mysqli_query($mysqli, "SELECT p.*, m.nama as namamuzakki, a.namaakun FROM penerimaan p left join user m ON p.id_donatur = m.id_user left join akun a on p.id_akun = a.kode WHERE p.tanggal like '%-$_GET[bulan]-%'");
+						while($parse=mysqli_fetch_array($query)){
 							echo "<tr class='grade'>
 								<td>$parse[id_penerimaan]</td>
 								<td>$parse[tanggal]</td>

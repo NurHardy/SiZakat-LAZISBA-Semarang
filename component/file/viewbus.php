@@ -38,12 +38,12 @@ function linkTo(link){
 					<tbody>
 					<?php
 						include "component/config/koneksi.php";
-						$query = mysql_query("select * from user WHERE id_user='$_SESSION[iduser]'");
-						$d = mysql_fetch_array($query);
-						$query = mysql_query("select * from penerima_bus WHERE wilayah='$d[wilayah_bus]' AND is_off='0'");
+						$query = mysqli_query($mysqli, "select * from user WHERE id_user='$_SESSION[iduser]'");
+						$d = mysqli_fetch_array($query);
+						$query = mysqli_query($mysqli, "select * from penerima_bus WHERE wilayah='$d[wilayah_bus]' AND is_off='0'");
 						$i = 1;
 						$sd = $smp = $sma = 0;
-						while($pecah = mysql_fetch_array($query)){
+						while($pecah = mysqli_fetch_array($query)){
 						echo"	
 							<tr class=\"gradeA\" onclick=linkTo('main.php?s=detailbus&id=$pecah[id_penerima]')>
 						

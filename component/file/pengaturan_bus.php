@@ -1,8 +1,8 @@
 <?php
 	include "component/config/koneksi.php";
 	//$action = "component/server/func_pengaturan_bus.php";
-	$sql = mysql_query("SELECT * FROM opsi WHERE name = 'dana_bus_jenjang'");
-	$f = mysql_fetch_array($sql);
+	$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'dana_bus_jenjang'");
+	$f = mysqli_fetch_array($sql);
 	$d = $f['value'];
 	$x = explode("#",$d);
 	

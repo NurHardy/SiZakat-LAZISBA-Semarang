@@ -6,8 +6,8 @@
 		$s  = clear_injection($_GET['s']); 
 		$id = clear_injection($_GET['id']);
 		
-		$sql = mysql_query("SELECT * FROM mustahik WHERE IdMustahik='$id'");
-		$d = mysql_fetch_array($sql);
+		$sql = mysqli_query($mysqli, "SELECT * FROM mustahik WHERE IdMustahik='$id'");
+		$d = mysqli_fetch_array($sql);
 		
 		$nama 			= $d['Nama'];
 		$tempat 		= $d['Tmp_Lahir'];

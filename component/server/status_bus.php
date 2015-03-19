@@ -29,13 +29,13 @@
 					</thead>
 					<tbody>
 						<?php
-						$wil = mysql_query("SELECT * from akun WHERE idParent='12'");
-						$harga = mysql_query("SELECT * FROM opsi WHERE name='dana_bus_jenjang'");
-						$val = mysql_fetch_array($harga);
+						$wil = mysqli_query($mysqli, "SELECT * from akun WHERE idParent='12'");
+						$harga = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name='dana_bus_jenjang'");
+						$val = mysqli_fetch_array($harga);
 						
 						$hr = explode('#',$val['value']);
 						$k=0;
-						while($w=mysql_fetch_array($wil)){
+						while($w=mysqli_fetch_array($wil)){
 							$k++;
 							
 							
@@ -44,10 +44,10 @@
 								<td>Bus Wilayah ".($k)."</td>";
 								$biaya = 0;
 								for($o=0;$o<3;$o++){
-									$sql1 = mysql_query("SELECT jenjang, count(jenjang) as jumlah_jenjang FROM penerima_bus WHERE wilayah='$k' AND jenjang='".($o+1)."' GROUP BY jenjang");
-									$cd = mysql_fetch_array($sql1);
+									$sql1 = mysqli_query($mysqli, "SELECT jenjang, count(jenjang) as jumlah_jenjang FROM penerima_bus WHERE wilayah='$k' AND jenjang='".($o+1)."' GROUP BY jenjang");
+									$cd = mysqli_fetch_array($sql1);
 									$biaya = $biaya + ($cd['jumlah_jenjang'] * $hr[$o]);
-									if(mysql_num_rows($sql1) > 0){
+									if(mysqli_num_rows($sql1) > 0){
 										echo "<td>$cd[jumlah_jenjang]</td>";
 									}else{
 										echo "<td></td>";
@@ -55,11 +55,11 @@
 								}
 								echo "<td>$biaya</td>";
 								
-								$sqq = mysql_query("SELECT * FROM penyaluran WHERE id_akun='$w[kode]' ORDER BY tanggal DESC LIMIT 0,2");
+								$sqq = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE id_akun='$w[kode]' ORDER BY tanggal DESC LIMIT 0,2");
 								
 								$st = 1;
 								$da = array("<td></td>","<td></td>");
-								while($df = mysql_fetch_array($sqq)){
+								while($df = mysqli_fetch_array($sqq)){
 									$da[$st] = "<td>$df[tanggal] / $df[jumlah]</td>";
 									$st = $st-1;
 								};

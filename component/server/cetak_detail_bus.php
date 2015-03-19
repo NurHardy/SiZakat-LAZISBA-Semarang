@@ -38,8 +38,8 @@
 		<?php
 			include "../config/koneksi.php";
 			$id = $_GET['id'];
-			$q1 = mysql_query("SELECT * FROM penerima_bus WHERE id_penerima = '$id'");
-			$p1 = mysql_fetch_array($q1);
+			$q1 = mysqli_query($mysqli, "SELECT * FROM penerima_bus WHERE id_penerima = '$id'");
+			$p1 = mysqli_fetch_array($q1);
 			$ket = nl2br($p1['keterangan']);
 			$pres = explode('<br />',$ket); 
 			if($p1['jenjang'] == '1'){
@@ -129,8 +129,8 @@
 		<?php 
 			include "../config/koneksi.php";
 			$id = $_GET['id'];
-			$q1 = mysql_query("SELECT * FROM prestasi WHERE id_penerima = '$id'");
-			$p1 = mysql_fetch_array($q1);
+			$q1 = mysqli_query($mysqli, "SELECT * FROM prestasi WHERE id_penerima = '$id'");
+			$p1 = mysqli_fetch_array($q1);
 			
 			$a = nl2br($p1['alquran']);
 			$a1 = explode('<br />',$a);

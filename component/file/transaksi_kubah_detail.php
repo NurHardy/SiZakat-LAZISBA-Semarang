@@ -16,8 +16,8 @@
 				<div class="widget-content nopadding">
 				<h4 style='padding:10px;'>Nama UKM : <?php 
 					include "component/config/koneksi.php";
-					$sql = mysql_query("SELECT * FROM user WHERE id_user='$_GET[id]'");
-					$a = mysql_fetch_array($sql);
+					$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user='$_GET[id]'");
+					$a = mysqli_fetch_array($sql);
 					echo '<b>'.$a['nama'].'</b>';
 				?></h4>
 			<div style='padding:0px 10px 10px 10px;'>
@@ -41,10 +41,10 @@
 									<tbody>
 					<?php
 						
-						$sql1 = mysql_query("SELECT * FROM penyaluran WHERE id_akun='2.10.' AND th_kubah='$_GET[th]' AND id_ukm='$_GET[id]'");
+						$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE id_akun='2.10.' AND th_kubah='$_GET[th]' AND id_ukm='$_GET[id]'");
 						$i=0;
 						$salur = 0;
-						while($f = mysql_fetch_array($sql1)){
+						while($f = mysqli_fetch_array($sql1)){
 							$i++;
 							echo "
 								<tr>
@@ -71,10 +71,10 @@
 										</tr>
 									</thead>
 					<?php
-							$sql = mysql_query("SELECT * FROM penerimaan WHERE id_akun='1.9.' AND th_kubah='$_GET[th]' AND id_donatur='$_GET[id]'");
+							$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE id_akun='1.9.' AND th_kubah='$_GET[th]' AND id_donatur='$_GET[id]'");
 							$i=0;
 							$salur1 = 0;
-							while($f = mysql_fetch_array($sql)){
+							while($f = mysqli_fetch_array($sql)){
 								$i++;
 								echo "
 									<tr>

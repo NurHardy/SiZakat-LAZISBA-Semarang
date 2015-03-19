@@ -1,7 +1,7 @@
 <?php
 	include "component/config/koneksi.php";
-$sql = mysql_query("SELECT * FROM opsi WHERE name = 'ramadhan' ");
-$opsi_ramadhan = mysql_fetch_array($sql);
+$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'ramadhan' ");
+$opsi_ramadhan = mysqli_fetch_array($sql);
 
 if($opsi_ramadhan['value'] != 1){
 	echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=home\">";
@@ -52,8 +52,8 @@ if($opsi_ramadhan['value'] != 1){
 					<select name='trans' class="input-small" style='width:80%;' required='required' data-placeholder="-- Pilih Transaksi --">
 						<option></option>
 					<?php
-						$q1 = mysql_query("SELECT * FROM akun WHERE jenis = '3' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
-						while($p1 = mysql_fetch_array($q1)){
+						$q1 = mysqli_query($mysqli, "SELECT * FROM akun WHERE jenis = '3' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
+						while($p1 = mysqli_fetch_array($q1)){
 							echo "
 								<option value='$p1[kode]'>$p1[kode] - $p1[namaakun]</option>
 								";
@@ -71,8 +71,8 @@ if($opsi_ramadhan['value'] != 1){
 					<select name='muzakki' class="input-small" style='width:80%;' data-placeholder="-- Pilih Muzakki --" required='required'>
 						<option></option>
 					<?php
-						$q3 = mysql_query("SELECT * FROM user WHERE level = 1");
-						while($p3 = mysql_fetch_array($q3)){
+						$q3 = mysqli_query($mysqli, "SELECT * FROM user WHERE level = 1");
+						while($p3 = mysqli_fetch_array($q3)){
 							echo "
 								<option value='$p3[id_user]'>$p3[id_user] - $p3[nama]</option>
 								";
@@ -89,8 +89,8 @@ if($opsi_ramadhan['value'] != 1){
 						<option></option>
 					<?php
 						//include "component/config/koneksi.php";
-								$sql = mysql_query("SELECT * FROM user WHERE level = 99");
-								while( $pecah = mysql_fetch_array($sql)){
+								$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE level = 99");
+								while( $pecah = mysqli_fetch_array($sql)){
 									echo"<option value=\"$pecah[id_user]\">$pecah[id_user] - $pecah[nama]</option>";
 								}
 					?>
@@ -105,8 +105,8 @@ if($opsi_ramadhan['value'] != 1){
 					<select name='thn' class="input-small" style='width:80%;' data-placeholder="-- Pilih Tahun Ramadhan --" required='required'>
 						<option></option>
 					<?php
-						$q4 = mysql_query("SELECT * FROM opsi WHERE name='tahun'");
-						while($p4 = mysql_fetch_array($q4)){
+						$q4 = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name='tahun'");
+						while($p4 = mysqli_fetch_array($q4)){
 							echo "
 								<option value='$p4[value]'>$p4[id_opsi] - $p4[value]</option>
 								";

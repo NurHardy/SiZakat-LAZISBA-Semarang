@@ -21,8 +21,8 @@
 								unset($_SESSION['error']);
 							}
 						}
-						$q1 = mysql_query("SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
-						$p1 = mysql_fetch_array($q1);
+						$q1 = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
+						$p1 = mysqli_fetch_array($q1);
 						$username = $p1['username'];
 					?>
 				</div>

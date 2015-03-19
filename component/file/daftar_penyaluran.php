@@ -83,8 +83,8 @@ function linkTo(link){
 						<td><div style='font-size:15px;font-weight:bolder;'>Total Penyaluran</div></td>
 						<td>&nbsp;&nbsp;:</td>
 						<td><div style='font-size:15px;font-weight:bolder;'><?php
-							$ttl = mysql_query("SELECT SUM(jumlah) as jml FROM penyaluran WHERE tanggal LIKE '__-__-$_GET[th]'");
-							$ttla = mysql_fetch_array($ttl);
+							$ttl = mysqli_query($mysqli, "SELECT SUM(jumlah) as jml FROM penyaluran WHERE tanggal LIKE '__-__-$_GET[th]'");
+							$ttla = mysqli_fetch_array($ttl);
 							echo "Rp ".number_format($ttla['jml'],2,',','.');
 						?></div></td>
 					</tr>
@@ -92,8 +92,8 @@ function linkTo(link){
 						<td><div style='font-size:15px;font-weight:bolder;'>Jumlah Transaksi Penyaluran</div></td>
 						<td>&nbsp;&nbsp;:</td>
 						<td><div style='font-size:15px;font-weight:bolder;'><?php
-							$ttl = mysql_query("SELECT count(id_penyaluran) as jml FROM penyaluran WHERE tanggal LIKE '__-__-$_GET[th]'");
-							$ttla = mysql_fetch_array($ttl);
+							$ttl = mysqli_query($mysqli, "SELECT count(id_penyaluran) as jml FROM penyaluran WHERE tanggal LIKE '__-__-$_GET[th]'");
+							$ttla = mysqli_fetch_array($ttl);
 							echo $ttla['jml'];
 						?></div></td>
 					</tr>
@@ -119,16 +119,16 @@ function linkTo(link){
 				</thead>
 				<tbody>
 					<?php 
-						$q1 = mysql_query("SELECT * FROM akun WHERE jenis = '2' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
+						$q1 = mysqli_query($mysqli, "SELECT * FROM akun WHERE jenis = '2' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
 						$i=0;
-						while($p = mysql_fetch_array($q1)){
+						while($p = mysqli_fetch_array($q1)){
 							$i++;
 							echo "<tr>";
 								echo "<td >$i</td>";
 								echo "<td >$p[namaakun]</td>";
 								foreach($month as $m => $val){
-									$sql = mysql_query("SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='$p[kode]' AND MID(tanggal,4,2) = '$m' AND MID(tanggal,7,4) = '$_GET[th]'");
-									$d = mysql_fetch_array($sql);
+									$sql = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun='$p[kode]' AND MID(tanggal,4,2) = '$m' AND MID(tanggal,7,4) = '$_GET[th]'");
+									$d = mysqli_fetch_array($sql);
 									if($d['jumlah'] == ""){
 										$jml = 0;
 									}else{

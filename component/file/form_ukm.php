@@ -7,8 +7,8 @@
 	if(ISSET($_GET['s']) && ISSET($_GET['id']) && ($_GET['s'] == 'edit_ukm')){ 
 		
 		$id = $_GET['id'];
-		$query = mysql_query("SELECT * FROM user WHERE id_user = '$id'");
-		$d = mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$id'");
+		$d = mysqli_fetch_array($query);
 		
 		$nama		= $d['nama'];
 		$alamat 	= $d['alamat'];

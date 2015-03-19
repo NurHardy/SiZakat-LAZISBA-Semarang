@@ -11,14 +11,14 @@
 		$username 	= clear_injection($_POST['username']);
 		$p1 	= clear_injection($_POST['p1']);
 		
-		$sql = mysql_query("INSERT INTO user (username,password,nama,alamat,hp, pj,level) VALUES ('$username',sha1(sha1(md5('$p1'))),'$nama','$alamat','$telp','$pj','2')");
+		$sql = mysqli_query($mysqli, "INSERT INTO user (username,password,nama,alamat,hp, pj,level) VALUES ('$username',sha1(sha1(md5('$p1'))),'$nama','$alamat','$telp','$pj','2')");
 		
 		if($sql){
 			$_SESSION['success'] = "Data UKM Berhasil Ditambah";
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_ukm\">";
-			echo mysql_error();
+			echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 		}else{
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan :".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan :".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_ukm\">";
 		}
 		

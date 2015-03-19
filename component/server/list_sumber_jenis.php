@@ -2,9 +2,9 @@
 <?php 
 		include "../config/koneksi.php";
 		
-		$sql = mysql_query("SELECT * FROM persamaan_akun p, akun a WHERE p.id_penyaluran='$_POST[jenis]' AND p.id_penerimaan = a.kode ORDER BY namaakun ASC");
+		$sql = mysqli_query($mysqli, "SELECT * FROM persamaan_akun p, akun a WHERE p.id_penyaluran='$_POST[jenis]' AND p.id_penerimaan = a.kode ORDER BY namaakun ASC");
 		$i=0;
-		while($s = mysql_fetch_array($sql)){
+		while($s = mysqli_fetch_array($sql)){
 			if($i == 0){
 				echo "<option value='$s[id_persamaan]'>$s[namaakun]</option>";
 			}else{

@@ -15,20 +15,20 @@
 		$pers 		= clear_injection($_POST['sumber']);
 
 		//-------------------------------------------------------------------------------------------------------------
-		$q = mysql_query("SELECT * FROM persamaan_akun WHERE id_persamaan = '$pers' ");
-		$fetch1 = mysql_fetch_array($q);
+		$q = mysqli_query($mysqli, "SELECT * FROM persamaan_akun WHERE id_persamaan = '$pers' ");
+		$fetch1 = mysqli_fetch_array($q);
 		$id_penerimaan = $fetch1['id_penerimaan'];
 		
-		$q = mysql_query("SELECT * FROM saldo_awal WHERE id_akun = '$id_penerimaan' ");
-		$fetch1 = mysql_fetch_array($q);
+		$q = mysqli_query($mysqli, "SELECT * FROM saldo_awal WHERE id_akun = '$id_penerimaan' ");
+		$fetch1 = mysqli_fetch_array($q);
 		$saldo_awal = $fetch1['saldo'];
 		
-		$q2 = mysql_query("SELECT SUM(jumlah) as jum FROM penerimaan WHERE id_akun = '$id_penerimaan' ");
-		$fetch2 = mysql_fetch_array($q2);
+		$q2 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jum FROM penerimaan WHERE id_akun = '$id_penerimaan' ");
+		$fetch2 = mysqli_fetch_array($q2);
 		$jumlah1 = $fetch2['jum'];
 
-		$q3 = mysql_query("SELECT SUM(y.jumlah) as jum2 FROM penyaluran y, persamaan_akun s WHERE s.id_penerimaan = '$id_penerimaan' AND y.id_akun = s.id_penyaluran");
-		$fetch3 = mysql_fetch_array($q3);
+		$q3 = mysqli_query($mysqli, "SELECT SUM(y.jumlah) as jum2 FROM penyaluran y, persamaan_akun s WHERE s.id_penerimaan = '$id_penerimaan' AND y.id_akun = s.id_penyaluran");
+		$fetch3 = mysqli_fetch_array($q3);
 		$jumlah2 = $fetch3['jum2'];
 		
 		$total = $saldo_awal + $jumlah1 - $jumlah2;
@@ -41,7 +41,7 @@
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_dana_zakat_s\">";
 		}else{
 		
-			$sql = mysql_query("
+			$sql = mysqli_query($mysqli, "
 				INSERT INTO penyaluran (id_penyaluran,tanggal,id_akun,jumlah,keterangan,id_teller,id_persamaan) VALUES 
 				('','$tgl','$jenis_transaksi','$jumlah','$ket','$amilin','$pers')
 			");
@@ -50,7 +50,7 @@
 				$_SESSION['success'] = "Data Transaksi Penyaluran Berhasil Ditambah"; 
 				echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_dana_zakat_s\">";
 			}else{
-				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".mysql_error();
+				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 				echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_dana_zakat_s\">";
 			}
 		

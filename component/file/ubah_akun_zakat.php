@@ -1,8 +1,8 @@
 <?php
 		//session_start();
 		include "component/config/koneksi.php";
-		$query = mysql_query("SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
-		$parse = mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
+		$parse = mysqli_fetch_array($query);
 		
 		$id = $parse['id_user'];
 		$nama = $parse['nama'];

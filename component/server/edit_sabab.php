@@ -21,7 +21,7 @@
 		$user = clear_injection($_POST['user']);
 		
 		$ket = clear_injection($_POST['keterangan']);
-		$sql = mysql_query("UPDATE user SET username = '$user', $pas nama = '$nama', tempat_lahir = '$tmp_lahir', tanggal_lahir = '$tgl_lahir' , alamat = '$alamat', kota = '$kota', hp = '$hp' , email = '$email', keterangan = '$ket' WHERE id_user = '$id'");
+		$sql = mysqli_query($mysqli, "UPDATE user SET username = '$user', $pas nama = '$nama', tempat_lahir = '$tmp_lahir', tanggal_lahir = '$tgl_lahir' , alamat = '$alamat', kota = '$kota', hp = '$hp' , email = '$email', keterangan = '$ket' WHERE id_user = '$id'");
 		
 		
 		if($sql){
@@ -35,7 +35,7 @@
 			
 			}
 		}else{
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_sabab&id=$id\">";
 		}
 	}else{

@@ -5,7 +5,7 @@
 	if(ISSET($_POST)){
 	$tanggal = date('d-m-Y');
 	$id = clear_injection($_GET['id']);
-	$query = mysql_query("UPDATE informasi SET
+	$query = mysqli_query($mysqli, "UPDATE informasi SET
 							Judul = '$_POST[judul]',
 							Isi = '$_POST[informasi]',
 							Tanggal = '$tanggal'
@@ -15,7 +15,7 @@
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=edit_info&id=$id\">";
 		}
 		else{
-			$_SESSION['error'] = "Proses mengubah informasi gagal, karena ".mysql_error();
+			$_SESSION['error'] = "Proses mengubah informasi gagal, karena ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=edit_info&id=$id\">";
 		}
 	}else{

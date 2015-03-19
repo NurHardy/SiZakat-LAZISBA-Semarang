@@ -36,8 +36,8 @@
 					<select name="nama" style='width:80%' data-placeholder="Pilih UKM">
 					<option></option>
 						<?php
-							$q1 = mysql_query("SELECT * FROM user WHERE level='2'");
-							while($p1 = mysql_fetch_array($q1)){
+							$q1 = mysqli_query($mysqli, "SELECT * FROM user WHERE level='2'");
+							while($p1 = mysqli_fetch_array($q1)){
 								echo "<option value='$p1[id_user]'>$p1[nama]</option>";
 							}
 						?>
@@ -62,8 +62,8 @@
                  <select name="petugas" style='width:80%' data-placeholder="Pilih Petugas">
 					<option></option>
 					<?php
-						$q1 = mysql_query("SELECT * FROM user WHERE level = '99'");
-						while($p1 = mysql_fetch_array($q1)){
+						$q1 = mysqli_query($mysqli, "SELECT * FROM user WHERE level = '99'");
+						while($p1 = mysqli_fetch_array($q1)){
 							echo "<option value='$p1[id_user]'>$p1[nama]</option>";
 						}
 					?>

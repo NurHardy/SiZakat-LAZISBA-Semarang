@@ -13,14 +13,14 @@
 		
 		print_r($_POST['datates']);
 	
-		$sql = mysql_query("UPDATE opsi SET value = '$satu' WHERE name = 'bln_thn_saldo'");
+		$sql = mysqli_query($mysqli, "UPDATE opsi SET value = '$satu' WHERE name = 'bln_thn_saldo'");
 		
 		for($i=0;$i<count($saldo_akun);$i++){
-			$sql11 = mysql_query("SELECT * FROM saldo_awal WHERE id_akun = '".$id_akun[$i]."'");
-			if(mysql_num_rows($sql11) > 0){
-				$sqla = mysql_query("UPDATE saldo_awal SET saldo='$saldo_akun[$i]' WHERE id_akun='$id_akun[$i]'");
+			$sql11 = mysqli_query($mysqli, "SELECT * FROM saldo_awal WHERE id_akun = '".$id_akun[$i]."'");
+			if(mysqli_num_rows($sql11) > 0){
+				$sqla = mysqli_query($mysqli, "UPDATE saldo_awal SET saldo='$saldo_akun[$i]' WHERE id_akun='$id_akun[$i]'");
 			}else{
-				$sqla = mysql_query("INSERT INTO saldo_awal (id_akun,saldo) VALUES ('$id_akun[$i]','$saldo_akun[$i]')");
+				$sqla = mysqli_query($mysqli, "INSERT INTO saldo_awal (id_akun,saldo) VALUES ('$id_akun[$i]','$saldo_akun[$i]')");
 			}
 		}
 		
@@ -28,9 +28,9 @@
 		if($sqla){
 				$_SESSION['success'] = "Berhasil"; 
 				echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=pengaturan_saldo\">";
-				echo mysql_error();
+				echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			}else{
-				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".mysql_error();
+				$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 				echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=pengaturan_saldo\">";
 			}
 		

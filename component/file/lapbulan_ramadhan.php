@@ -1,8 +1,8 @@
 <?php
 
 include "component/config/koneksi.php";
-$sql = mysql_query("SELECT * FROM opsi WHERE name = 'ramadhan' ");
-$opsi_ramadhan = mysql_fetch_array($sql);
+$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'ramadhan' ");
+$opsi_ramadhan = mysqli_fetch_array($sql);
 
 if($opsi_ramadhan['value'] != 1){
 	echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=home\">";
@@ -17,10 +17,10 @@ if($opsi_ramadhan['value'] != 1){
 	include "component/config/koneksi.php";
 	$th = $_GET['th'];
 	
-	$sql = mysql_query("SELECT * FROM penerimaan WHERE thn_ramadhan < '$th'");
-	$sql1 = mysql_query("SELECT * FROM penyaluran WHERE thn_ramadhan < '$th'");
+	$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE thn_ramadhan < '$th'");
+	$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE thn_ramadhan < '$th'");
 	$error = 0;
-	if((mysql_num_rows($sql) > 0) || (mysql_num_rows($sql1) > 0)){
+	if((mysqli_num_rows($sql) > 0) || (mysqli_num_rows($sql1) > 0)){
 		/*//jika ada transaksi sebelum bulan yang dipilih
 		
 		//ambil saldo awal
@@ -72,15 +72,15 @@ if($opsi_ramadhan['value'] != 1){
 		</div>
 		<?php 
 			/*SQL*/
-			$sql = mysql_query("SELECT SUM(saldo) as saldo FROM saldo_awal");
-			$s = mysql_fetch_array($sql);
+			$sql = mysqli_query($mysqli, "SELECT SUM(saldo) as saldo FROM saldo_awal");
+			$s = mysqli_fetch_array($sql);
 			
 			
 			//Penerimaan
-			$sql1 = mysql_query("SELECT * FROM `penerimaan` WHERE thn_ramadhan <= '$_GET[th]'");
-			if(mysql_num_rows($sql1) <= 0){
-				$sql = mysql_query("SELECT * FROM saldo_awal");
-				$s = mysql_fetch_array($sql);
+			$sql1 = mysqli_query($mysqli, "SELECT * FROM `penerimaan` WHERE thn_ramadhan <= '$_GET[th]'");
+			if(mysqli_num_rows($sql1) <= 0){
+				$sql = mysqli_query($mysqli, "SELECT * FROM saldo_awal");
+				$s = mysqli_fetch_array($sql);
 			}
 		?>
 		<div class="widget-content nopadding">
@@ -111,10 +111,10 @@ if($opsi_ramadhan['value'] != 1){
 						<td></td>
 					</tr>
 					<?php 
-						$sqls = mysql_query("SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penerimaan p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan = '$th' AND id_akun LIKE '3.1%' GROUP BY p.id_akun");
+						$sqls = mysqli_query($mysqli, "SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penerimaan p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan = '$th' AND id_akun LIKE '3.1%' GROUP BY p.id_akun");
 						$i=0;
 						$total_masuk = 0;
-						while($q = mysql_fetch_array($sqls)){
+						while($q = mysqli_fetch_array($sqls)){
 							$i++;
 							$total_masuk = $total_masuk + $q['jumlah'];
 							
@@ -145,10 +145,10 @@ if($opsi_ramadhan['value'] != 1){
 						<td></td>
 					</tr>
 					<?php 
-						$sqls = mysql_query("SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penyaluran p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan LIKE '$th' AND (id_akun LIKE '3.2%') GROUP BY p.id_akun");
+						$sqls = mysqli_query($mysqli, "SELECT p.id_akun,a.namaakun,SUM(p.jumlah) as jumlah FROM penyaluran p, akun a WHERE p.id_akun=a.kode AND thn_ramadhan LIKE '$th' AND (id_akun LIKE '3.2%') GROUP BY p.id_akun");
 						$i=0;
 						$total_keluar = 0;
-						while($q = mysql_fetch_array($sqls)){
+						while($q = mysqli_fetch_array($sqls)){
 							$i++;
 							$total_keluar = $total_keluar + $q['jumlah'];
 							

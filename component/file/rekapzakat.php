@@ -22,13 +22,13 @@
 									<table class='table table-bordered table-striped table-hover'>
 					<?php
 						include "component/config/koneksi.php";
-						$sql = mysql_query("SELECT * FROM akun WHERE jenis='2' AND idParent <> '0' AND idakun NOT IN (SELECT idParent FROM akun)");
+						$sql = mysqli_query($mysqli, "SELECT * FROM akun WHERE jenis='2' AND idParent <> '0' AND idakun NOT IN (SELECT idParent FROM akun)");
 						$k=0;
 						$totalMasuk = 0;
-						while ($d = mysql_fetch_array($sql)){
+						while ($d = mysqli_fetch_array($sql)){
 							$k++;
-							$dd = mysql_query("SELECT sum(jumlah) as jumlah FROM penerimaan WHERE idakun='$d[kode]'");
-							$ddq = mysql_fetch_array($dd);
+							$dd = mysqli_query($mysqli, "SELECT sum(jumlah) as jumlah FROM penerimaan WHERE idakun='$d[kode]'");
+							$ddq = mysqli_fetch_array($dd);
 							if($ddq['jumlah'] == ""){
 								$jml = 0;
 							}else{
@@ -57,13 +57,13 @@
 								<table class='table table-bordered table-striped table-hover'>
 					<?php
 						include "component/config/koneksi.php";
-						$sql = mysql_query("SELECT * FROM akun WHERE jenis='3' AND idParent <> '0' AND idakun NOT IN (SELECT idParent FROM akun)");
+						$sql = mysqli_query($mysqli, "SELECT * FROM akun WHERE jenis='3' AND idParent <> '0' AND idakun NOT IN (SELECT idParent FROM akun)");
 						$k=0;
 						$totalKeluar = 0;
-						while ($d = mysql_fetch_array($sql)){
+						while ($d = mysqli_fetch_array($sql)){
 							$k++;
-							$dd = mysql_query("SELECT sum(jumlah) as jumlah FROM penyaluran WHERE idakun='$d[kode]'");
-							$ddq = mysql_fetch_array($dd);
+							$dd = mysqli_query($mysqli, "SELECT sum(jumlah) as jumlah FROM penyaluran WHERE idakun='$d[kode]'");
+							$ddq = mysqli_fetch_array($dd);
 							if($ddq['jumlah'] == ""){
 								$jml = 0;
 							}else{

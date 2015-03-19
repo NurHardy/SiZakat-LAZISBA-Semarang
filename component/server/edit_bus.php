@@ -31,7 +31,7 @@
 		$target = $_FILES['bus']['name'];
 		move_uploaded_file($source,'../../img/bus/'.$target);
 		
-		$sql = mysql_query("UPDATE penerima_bus SET 
+		$sql = mysqli_query($mysqli, "UPDATE penerima_bus SET 
 								nama = '$nama',
 								alamat = '$alamat',
 								wilayah = '$wilayah',
@@ -42,7 +42,7 @@
 								ibu = '$ibu',
 								foto = '$target' WHERE id_penerima = '$id'");
 								
-		$sql2 = mysql_query("UPDATE prestasi SET 
+		$sql2 = mysqli_query($mysqli, "UPDATE prestasi SET 
 								alquran = '$alquran',
 								doa = '$doa',
 								minat = '$minat',
@@ -54,7 +54,7 @@
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=editbus&id=$id\">";
 		}
 		else {
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=editbus&id=$id\">";
 		}
 	

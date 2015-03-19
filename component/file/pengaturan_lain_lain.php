@@ -1,19 +1,19 @@
 <?php
 	include "component/config/koneksi.php";
 
-		$query = mysql_query("select * from opsi where name = 'link' ");
-		$parse = mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "select * from opsi where name = 'link' ");
+		$parse = mysqli_fetch_array($query);
 		$link = $parse['value'];
 		
 		if(ISSET($_POST['save'])){
 			//$sql = mysql_query ("INSERT INTO opsi (id_opsi,name,value) VALUES ('','link','$_POST[link]')");
 			
-			$sql = mysql_query ("UPDATE opsi SET value = '$_POST[link]' WHERE name = 'link'");
+			$sql = mysqli_query($mysqli, "UPDATE opsi SET value = '$_POST[link]' WHERE name = 'link'");
 								
 				if($sql){
 					$_SESSION['success'] = "Data Berhasil Di Ubah"; 
 				}else{
-					$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".mysql_error();
+					$_SESSION['error'] = "Terdapat Kesalahan Dalam Pemrosesan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 					//echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=opsi_ramadhan\">";
 				}
 			}

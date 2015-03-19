@@ -20,8 +20,8 @@
 						<td style='width:100px;'>Tahun</td>
 						<td><select name='th'>
 								<?php 
-									$sqla = mysql_query("SELECT DISTINCT th_kubah FROM penyaluran WHERE id_ukm = '$_SESSION[iduser]'");
-									while($s = mysql_fetch_array($sqla)){
+									$sqla = mysqli_query($mysqli, "SELECT DISTINCT th_kubah FROM penyaluran WHERE id_ukm = '$_SESSION[iduser]'");
+									while($s = mysqli_fetch_array($sqla)){
 										if($s['th_kubah'] == $_GET['th']){
 											echo "<option value='$s[th_kubah]' selected>$s[th_kubah]</option>";
 										}else{
@@ -56,10 +56,10 @@
 									<tbody>
 					<?php
 						
-						$sql1 = mysql_query("SELECT * FROM penyaluran WHERE id_akun='2.10.' AND th_kubah='$_GET[th]' AND id_ukm='$_SESSION[iduser]'");
+						$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE id_akun='2.10.' AND th_kubah='$_GET[th]' AND id_ukm='$_SESSION[iduser]'");
 						$i=0;
 						$salur = 0;
-						while($f = mysql_fetch_array($sql1)){
+						while($f = mysqli_fetch_array($sql1)){
 							$i++;
 							echo "
 								<tr>
@@ -86,10 +86,10 @@
 										</tr>
 									</thead>
 					<?php
-							$sql = mysql_query("SELECT * FROM penerimaan WHERE id_akun='1.9.' AND th_kubah='$_GET[th]' AND id_donatur='$_SESSION[iduser]'");
+							$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE id_akun='1.9.' AND th_kubah='$_GET[th]' AND id_donatur='$_SESSION[iduser]'");
 							$i=0;
 							$salur1 = 0;
-							while($f = mysql_fetch_array($sql)){
+							while($f = mysqli_fetch_array($sql)){
 								$i++;
 								echo "
 									<tr>

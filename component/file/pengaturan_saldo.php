@@ -1,8 +1,8 @@
 <?php
 	include "component/config/koneksi.php";
 	//$action = "component/server/func_pengaturan_bus.php";
-	$sql = mysql_query("SELECT * FROM opsi WHERE name = 'bln_th_saldo'");
-	$f = mysql_fetch_array($sql);
+	$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'bln_th_saldo'");
+	$f = mysqli_fetch_array($sql);
 	$d = $f['value'];
 	$x = explode("#",$d);
 
@@ -50,11 +50,11 @@
 						</div>
 					  </div>
 					<?php 
-						$q1 = mysql_query("SELECT * FROM akun WHERE jenis = '1' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
-						while($d = mysql_fetch_array($q1)){
-							$sql = mysql_query("SELECT * FROM saldo_awal WHERE id_akun='$d[kode]'");
-							if(mysql_num_rows($sql)){
-								$s = mysql_fetch_array($sql);
+						$q1 = mysqli_query($mysqli, "SELECT * FROM akun WHERE jenis = '1' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
+						while($d = mysqli_fetch_array($q1)){
+							$sql = mysqli_query($mysqli, "SELECT * FROM saldo_awal WHERE id_akun='$d[kode]'");
+							if(mysqli_num_rows($sql)){
+								$s = mysqli_fetch_array($sql);
 							}else{
 								$s = "";
 							}

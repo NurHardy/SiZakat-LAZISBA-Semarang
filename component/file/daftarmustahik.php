@@ -26,9 +26,9 @@
 			</thead>
 			<tbody>
 				<?php
-					$sql = mysql_query("SELECT * FROM mustahik");
+					$sql = mysqli_query($mysqli, "SELECT * FROM mustahik");
 					$k=0;
-					while($d = mysql_fetch_array($sql)){
+					while($d = mysqli_fetch_array($sql)){
 					$k++;
 				?>
 				<tr>

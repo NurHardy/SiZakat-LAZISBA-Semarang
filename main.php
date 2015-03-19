@@ -200,36 +200,36 @@
 			 $bln6 = array(1,7);
 			 
 			
-			$sql1 = mysql_query("SELECT * FROM user WHERE level='1'");
+			$sql1 = mysqli_query($mysqli, "SELECT * FROM user WHERE level='1'");
 			$jml = 0;
-			while($d = mysql_fetch_array($sql1)){
+			while($d = mysqli_fetch_array($sql1)){
 				//cek bulanan
 				if($d['jns_donatur'] == '1'){
-					$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-					$a = mysql_fetch_array($sqla);
+					$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+					$a = mysqli_fetch_array($sqla);
 					if($a['jumlah'] <= 0){
 						$jml++;
 					}
 				}elseif($d['jns_donatur'] == '2'){
 					if(in_array(date('m'),$bln3)){
-						$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-						$a = mysql_fetch_array($sqla);
+						$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+						$a = mysqli_fetch_array($sqla);
 						if($a['jumlah'] <= 0){
 							$jml++;
 						}
 					}
 				}elseif($d['jns_donatur'] == '3'){
 					if(in_array(date('m'),$bln6)){
-						$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-						$a = mysql_fetch_array($sqla);
+						$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+						$a = mysqli_fetch_array($sqla);
 						if($a['jumlah'] <= 0){
 							$jml++;
 						}
 					}
 				}elseif($d['jns_donatur'] == '4'){
 					if(date('m') == '1'){
-						$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-						$a = mysql_fetch_array($sqla);
+						$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+						$a = mysqli_fetch_array($sqla);
 						if($a['jumlah'] <= 0){
 							$jml++;
 						}
@@ -247,8 +247,8 @@
 				
 				<?php
 					include "component/config/koneksi.php";
-					$sql = mysql_query("SELECT COUNT(*) AS jumlah FROM user WHERE level = 1 and MID(tanggal_lahir,4,2) = MONTH(CURDATE())");
-					$f = mysql_fetch_array($sql);
+					$sql = mysqli_query($mysqli, "SELECT COUNT(*) AS jumlah FROM user WHERE level = 1 and MID(tanggal_lahir,4,2) = MONTH(CURDATE())");
+					$f = mysqli_fetch_array($sql);
 					
 					
 				?>
@@ -382,8 +382,8 @@
 				</li>
 				
 				<?php 
-					$sql = mysql_query("SELECT * FROM opsi WHERE name = 'ramadhan' ");
-					$opsi_ramadhan = mysql_fetch_array($sql);
+					$sql = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name = 'ramadhan' ");
+					$opsi_ramadhan = mysqli_fetch_array($sql);
 					
 					if($opsi_ramadhan['value']== 1){
 						echo "
@@ -423,8 +423,8 @@
 				<?php }elseif($_SESSION['level'] == 2){ ?>
 					<li <?php setActiveMenu('home');?>><a href="main.php?s=home"><i class="glyphicon glyphicon-home"></i> <span>Dashboard</span></a></li>
 					<li <?php setActiveMenu('lapukm_ukm');?>><a href="main.php?s=lapukm_ukm&th=<?php 
-						$sqlaqq = mysql_query("SELECT DISTINCT th_kubah FROM penyaluran WHERE id_ukm = '$_SESSION[iduser]' ORDER BY th_kubah DESC");
-						$dqq = mysql_fetch_array($sqlaqq);
+						$sqlaqq = mysqli_query($mysqli, "SELECT DISTINCT th_kubah FROM penyaluran WHERE id_ukm = '$_SESSION[iduser]' ORDER BY th_kubah DESC");
+						$dqq = mysqli_fetch_array($sqlaqq);
 						echo $dqq['th_kubah'];
 					?>"><i class="glyphicon glyphicon-home"></i> <span>Laporan Penyaluran UKM</span></a></li>
 					<li <?php setActiveMenu('ubah_akun_ukm');?>><a href="main.php?s=ubah_akun_ukm"><i class="glyphicon glyphicon-th-list"></i> <span>Ubah Akun</span></a></li>

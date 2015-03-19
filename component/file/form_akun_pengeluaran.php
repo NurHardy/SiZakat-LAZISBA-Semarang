@@ -6,8 +6,8 @@
 	if(ISSET($_GET['s']) && ISSET($_GET['id']) && ($_GET['s'] == 'edit_akun_pengeluaran')){ 
 		$id = clear_injection($_GET['id']);
 		
-		$sql = mysql_query("SELECT * FROM pengeluaran WHERE idakun='$id'");
-		$d = mysql_fetch_array($sql);
+		$sql = mysqli_query($mysqli, "SELECT * FROM pengeluaran WHERE idakun='$id'");
+		$d = mysqli_fetch_array($sql);
 		$nama		= $d['namaakun'];
 		$idParent 	= $d['idParent'];
 		$ket 		= $d['keterangan'];
@@ -55,8 +55,8 @@
 						<option value='1' <?php echo ((ISSET($idParent)) && ($idParent == 0))?"selected='selected'":""; ?>>4. Pengeluaran</option>
 						
 						<?php 
-							$optionInduk = mysql_query("SELECT * FROM pengeluaran WHERE idParent <> '0' AND (idParent IN (SELECT idakun FROM pengeluaran)) ORDER BY kode ASC");
-							while($fo = mysql_fetch_array($optionInduk)){
+							$optionInduk = mysqli_query($mysqli, "SELECT * FROM pengeluaran WHERE idParent <> '0' AND (idParent IN (SELECT idakun FROM pengeluaran)) ORDER BY kode ASC");
+							while($fo = mysqli_fetch_array($optionInduk)){
 								if(ISSET($idParent)){
 									if($fo['idakun'] == $idParent){
 										$sel = "selected='selected'";

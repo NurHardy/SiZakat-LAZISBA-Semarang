@@ -3,8 +3,8 @@
 	include"component/config/koneksi.php";
 	require_once "component/libraries/injection.php";
 		
-		$query = mysql_query("SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
-		$d = mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$_SESSION[iduser]'");
+		$d = mysqli_fetch_array($query);
 		
 		$nama		= $d['nama'];
 		$alamat 	= $d['alamat'];

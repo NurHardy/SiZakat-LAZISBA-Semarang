@@ -6,8 +6,8 @@
 	if(ISSET($_GET['s']) && ISSET($_GET['id']) && ($_GET['s'] == 'editakun')){ 
 		$id = clear_injection($_GET['id']);
 		
-		$sql = mysql_query("SELECT * FROM akun WHERE idakun='$id'");
-		$d = mysql_fetch_array($sql);
+		$sql = mysqli_query($mysqli, "SELECT * FROM akun WHERE idakun='$id'");
+		$d = mysqli_fetch_array($sql);
 		$nama		= $d['namaakun'];
 		$idParent 	= $d['idParent'];
 		$ket 		= $d['keterangan'];
@@ -55,8 +55,8 @@
 						<option value='2' <?php echo ((ISSET($idParent)) && ($idParent == 2))?"selected='selected'":""; ?>>2. Penyaluran</option>
 						<option value='21' <?php echo ((ISSET($idParent)) && ($idParent == 21))?"selected='selected'":""; ?>>3. Ramadhan</option>
 						<?php 
-							$optionInduk = mysql_query("SELECT * FROM akun WHERE idParent <> '0' AND (idParent IN (SELECT idakun FROM akun)) ORDER BY kode ASC");
-							while($fo = mysql_fetch_array($optionInduk)){
+							$optionInduk = mysqli_query($mysqli, "SELECT * FROM akun WHERE idParent <> '0' AND (idParent IN (SELECT idakun FROM akun)) ORDER BY kode ASC");
+							while($fo = mysqli_fetch_array($optionInduk)){
 								if(ISSET($idParent)){
 									if($fo['idakun'] == $idParent){
 										$sel = "selected='selected'";

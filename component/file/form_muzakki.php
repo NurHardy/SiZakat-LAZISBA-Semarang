@@ -3,8 +3,8 @@
 	$action = "component/server/func_input_data_muzakki.php";
 	if(ISSET($_GET['s']) && ISSET($_GET['id']) && ($_GET['s'] == 'editmuzakki')){
 		$id = $_GET['id'];
-		$query = mysql_query("SELECT * FROM user WHERE id_user = '$id'");
-		$parse = mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM user WHERE id_user = '$id'");
+		$parse = mysqli_fetch_array($query);
 		
 		$id = $parse['id_user'];
 		$nama = $parse['nama'];

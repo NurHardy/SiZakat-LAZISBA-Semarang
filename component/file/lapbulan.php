@@ -4,9 +4,9 @@
 	
 	$month1 = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 	
-	$sql = mysql_query("SELECT * FROM penerimaan WHERE MID(tanggal,4,2) = '$_GET[bln]' AND MID(tanggal,7,4) = '$_GET[th]' ");
-	$sql1 = mysql_query("SELECT * FROM penyaluran WHERE MID(tanggal,4,2) = '$_GET[bln]' AND MID(tanggal,7,4) = '$_GET[th]' ");
-	if((mysql_num_rows($sql) <= 0) && (mysql_num_rows($sql1) <= 0)){
+	$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE MID(tanggal,4,2) = '$_GET[bln]' AND MID(tanggal,7,4) = '$_GET[th]' ");
+	$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE MID(tanggal,4,2) = '$_GET[bln]' AND MID(tanggal,7,4) = '$_GET[th]' ");
+	if((mysqli_num_rows($sql) <= 0) && (mysqli_num_rows($sql1) <= 0)){
 		$_SESSION['error'] = "Tidak Ada Transaksi untuk bulan ".$month1[$_GET['bln']]." - $_GET[th]";
 		echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=lapbulanan\">";
 	}
@@ -22,15 +22,15 @@
 		</div>
 		<?php 
 			/*SQL*/
-			$sql = mysql_query("SELECT SUM(saldo) as saldo FROM saldo_awal");
-			$s = mysql_fetch_array($sql);
+			$sql = mysqli_query($mysqli, "SELECT SUM(saldo) as saldo FROM saldo_awal");
+			$s = mysqli_fetch_array($sql);
 			
 			
 			//Penerimaan
-			$sql1 = mysql_query("SELECT * FROM `penerimaan` WHERE tanggal <= '$_GET[th]-$_GET[bln]-01'");
-			if(mysql_num_rows($sql1) <= 0){
-				$sql = mysql_query("SELECT * FROM saldo_awal");
-			$s = mysql_fetch_array($sql);
+			$sql1 = mysqli_query($mysqli, "SELECT * FROM `penerimaan` WHERE tanggal <= '$_GET[th]-$_GET[bln]-01'");
+			if(mysqli_num_rows($sql1) <= 0){
+				$sql = mysqli_query($mysqli, "SELECT * FROM saldo_awal");
+			$s = mysqli_fetch_array($sql);
 			}
 		?>
 		<div class="widget-content nopadding">

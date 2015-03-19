@@ -29,38 +29,38 @@
 						$bln6 = array(1,7);
 						 
 						
-						$sql1 = mysql_query("SELECT * FROM user WHERE level='1'");
+						$sql1 = mysqli_query($mysqli, "SELECT * FROM user WHERE level='1'");
 						$jml = 0;
 						$i = 1;	
-						while($d = mysql_fetch_array($sql1)){
+						while($d = mysqli_fetch_array($sql1)){
 							$cc = 0;
 							//cek bulanan
 							if($d['jns_donatur'] == '1'){
-								$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-								$a = mysql_fetch_array($sqla);
+								$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+								$a = mysqli_fetch_array($sqla);
 								if($a['jumlah'] <= 0){
 									$cc = 1;
 								}
 							}elseif($d['jns_donatur'] == '2'){
 								if(in_array(date('m'),$bln3)){
-									$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-									$a = mysql_fetch_array($sqla);
+									$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+									$a = mysqli_fetch_array($sqla);
 									if($a['jumlah'] <= 0){
 										$cc = 1;
 									}
 								}
 							}elseif($d['jns_donatur'] == '3'){
 								if(in_array(date('m'),$bln6)){
-									$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-									$a = mysql_fetch_array($sqla);
+									$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+									$a = mysqli_fetch_array($sqla);
 									if($a['jumlah'] <= 0){
 										$cc = 1;
 									}
 								}
 							}elseif($d['jns_donatur'] == '4'){
 								if(date('m') == '1'){
-									$sqla = mysql_query("SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
-									$a = mysql_fetch_array($sqla);
+									$sqla = mysqli_query($mysqli, "SELECT count(id_penerimaan) as jumlah FROM penerimaan WHERE id_donatur='$d[id_user]' AND MONTH(tanggal) = '".date('m')."'");
+									$a = mysqli_fetch_array($sqla);
 									if($a['jumlah'] <= 0){
 										$cc = 1;
 									}

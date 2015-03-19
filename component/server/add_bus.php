@@ -34,13 +34,13 @@
 		$target = $_FILES['bus']['name'];
 		move_uploaded_file($source,'../../img/bus/'.$target);
 		
-		$sql = mysql_query("INSERT INTO penerima_bus(nama,alamat,wilayah,jenjang,add_date,tanggal_lahir,ayah,ibu,foto,alamatortu, pekayah, pekibu, penghasilan, status, hobi) VALUES ('$nama','$alamat','$wilayah','$jenjang','$tanggal','$tlahir','$ayah','$ibu','$target','$alamatortu','$pekayah','$pekibu','$penghasilan','$status','$hobi')");
+		$sql = mysqli_query($mysqli, "INSERT INTO penerima_bus(nama,alamat,wilayah,jenjang,add_date,tanggal_lahir,ayah,ibu,foto,alamatortu, pekayah, pekibu, penghasilan, status, hobi) VALUES ('$nama','$alamat','$wilayah','$jenjang','$tanggal','$tlahir','$ayah','$ibu','$target','$alamatortu','$pekayah','$pekibu','$penghasilan','$status','$hobi')");
 		
-		$sql5 = mysql_query("select * from penerima_bus where nama = '$nama' AND alamat = '$alamat' AND tanggal_lahir = '$tlahir' ");
-		$f5 = mysql_fetch_array($sql5);
+		$sql5 = mysqli_query($mysqli, "select * from penerima_bus where nama = '$nama' AND alamat = '$alamat' AND tanggal_lahir = '$tlahir' ");
+		$f5 = mysqli_fetch_array($sql5);
 		$id = $f5['id_penerima'];
 		
-		$sql2 = mysql_query("INSERT INTO prestasi(alquran,doa,minat,rapor,id_penerima) VALUES ('$alquran','$doa','$minat','$rapor','$id')");
+		$sql2 = mysqli_query($mysqli, "INSERT INTO prestasi(alquran,doa,minat,rapor,id_penerima) VALUES ('$alquran','$doa','$minat','$rapor','$id')");
 		
 		if(($sql)&&($sql2)){
 			$_SESSION['success'] = "Data Penerima Bus Berhasil Ditambah";
@@ -48,7 +48,7 @@
 			//echo mysql_error();
 		}
 		else {
-			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".mysql_error();
+			$_SESSION['error'] = "Proses Gagal, Terjadi Kesalahan : ".((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=addbus\">";
 		}
 	

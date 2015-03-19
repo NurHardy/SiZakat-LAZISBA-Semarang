@@ -3,8 +3,8 @@
 	$action = "component/server/func_input_info_baru.php";
 	if(ISSET($_GET['s']) && ISSET($_GET['id']) && ($_GET['s'] == 'edit_info')){
 		$id = $_GET['id'];
-		$query = mysql_query("SELECT * FROM informasi WHERE id_informasi = '$id'");
-		$parse = mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM informasi WHERE id_informasi = '$id'");
+		$parse = mysqli_fetch_array($query);
 		$judul = $parse['judul'];
 		$status = $parse['status'];
 		$isi = $parse['isi'];

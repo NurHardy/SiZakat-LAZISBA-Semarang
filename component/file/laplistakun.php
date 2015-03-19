@@ -16,16 +16,16 @@
 	}
 	
 	
-	$sql = mysql_query("SELECT * FROM penerimaan WHERE tanggal < '$th-$bln-01'");
-	$sql1 = mysql_query("SELECT * FROM penyaluran WHERE tanggal < '$th-$bln-01'");
+	$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE tanggal < '$th-$bln-01'");
+	$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE tanggal < '$th-$bln-01'");
 	$error = 0;
-	if((mysql_num_rows($sql) > 0) || (mysql_num_rows($sql1) > 0)){
+	if((mysqli_num_rows($sql) > 0) || (mysqli_num_rows($sql1) > 0)){
 		//jika ada transaksi sebelum bulan yang dipilih
 		
 	}else{
 		//jika tidak ada transaksi sebelum bulan yang dipilih
-		$sqla = mysql_query("SELECT * FROM opsi WHERE name='bln_th_saldo'");
-		$d = mysql_fetch_array($sqla);
+		$sqla = mysqli_query($mysqli, "SELECT * FROM opsi WHERE name='bln_th_saldo'");
+		$d = mysqli_fetch_array($sqla);
 		$d = explode('#',$d['value']);
 		if(($d[0] <= $bln) && ($d[1] <= $th)){
 			//ambil saldo awal
@@ -63,30 +63,30 @@
 					</tr>
 					
 					<?php 
-						$sql = mysql_query("SELECT * FROM akun WHERE jenis = '1' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
+						$sql = mysqli_query($mysqli, "SELECT * FROM akun WHERE jenis = '1' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
 						$i=0;
 						
-						while($f = mysql_fetch_array($sql)){
+						while($f = mysqli_fetch_array($sql)){
 							$i++;
 							//saldo awal
-							$sql1 = mysql_query("SELECT * FROM saldo_awal WHERE id_akun='$f[kode]'");
-							$s = mysql_fetch_array($sql1);
+							$sql1 = mysqli_query($mysqli, "SELECT * FROM saldo_awal WHERE id_akun='$f[kode]'");
+							$s = mysqli_fetch_array($sql1);
 							$saldo_awal = $s['saldo'];
 							
 							
 							//penerimaan Bulan Lalu
-							$sql1 = mysql_query("SELECT SUM(jumlah) as jumlah FROM penerimaan WHERE id_akun='$f[kode]' AND tanggal < '$_GET[th]-$_GET[bln]-01'");
-							$s = mysql_fetch_array($sql1);
+							$sql1 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penerimaan WHERE id_akun='$f[kode]' AND tanggal < '$_GET[th]-$_GET[bln]-01'");
+							$s = mysqli_fetch_array($sql1);
 							$penerimaan_bln_lalu = $s['jumlah'];
 							
 							
 							
 							//penyaluran bulan lalu
 							$salur = 0;
-							$sql2 = mysql_query("SELECT * FROM persamaan_akun WHERE id_penerimaan='$f[kode]'");
-							while($d = mysql_fetch_array($sql2)){
-								$sql3 = mysql_query("SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun LIKE '$d[id_penyaluran]' AND tanggal < '$_GET[th]-$_GET[bln]-01'");
-								$g = mysql_fetch_array($sql3);
+							$sql2 = mysqli_query($mysqli, "SELECT * FROM persamaan_akun WHERE id_penerimaan='$f[kode]'");
+							while($d = mysqli_fetch_array($sql2)){
+								$sql3 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun LIKE '$d[id_penyaluran]' AND tanggal < '$_GET[th]-$_GET[bln]-01'");
+								$g = mysqli_fetch_array($sql3);
 								$salur = $salur + $g['jumlah'];
 							}
 							
@@ -95,8 +95,8 @@
 							
 							
 							
-							$sql22 = mysql_query("SELECT SUM(jumlah) as jumlah FROM penerimaan WHERE id_akun LIKE '$f[kode]%' AND MONTH(tanggal) = '$_GET[bln]' AND YEAR(tanggal) = '$_GET[th]'");
-							$w = mysql_fetch_array($sql22);
+							$sql22 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penerimaan WHERE id_akun LIKE '$f[kode]%' AND MONTH(tanggal) = '$_GET[bln]' AND YEAR(tanggal) = '$_GET[th]'");
+							$w = mysqli_fetch_array($sql22);
 							
 							if($w['jumlah'] == ""){
 								$jml_masuk = 0;
@@ -106,10 +106,10 @@
 							
 							
 							$jml_keluar = 0;
-							$sql2 = mysql_query("SELECT * FROM persamaan_akun WHERE id_penerimaan='$f[kode]'");
-							while($d = mysql_fetch_array($sql2)){
-								$sql3 = mysql_query("SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun LIKE '$d[id_penyaluran]' AND MONTH(tanggal) = '$_GET[bln]' AND YEAR(tanggal) = '$_GET[th]'");
-								$g = mysql_fetch_array($sql3);
+							$sql2 = mysqli_query($mysqli, "SELECT * FROM persamaan_akun WHERE id_penerimaan='$f[kode]'");
+							while($d = mysqli_fetch_array($sql2)){
+								$sql3 = mysqli_query($mysqli, "SELECT SUM(jumlah) as jumlah FROM penyaluran WHERE id_akun LIKE '$d[id_penyaluran]' AND MONTH(tanggal) = '$_GET[bln]' AND YEAR(tanggal) = '$_GET[th]'");
+								$g = mysqli_fetch_array($sql3);
 								$jml_keluar = $jml_keluar + $g['jumlah'];
 							}
 

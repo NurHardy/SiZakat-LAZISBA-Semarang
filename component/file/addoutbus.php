@@ -4,8 +4,8 @@
 	$level="";
 	if(ISSET($_GET['s']) && ISSET($_GET['id']) && ($_GET['s'] == 'edit_bus')){
 		$id = $_GET['id'];
-		$query = mysql_query("SELECT * FROM penyaluran_bus WHERE id_penyaluran = '$id'");
-		$d= mysql_fetch_array($query);
+		$query = mysqli_query($mysqli, "SELECT * FROM penyaluran_bus WHERE id_penyaluran = '$id'");
+		$d= mysqli_fetch_array($query);
 		$nama = $d['nama'];
 		$alamat = $d['alamat'];
 		$wil = $d['wilayahs'];
