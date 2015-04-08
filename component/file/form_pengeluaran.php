@@ -109,7 +109,7 @@
 					<!-- <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Mustahik</label>
 						<div class="controls span5">
-						<select name="mustahik" style='width:80%;' data-placeholder='--Pilih Jenis--' required="required">
+						<select name="mustahik" style='width:80%;' data-placeholder='-Pilih Jenis-' required="required">
 							<option ></option>
 							<?php
 								include "component/config/koneksi.php";
@@ -120,7 +120,7 @@
 							?>
 						</select>
 						</div>
-					  </div>-->
+					  </div> -->
 					  
 					 <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Amilin</label>

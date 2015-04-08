@@ -1,6 +1,8 @@
 <?php
 	include"component/config/koneksi.php";
 	function setTree($idParent){
+		global $mysqli;
+	
 		$sql = mysqli_query($mysqli, "SELECT * FROM pengeluaran WHERE idParent='$idParent' ORDER BY idakun ASC");
 		if(mysqli_num_rows($sql) > 0){
 			echo "<ul>";

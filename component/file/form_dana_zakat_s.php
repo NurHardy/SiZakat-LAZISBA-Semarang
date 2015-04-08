@@ -67,7 +67,7 @@
 						<div class="controls span5">
 						  <input type="text" id="normal-field" class="form-control input-small" name="no_transaksi" value="" required="required" style='width:80%;'>
 						</div>
-					  </div>-->
+					  </div> -->
 					  
 					  <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Jenis Transaksi</label>
@@ -76,9 +76,10 @@
 							<option></option>
 							<?php
 								include "component/config/koneksi.php";
-								$sql = mysqli_query($mysqli, "SELECT * FROM Akun Where Jenis = '2' AND idakun NOT IN (SELECT idParent FROM akun)");
-								while( $pecah = mysqli_fetch_array($sql)){
-									echo"<option value=\"$pecah[kode]\">$pecah[kode] - $pecah[namaakun]</option>";
+								$sql = mysqli_query($mysqli, "SELECT * FROM akun Where (Jenis = '2') AND (idakun NOT IN (SELECT idParent FROM akun))");
+								// echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
+								while( $pecah = mysqli_fetch_array($sql)) {
+									echo "<option value=\"".$pecah['kode']."\">".$pecah['kode']." - ".$pecah['namaakun']."</option>";
 								}
 							?>
 							</select>
@@ -105,7 +106,7 @@
 					<!-- <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Mustahik</label>
 						<div class="controls span5">
-						<select name="mustahik" style='width:80%;' data-placeholder='--Pilih Jenis--' required="required">
+						<select name="mustahik" style='width:80%;' data-placeholder='-Pilih Jenis-' required="required">
 							<option ></option>
 							<?php
 							//	include "component/config/koneksi.php";
@@ -116,7 +117,7 @@
 							?>
 						</select>
 						</div>
-					  </div>-->
+					  </div> -->
 					  
 					 <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Amilin</label>
@@ -149,9 +150,7 @@
 					<div class="form-actions">
 						<button type="submit" name="save" class="btn btn-primary btn-small">Simpan</button> atau <a class="text-danger" href="#">Batal</a>
 					</div>
-					</div>
 					</form>
 				</div>
 			</div>						
 		</div>
-	

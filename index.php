@@ -311,7 +311,7 @@
 		<!-- Footer / Bottom -->
 		<div class="sixteen columns">
 			<div id="footer-bottom">
-				© Copyright <?php echo date('Y');?> by <a href="#">Takmir & Lazisba Online</a>. All rights reserved.
+				&copy; Copyright <?php echo date('Y');?> by <a href="#">Takmir &amp; Lazisba Online</a>. All rights reserved.
 				<div id="scroll-top-top"><a href="#"></a></div>
 			</div>
 		</div>
@@ -323,5 +323,5 @@
 <!-- Footer / End -->
 
 
-</body>
-</html>
+</BoDy ><!-- Menghindari injeksi < /body > pada provider telkom -->
+</hTmL >

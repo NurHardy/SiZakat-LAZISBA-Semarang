@@ -1,11 +1,14 @@
 <?php
 	session_start();	
 	
-	if ((!ISSET($_SESSION['username']))AND (!ISSET($_SESSION['passsword']))){
-		echo "<meta http-equiv=\"refresh\" content=\"0; url=login.php\">";
-	}else{
-		include "component/config/koneksi.php";
-		include "component/libraries/injection.php";
+	// Jika berlum login, maka tidak boleh mengakses
+	if ((!isset($_SESSION['username']))AND (!isset($_SESSION['passsword']))){
+		header("Location: login.php?next=".urlencode($_SERVER['REQUEST_URI']));
+		//echo "<meta http-equiv=\"refresh\" content=\"0; url=login.php\">";
+	}
+	
+	include "component/config/koneksi.php";
+	include "component/libraries/injection.php";
 
 	function setActiveMenu($link){
 		$get = clear_injection(@$_GET['s']);
@@ -850,5 +853,5 @@
 				
 				$(selector).chosen(config[selector]);
 			</script>
-</html>
-<?php }?>
+</BoDy ><!-- Menghindari injeksi < /body > pada provider telkom -->
+</hTmL >
