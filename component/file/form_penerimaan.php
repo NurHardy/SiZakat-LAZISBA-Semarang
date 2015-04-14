@@ -3,48 +3,18 @@
 ?>
 
 <script type="text/javascript">
-	$( document ).ready(function() {
-		$(function() {
-			$('#debetkaskas').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1, #div2, #div3, #div5, #div6, #div7, #div8').show();
-			});
-			$('#debetkasaset').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1').show();
-			});
-
-			$('#debettransferkas').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1, #div2, #div3, #div4, #div5, #div6, #div7, #div8').show();
-			});
-
-			$('#debettransferaset').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1').show();
-			});
-			
-			$('#kreditkaskas').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1,#div2, #div3, #div5, #div6, #div7, #div8').show();
-			});
-			$('#kreditkasaset').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1').show();
-			});
-
-			$('#kredittransferkas').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1,#div2, #div3, #div4, #div5, #div6, #div7, #div8').show();
-			});
-
-			$('#kredittransferaset').click(function() {
-				$('div[id^=div]').hide();
-				$('#div1').show();
-			});
-			
-		});
+	$(function() {
+		$( document ).tooltip();
 	});
+	
+	$(document).ready(function(){
+		$('#transfer').change(function(){
+			if(this.checked)
+				$('#aset').fadeIn('slow');
+			else
+				$('#aset').fadeOut('slow');
+    });
+});
 </script>
 
 <div class="col-12">
@@ -80,85 +50,21 @@
                 </div>
               </div>
 			  
-			  <div class="form-row control-group row-fluid form-group">
-                <label class="control-label span3" for="normal-field">Jenis</label>
-                <div class="controls span5">
-					<select id='jenis' name='jenis' class="input-small" style='width:80%;' required='required' data-placeholder="-- Pilih Jenis --">
-						<option></option>
-						<option value="0">Debet</option>
-						<option value="1">Kredit</option>
-					</select>
-                </div>
-              </div>	
-
-			  <div class="form-row control-group row-fluid form-group">
-                <label class="control-label span3" for="normal-field">Transaksi</label>
-                <div class="controls span5">
-					<select id='transaksi' name='transaksi' class="input-small" style='width:80%;' required='required' data-placeholder="-- Pilih Transaksi --">
-						<option></option>
-						<option value="0">Kas</option>
-						<option value="1">Transfer</option>
-					</select>
-                </div>
-              </div>
-			  
-			  <div class="form-row control-group row-fluid form-group">
-                <label class="control-label span3" for="normal-field">Kas/Aset</label>
-                <div class="controls span5">
-					<select id='kasaset' name='kasaset' class="input-small" style='width:80%;' required='required' data-placeholder="-- Kas/Aset --">
-						<option></option>
-						<option value="0">Kas</option>
-						<option value="1">Asset</option>
-					</select>
-                </div>
-              </div>
-
-			  <div class="form-actions">
-                  <button type="button" name='pilih' class="btn btn-primary btn-small" id="<?php 
-																								$a = (isset($_POST['jenis']) ? $_POST['jenis'] : '0');
-																								$b = (isset($_POST['transaksi']) ? $_POST['transaksi'] : '0');
-																								$c = (isset($_POST['kasaset']) ? $_POST['kasaset'] : '1');   
-										
-																							if (($a = 0) && ($b = 0) && ($c = 0)){
-																								echo "debetkaskas";
-																							}elseif (($a = 0) && ($b = 0) && ($c = 1)){
-																								echo "debetkasaset";
-																							}elseif (($a = 0) && ($b = 1) && ($c = 0)){
-																								echo "debettransferkas";
-																							}elseif (($a = 0) && ($b = 1) && ($c = 1)){
-																								echo "debettransferaset";
-																							}elseif (($a = 1) && ($b = 0) && ($c = 0)){
-																								echo "kreditkaskas";
-																							}elseif (($a = 1) && ($b = 0) && ($c = 0)){
-																								echo "kreditkasaset";
-																							}elseif (($a = 1) && ($b = 1) && ($c = 0)){
-																								echo "kredittransferkas";
-																							}elseif (($a = 1) && ($b = 1) && ($c = 1)){
-																								echo "kredittransferkas";
-																							}else{
-																								echo "#"; 
-																							}
-																						?>">
-				  
-				  
-				  Pilih</button>
-			  </div>
-			  
-			  <div class="form-row control-group row-fluid form-group" id="div1" style="display:none;">
+			  <div class="form-row control-group row-fluid form-group" id="div1" style="display:block;">
                 <label class="control-label span3" for="normal-field">No. Nota</label>
                 <div class="controls span5">
                   <input type="text" id="normal-field" class="form-control input-small" name="notrans" required='required' style='width:80%;'/>
                 </div>
               </div>
 	  
-			  <div class="form-row control-group row-fluid form-group" id="div2" style="display:none;">
+			  <div class="form-row control-group row-fluid form-group" id="div2" style="display:block;">
                 <label class="control-label span3" for="normal-field">Jenis Akun</label>
                 <div class="controls span5">
 					<select name='trans' class="input-small" style='width:80%;' required='required' data-placeholder="-- Pilih Akun --">
 						<option></option>
 					<?php
-						$q1 = mysql_query("SELECT * FROM akun WHERE jenis = '1' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
-						while($p1 = mysql_fetch_array($q1)){
+						$q1 = mysqli_query($mysqli,"SELECT * FROM akun WHERE jenis = '1' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
+						while($p1 = mysqli_fetch_array($q1)){
 							echo "
 								<option value='$p1[kode]'>$p1[kode] - $p1[namaakun]</option>
 								";
@@ -168,14 +74,14 @@
                 </div>
               </div>
 			  		  
-			   <div class="form-row control-group row-fluid form-group" id="div3" style="display:none;">
+			   <div class="form-row control-group row-fluid form-group" id="div3" style="display:block;">
                 <label class="control-label span3" for="normal-field">Muzakki</label>
                 <div class="controls span5">
 					<select name='muzakki' class="input-small" style='width:80%;' data-placeholder="-- Pilih Muzakki --" required='required'>
 						<option></option>
 					<?php
-						$q3 = mysql_query("SELECT * FROM user WHERE level = 1");
-						while($p3 = mysql_fetch_array($q3)){
+						$q3 = mysqli_query($mysqli, "SELECT * FROM user WHERE level = 1");
+						while($p3 = mysqli_fetch_array($q3)){
 							echo "
 								<option value='$p3[id_user]'>$p3[id_user] - $p3[nama]</option>
 								";
@@ -185,32 +91,15 @@
 				</div>
               </div>
 			  
-			  <div class="form-row control-group row-fluid form-group" id="div4" style="display:none;">
-                <label class="control-label span3" for="normal-field">Bank</label>
-                <div class="controls span5">
-					<select name='muzakki' class="input-small" style='width:80%;' data-placeholder="-- Pilih Bank --" required='required'>
-						<option></option>
-					<!-- <?php
-						$q3 = mysql_query("SELECT * FROM user WHERE level = 1");
-						while($p3 = mysql_fetch_array($q3)){
-							echo "
-								<option value='$p3[id_user]'>$p3[id_user] - $p3[nama]</option>
-								";
-						}
-					?> -->
-					</select>
-				</div>
-              </div>
-			  
-			  <div class="form-row control-group row-fluid form-group" id="div5" style="display:none;">
+			  <div class="form-row control-group row-fluid form-group" id="div4" style="display:block;">
                 <label class="control-label span3" for="normal-field">Amilin</label>
                 <div class="controls span5">
 					<select name='amilin' class="input-small" style='width:80%;' data-placeholder="-- Pilih Amilin --" required='required'>
 						<option></option>
 					<?php
 						//include "component/config/koneksi.php";
-								$sql = mysql_query("SELECT * FROM user WHERE level = 99");
-								while( $pecah = mysql_fetch_array($sql)){
+								$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE level = 99");
+								while( $pecah = mysqli_fetch_array($sql)){
 									echo"<option value=\"$pecah[id_user]\">$pecah[id_user] - $pecah[nama]</option>";
 								}
 					?>
@@ -218,21 +107,54 @@
 				</div>
               </div>
 			  
-			  <div class="form-row control-group row-fluid form-group" id="div6" style="display:none;">
+			  <div class="form-row control-group row-fluid form-group" id="trnsfr" style="display:block;">
+				<label class="control-label span3" for="normal-field"></label>
+				<div class="controls span5">
+					<input type="hidden" name="transfer" id="transfer" value="0">
+					<input type="checkbox" name="transfer" id="transfer" value="1">  Transfer  <a href="#" title="Jika penerimaan melalui transfer bank, cek"> @ </a>
+				</div>
+			  </div>
+			  
+			  <div class="form-row control-group row-fluid form-group" id="div5" style="display:block;">
+                <label class="control-label span3" for="normal-field">Bank</label>
+                <div class="controls span5">
+					<select name='bank' class="input-small" style='width:80%;' data-placeholder="-- Pilih Bank --">
+						<option></option>
+					 <?php
+						$q3 = mysqli_query($mysqli, "SELECT * FROM bank");
+						while($p3 = mysqli_fetch_array($q3)){
+							echo "
+								<option value='$p3[id_bank]'>$p3[id_bank] - $p3[bank]</option>
+								";
+						}
+					 ?> 
+					</select>
+				</div>
+              </div>
+			  
+			  <div class="form-row control-group row-fluid form-group" id="ast" style="display:block;">
+				<label class="control-label span3" for="normal-field"></label>
+				<div class="controls span5">
+					<input type="hidden" name="aset" id="aset" value="0">
+					<input type="checkbox" name="aset" id="aset" value="1">  Aset  <a href="#" title="Jika menerima berupa barang, cek"> @ </a>
+				</div>
+			  </div>
+			  		  
+			  <div class="form-row control-group row-fluid form-group" id="div6" style="display:block;">
                 <label class="control-label span3" for="normal-field">Jumlah Setoran</label>
                 <div class="controls span5">
                   <input type="text" id="normal-field number" class="form-control input-small" name="jumlah" required='required' style='width:80%;'/>
                 </div>
               </div>
 			  
-				<div class="form-row control-group row-fluid" id="div7" style="display:none;">
+				<div class="form-row control-group row-fluid" id="div7" style="display:block;">
 					<label class="control-label span3" for="normal-field">Keterangan</label>
 					<div class="controls span8">
 						<textarea name="keterangan" class="span8" style='width:80%;'></textarea>
 					</div>
 				  </div>
 			
-			<div class="form-actions" id="div8" style="display:none;">
+			<div class="form-actions" id="div8" style="display:block;">
                   <button type="submit" name='save' class="btn btn-primary btn-small"><?php echo ($_GET['s'] == 'form_penerimaan')?"Tambah Transaksi":"Ubah Transaksi";?></button>
 			</div>
 
