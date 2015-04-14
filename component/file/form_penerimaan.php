@@ -7,7 +7,7 @@
 		$(function() {
 			$('#debetkaskas').click(function() {
 				$('div[id^=div]').hide();
-				$('#div1,#div2, #div3, #div5, #div6, #div7, #div8').show();
+				$('#div1, #div2, #div3, #div5, #div6, #div7, #div8').show();
 			});
 			$('#debetkasaset').click(function() {
 				$('div[id^=div]').hide();
@@ -42,7 +42,7 @@
 				$('div[id^=div]').hide();
 				$('#div1').show();
 			});
-
+			
 		});
 	});
 </script>
@@ -114,29 +114,31 @@
               </div>
 
 			  <div class="form-actions">
-                  <button type="button" name='pilih' class="btn btn-primary btn-small" id=<?php 
-																							//$a = 0;   //$_POST[nama_selector]; gagal
-																							//$b = 0;	  //$("#selector").val(); gagal
-																							//$c = 0;   
-																							
-																							if (($("#jenis").val() = 0) && ($("#transaksi").val() = 0) && ($("#kasaset").val() = 0)){
+                  <button type="button" name='pilih' class="btn btn-primary btn-small" id="<?php 
+																								$a = (isset($_POST['jenis']) ? $_POST['jenis'] : '0');
+																								$b = (isset($_POST['transaksi']) ? $_POST['transaksi'] : '0');
+																								$c = (isset($_POST['kasaset']) ? $_POST['kasaset'] : '1');   
+										
+																							if (($a = 0) && ($b = 0) && ($c = 0)){
 																								echo "debetkaskas";
-																							}elseif (($( "#jenis" ).val() = 0) && ($( "#transaksi" ).val() = 0) && ($( "#kasaset" ).val() = 1)){
+																							}elseif (($a = 0) && ($b = 0) && ($c = 1)){
 																								echo "debetkasaset";
-																							}elseif (($( "#jenis" ).val() = 0) && ($( "#transaksi" ).val() = 1) && ($( "#kasaset" ).val() = 0)){
+																							}elseif (($a = 0) && ($b = 1) && ($c = 0)){
 																								echo "debettransferkas";
-																							}elseif (($( "#jenis" ).val() = 0) && ($( "#transaksi" ).val() = 1) && ($( "#kasaset" ).val() = 1)){
+																							}elseif (($a = 0) && ($b = 1) && ($c = 1)){
 																								echo "debettransferaset";
-																							}elseif (($( "#jenis" ).val() = 1) && ($( "#transaksi" ).val() = 0) && ($( "#kasaset" ).val() = 0)){
+																							}elseif (($a = 1) && ($b = 0) && ($c = 0)){
 																								echo "kreditkaskas";
-																							}elseif (($( "#jenis" ).val() = 1) && ($( "#transaksi" ).val() = 0) && ($( "#kasaset" ).val() = 0)){
+																							}elseif (($a = 1) && ($b = 0) && ($c = 0)){
 																								echo "kreditkasaset";
-																							}elseif (($( "#jenis" ).val() = 1) && ($( "#transaksi" ).val() = 1) && ($( "#kasaset" ).val() = 0)){
+																							}elseif (($a = 1) && ($b = 1) && ($c = 0)){
+																								echo "kredittransferkas";
+																							}elseif (($a = 1) && ($b = 1) && ($c = 1)){
 																								echo "kredittransferkas";
 																							}else{
-																								echo "kredittransferaset"; // terus mengacu ke ini
+																								echo "#"; 
 																							}
-																						?>>
+																						?>">
 				  
 				  
 				  Pilih</button>
