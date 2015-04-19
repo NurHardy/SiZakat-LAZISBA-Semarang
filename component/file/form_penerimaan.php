@@ -3,18 +3,34 @@
 ?>
 
 <script type="text/javascript">
-	$(function() {
-		$( document ).tooltip();
+
+$(document).ready(function(){   
+	$('#aset').on('ifChecked', function(){
+        $('#field_namabrg, #field_wujud, #field_harga_satuan').slideDown('fast');
+        $('#field_transfer, #field_nota, #field_akun, #field_amilin').slideUp('fast');
+	}).on('ifUnchecked', function(event){
+        $('#field_namabrg, #field_wujud, #field_harga_satuan').slideUp('fast');
+        $('#field_transfer, #field_nota, #field_akun, #field_amilin').slideDown('fast');
 	});
-	
-	$(document).ready(function(){
-		$('#transfer').change(function(){
-			if(this.checked)
-				$('#aset').fadeIn('slow');
-			else
-				$('#aset').fadeOut('slow');
-    });
 });
+	
+$(document).ready(function(){   
+	$('#transfer').on('ifChecked', function(){
+        $('#field_bank, #field_nota').slideDown('fast');
+        $('#field_aset').slideUp('fast');
+	}).on('ifUnchecked', function(event){
+        $('#field_bank').slideUp('fast');
+        $('#field_aset, #field_nota').slideDown('fast');
+	});
+});
+
+function validateData(){
+	if (($('#transfer').is(":checked")) && ($("#select_bank")[0].selectedIndex <= 0)){ 
+		alert('Bank untuk transfer belum dipilih');
+        return false;
+    };
+	return true;
+};
 </script>
 
 <div class="col-12">
@@ -26,7 +42,7 @@
             </h5>
           </div>
           <div class="widget-content nopadding">
-            <form class="form-horizontal row-fluid" action="component/server/func_input_penerimaan.php" Method="POST">
+            <form class="form-horizontal row-fluid" action="component/server/func_input_penerimaan.php" Method="POST" onsubmit="return validateData()">
 			   <div class="form-group">
 					<?php
 						if(ISSET($_SESSION['success']) || ISSET($_SESSION['error'])){
@@ -50,17 +66,39 @@
                 </div>
               </div>
 			  
-			  <div class="form-row control-group row-fluid form-group" id="div1" style="display:block;">
+			  <div class="form-row control-group row-fluid form-group" id="field_aset" style="display:block;">
+				<label class="control-label span3" for="normal-field"></label>
+				<div class="controls span5">
+					<input type="checkbox" name="aset" id="aset" value="1">
+					<label for="aset">Aset</label>
+					<a href="#" class="tip" title="Jika menerima berupa barang, cek">
+						<span class="glyphicon glyphicon-question-sign"></span>
+					</a>
+				</div>
+			  </div>
+			  
+			  <div class="form-row control-group row-fluid form-group" id="field_transfer" style="display:block;">
+				<label class="control-label span3" for="normal-field"></label>
+				<div class="controls span5">
+					<input type="checkbox" name="transfer" id="transfer" value="1">
+						<label for="transfer">Transfer</label>
+						<a href="#" class="tip" title="Jika penerimaan melalui transfer bank, cek">
+							<span class="glyphicon glyphicon-question-sign"></span>
+						</a>
+				</div>
+			  </div>
+			  	  
+			  <div class="form-row control-group row-fluid form-group" id="field_nota" style="display:block;">
                 <label class="control-label span3" for="normal-field">No. Nota</label>
                 <div class="controls span5">
-                  <input type="text" id="normal-field" class="form-control input-small" name="notrans" required='required' style='width:80%;'/>
+                  <input type="text" id="normal-field" class="form-control input-small" name="notrans" style='width:80%;'/>
                 </div>
               </div>
 	  
-			  <div class="form-row control-group row-fluid form-group" id="div2" style="display:block;">
+			  <div class="form-row control-group row-fluid form-group" id="field_akun" style="display:block;">
                 <label class="control-label span3" for="normal-field">Jenis Akun</label>
                 <div class="controls span5">
-					<select name='trans' class="input-small" style='width:80%;' required='required' data-placeholder="-- Pilih Akun --">
+					<select name='trans' class="input-small" style='width:80%;' data-placeholder="-- Pilih Akun --">
 						<option></option>
 					<?php
 						$q1 = mysqli_query($mysqli,"SELECT * FROM akun WHERE jenis = '1' AND idParent != '0'  AND idakun NOT IN (SELECT idParent FROM akun)");
@@ -74,7 +112,7 @@
                 </div>
               </div>
 			  		  
-			   <div class="form-row control-group row-fluid form-group" id="div3" style="display:block;">
+			   <div class="form-row control-group row-fluid form-group" id="field_muzakki" style="display:block;">
                 <label class="control-label span3" for="normal-field">Muzakki</label>
                 <div class="controls span5">
 					<select name='muzakki' class="input-small" style='width:80%;' data-placeholder="-- Pilih Muzakki --" required='required'>
@@ -91,10 +129,10 @@
 				</div>
               </div>
 			  
-			  <div class="form-row control-group row-fluid form-group" id="div4" style="display:block;">
+			  <div class="form-row control-group row-fluid form-group" id="field_amilin" style="display:block;">
                 <label class="control-label span3" for="normal-field">Amilin</label>
                 <div class="controls span5">
-					<select name='amilin' class="input-small" style='width:80%;' data-placeholder="-- Pilih Amilin --" required='required'>
+					<select name='amilin' class="input-small" style='width:80%;' data-placeholder="-- Pilih Amilin --">
 						<option></option>
 					<?php
 						//include "component/config/koneksi.php";
@@ -107,18 +145,17 @@
 				</div>
               </div>
 			  
-			  <div class="form-row control-group row-fluid form-group" id="trnsfr" style="display:block;">
-				<label class="control-label span3" for="normal-field"></label>
-				<div class="controls span5">
-					<input type="hidden" name="transfer" id="transfer" value="0">
-					<input type="checkbox" name="transfer" id="transfer" value="1">  Transfer  <a href="#" title="Jika penerimaan melalui transfer bank, cek"> @ </a>
-				</div>
-			  </div>
+			  <div class="form-row control-group row-fluid form-group" id="field_namabrg" style="display:none;">
+                <label class="control-label span3" for="normal-field">Nama Barang</label>
+                <div class="controls span5">
+                  <input type="text" id="normal-field" class="form-control input-small" name="namabrg" style='width:80%;'/>
+                </div>
+              </div>
 			  
-			  <div class="form-row control-group row-fluid form-group" id="div5" style="display:block;">
+			  <div class="form-row control-group row-fluid form-group" id="field_bank" style="display:none;">
                 <label class="control-label span3" for="normal-field">Bank</label>
                 <div class="controls span5">
-					<select name='bank' class="input-small" style='width:80%;' data-placeholder="-- Pilih Bank --">
+					<select name='bank' id='select_bank' class="input-small" style='width:80%;' data-placeholder="-- Pilih Bank --" >
 						<option></option>
 					 <?php
 						$q3 = mysqli_query($mysqli, "SELECT * FROM bank");
@@ -132,30 +169,48 @@
 				</div>
               </div>
 			  
-			  <div class="form-row control-group row-fluid form-group" id="ast" style="display:block;">
-				<label class="control-label span3" for="normal-field"></label>
-				<div class="controls span5">
-					<input type="hidden" name="aset" id="aset" value="0">
-					<input type="checkbox" name="aset" id="aset" value="1">  Aset  <a href="#" title="Jika menerima berupa barang, cek"> @ </a>
+			  <div class="form-row control-group row-fluid form-group" id="field_wujud" style="display:none;">
+                <label class="control-label span3" for="normal-field">Wujud</label>
+                <div class="controls span5">
+					<select name='wujud' id='select_wujud' class="input-small" style='width:80%;' data-placeholder="-- Pilih Wujud Barang --" >
+						<option></option>
+					 <?php
+						$q3 = mysqli_query($mysqli, "SELECT * FROM aset_wujud");
+						while($p3 = mysqli_fetch_array($q3)){
+							echo "
+								<option value='$p3[id_wujud]'>$p3[id_wujud] - $p3[wujud]</option>
+								";
+						}
+					 ?> 
+					</select>
 				</div>
-			  </div>
+              </div>
 			  		  
-			  <div class="form-row control-group row-fluid form-group" id="div6" style="display:block;">
-                <label class="control-label span3" for="normal-field">Jumlah Setoran</label>
+			  <div class="form-row control-group row-fluid form-group" id="field_jumlah_set" style="display:block;">
+                <label class="control-label span3" for="normal-field">Jumlah</label>
                 <div class="controls span5">
                   <input type="text" id="normal-field number" class="form-control input-small" name="jumlah" required='required' style='width:80%;'/>
                 </div>
               </div>
 			  
-				<div class="form-row control-group row-fluid" id="div7" style="display:block;">
-					<label class="control-label span3" for="normal-field">Keterangan</label>
-					<div class="controls span8">
-						<textarea name="keterangan" class="span8" style='width:80%;'></textarea>
-					</div>
-				  </div>
+			  <div class="form-row control-group row-fluid form-group" id="field_harga_satuan" style="display:none;">
+                <label class="control-label span3" for="normal-field">Harga Satuaan</label>
+                <div class="controls span5">
+                  <input type="text" id="normal-field" class="form-control input-small" name="harga_satuan" style='width:80%;'/>
+                </div>
+              </div>
+			  
+			  <div class="form-row control-group row-fluid" id="field_keterangan" style="display:block;">
+				<label class="control-label span3" for="normal-field">Keterangan</label>
+				<div class="controls span8">
+					<textarea name="keterangan" class="span8" style='width:80%;'></textarea>
+				</div>
+			  </div>
 			
-			<div class="form-actions" id="div8" style="display:block;">
-                  <button type="submit" name='save' class="btn btn-primary btn-small"><?php echo ($_GET['s'] == 'form_penerimaan')?"Tambah Transaksi":"Ubah Transaksi";?></button>
+			<div class="form-actions" style="display:block;">
+                  <button type="submit" name='save' class="btn btn-primary btn-small">
+					<span class="glyphicon glyphicon-plus"></span> 
+					<?php echo ($_GET['s'] == 'form_penerimaan')?"Tambah Transaksi":"Ubah Transaksi";?></button>
 			</div>
 
               </div>

@@ -4,8 +4,8 @@
 	
 	$month1 = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 	
-	$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE MID(tanggal,4,2) = '$_GET[bln]' AND MID(tanggal,7,4) = '$_GET[th]' ");
-	$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE MID(tanggal,4,2) = '$_GET[bln]' AND MID(tanggal,7,4) = '$_GET[th]' ");
+	$sql = mysqli_query($mysqli, "SELECT * FROM penerimaan WHERE MID(tanggal,6,2) = '$_GET[bln]' AND MID(tanggal,1,4) = '$_GET[th]' ");
+	$sql1 = mysqli_query($mysqli, "SELECT * FROM penyaluran WHERE MID(tanggal,6,2) = '$_GET[bln]' AND MID(tanggal,1,4) = '$_GET[th]' ");
 	if((mysqli_num_rows($sql) <= 0) && (mysqli_num_rows($sql1) <= 0)){
 		$_SESSION['error'] = "Tidak Ada Transaksi untuk bulan ".$month1[$_GET['bln']]." - $_GET[th]";
 		echo "<meta http-equiv=\"refresh\" content=\"0; url=main.php?s=lapbulanan\">";
