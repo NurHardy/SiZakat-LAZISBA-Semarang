@@ -94,7 +94,8 @@ class SiZakat extends API
 								'user_id'		=> intval($row['id_user']),
 								'user_token'	=> $newToken,
 								'user_fullname'	=> $row['nama'],
-								'user_email'	=> $row['email']
+								'user_email'	=> $row['email'],
+								'user_level'	=> $row['level']
 							)
 						);
 					} else {
@@ -126,7 +127,7 @@ class SiZakat extends API
 			$hasilAkhir = array();
 			
 			//if ($inMonth && $inYear) {
-			require('rest_laporan_keuangan.php');
+			require('modules/rest_laporan_keuangan.php');
 			return $hasilAkhir;
 			//} else {
 			//	return array('error' => 'Incomplete parameter...');
@@ -163,7 +164,63 @@ class SiZakat extends API
 			return (array('error' => "Only accepts GET requests"));
 		}
 	}
-	
+	protected function profilku() {
+		global $mysqli;
+		if ($this->method == 'GET') {
+			$query = "SELECT * FROM user WHERE id_user=".intval($this->activeUserId);
+			$result = $mysqli->query($query);
+
+			$row = $result->fetch_array(MYSQLI_ASSOC);
+			$dataResult = array(
+				'nama'			=> $row['nama'],
+				'email'			=> $row['email'],
+				'tempat_lahir'	=> $row['tempat_lahir'],
+				'tanggal_lahir'	=> $row['tanggal_lahir'],
+				'alamat'		=> $row['alamat'],
+				'kota'			=> $row['kota'],
+				'hp'			=> $row['hp'],
+				'pekerjaan'		=> $row['pekerjaan'],
+				'perusahaan'	=> $row['perusahaan']
+			);
+			return (array(
+				'result'	=> "ok",
+				'data'		=> $dataResult
+			));
+		} else if ($this->method == 'POST') {
+			require("libraries/querybuilder.php");
+			$fieldSet = array(
+				'nama'			=> $this->request['user_fullname'],
+				'email'			=> $this->request['user_email'],
+				'tempat_lahir'	=> $this->request['user_ttl'],
+				'tanggal_lahir'	=> $this->request['user_tgl'],
+				'kota'			=> $this->request['user_kota'],
+				'alamat'		=> $this->request['user_alamat'],
+				'hp'			=> $this->request['user_kontak'],
+				'pekerjaan'		=> $this->request['user_pekerjaan']
+			);
+			if (querybuilder_checkset($fieldSet)) {
+				$querySet = querybuilder_generate_set($fieldSet);
+				$query = sprintf(
+					"UPDATE user SET %s WHERE id_user=%d",
+					$querySet,
+					intval($this->activeUserId)
+				);
+				$result = $mysqli->query($query);
+				if ($result) {
+					return (array(
+						'result'	=> "ok",
+						'data'		=> "Data profil berhasil diperbaharui."
+					));
+				} else {
+					return (array('error' => "Server returned: ".$mysqli->error));
+				}
+			} else {
+				return (array('error' => "Missing one or more required arguments!"));
+			}
+		} else {
+			return (array('error' => "Only accepts GET and POST requests"));
+		}
+	}
 	//================= BUS ==============
 	protected function wilayah_bus() {
 		global $mysqli;
@@ -184,6 +241,7 @@ class SiZakat extends API
 				'count' => $index,
 				'data' => $dataResult
 			));
+		
 		} else {
 			return (array('error' => "Only accepts GET requests"));
 		}
@@ -191,28 +249,49 @@ class SiZakat extends API
 	protected function peserta_bus() {
 		global $mysqli;
 		if ($this->method == 'GET') {
-			//if ($this->verb == 'list')
-				$query = "SELECT * FROM penerima_bus";
-			//else
-			//	$query = "SELECT * FROM penerima_bus WHERE f_id_donatur=".intval($this->activeUserId);
+			if (array_key_exists('id_bus', $this->request)) {
+				$idBus = ($this->request['id_bus']);
 				
-			$result = $mysqli->query($query);
+				
+				$query = "SELECT * FROM penerima_bus WHERE id_penerima=".intval($idBus);
+				
+				$result = $mysqli->query($query);
 
-			$index = 0;
-			$dataResult = array();
-			
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				$dataResult[$index] = array(
-					'nama'		=> $row['nama'],
-					'sekolah'	=> $row['wilayah']
+				$row = $result->fetch_array(MYSQLI_ASSOC);
+				$dataResult = array(
+					'nama'			=> $row['nama'],
+					'sekolah'		=> $row['wilayah']
 				);
-				$index++;
+				
+				return (array(
+					'result'	=> "ok",
+					'count'		=> $index,
+					'data'		=> $dataResult
+				));
+			} else {
+				//if ($this->verb == 'list')
+					$query = "SELECT * FROM penerima_bus";
+				//else
+				//	$query = "SELECT * FROM penerima_bus WHERE f_id_donatur=".intval($this->activeUserId);
+					
+				$result = $mysqli->query($query);
+
+				$index = 0;
+				$dataResult = array();
+				
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+					$dataResult[$index] = array(
+						'nama'			=> $row['nama'],
+						'sekolah'		=> $row['wilayah']
+					);
+					$index++;
+				}
+				return (array(
+					'result'	=> "ok",
+					'count'		=> $index,
+					'data'		=> $dataResult
+				));
 			}
-			return (array(
-				'result' => "ok",
-				'count' => $index,
-				'data' => $dataResult
-			));
 		} else {
 			return (array('error' => "Only accepts GET requests"));
 		}

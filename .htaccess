@@ -1,0 +1,7 @@
+RewriteEngine on
+
+RewriteBase /siz
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^ra-ajax$ /siz/main.php?s=ajax&m=perencanaan [L]

@@ -1,0 +1,64 @@
+a.red_link {color: #CC0000;}
+a.red_link:hover {color:#FF0000;}
+
+.siz-fullwidth {width:100%;}
+.siz-operation-table {font-size:0.9em;}
+
+/* =========== SIZ TABLES ================== */
+.siz-table-detail, .siz-table-detail-input {width: 100%;}
+.siz-table-detail tr td, .siz-table-detail-input tr td {padding: 5px;}
+.siz-table-detail tr td:first-child {vertical-align: top;width: 200px;}
+.siz-table-detail tr td:nth-child(2) {font-weight: bold;}
+.siz-table-detail tr td:nth-child(2):before {content: ': ';}
+.siz-table-detail-input tr td:first-child {width: 200px;}
+
+.siz-table-ra-kegiatan input[type=text],
+.siz-table-ra-kegiatan input[type=number],
+ {width: 100%;}
+.siz-row-highlight-fordelete td {background-color: #F4BABA !important;}
+.siz-p-conclude {
+	font-size: 1.1em;
+}
+.siz-desc-nota {
+	font-size: 0.8em; color: #555;
+}
+.siz-desc-container {
+	min-height: 100px;
+}
+textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100px;display:block; width: 100%;}
+.td-prioritas {text-align: center;width:100px;}
+
+.siz-container-month {
+	margin: 0px 10px 20px;
+	padding: 0px 0px 5px;
+}
+#siz_loading_overlay {
+	position: fixed; top: 0px; left:0px;bottom:0px;right:0px;
+	background-color:rgba(0,0,0,0.2);
+	z-index:1050; cursor:wait; display: none;
+}
+#siz_loading_infobox {
+	text-align: center; width: 400px; padding: 10px; margin: 50px auto 0px; background-color:#fff;box-shadow:0 0 3px rgba(0,0,0,0.5);
+}
+#siz-benchmark {color: #A1DDBC;text-shadow:none;}
+
+/* ================ Style untuk AM_SIZ_RA_REKAPTHN ==== */
+.siz_kegiatan_bulan {
+	display: block;
+	position: absolute;
+}
+.siz_detail_tooltip {
+	display: none;
+	width: 300px;
+	font-size: 10pt;
+	background-color: #fff;
+	padding: 5px;
+	position: relative;
+	border-radius: 3px;
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	z-index: 90;
+	left: -50px;
+}
+.siz_kegiatan_bulan:hover .siz_detail_tooltip {
+	display: block;
+}

@@ -10,12 +10,16 @@
 		if($csql >= 1){
 			$r = mysqli_fetch_array($sql);
 			/*inisialisasi sesi*/
-			$_SESSION['level']=$r['level'];
-			$_SESSION['username']=$r['username'];
-			$_SESSION['iduser']=$r['id_user'];
+			$_SESSION['level']		= $r['level'];
+			$_SESSION['username']	= $r['username'];
+			$_SESSION['iduser']		= $r['id_user'];
 			if($r['level'] == '3'){
-				$_SESSION['wil_bus']=$r['wilayah_bus'];
+				$_SESSION['wil_bus'] = $r['wilayah_bus'];
 			}
+			// === Tambahan untuk modul perencanaan ==
+			$_SESSION['siz_divisi']=$r['divisi'];
+			
+			// === Akhir tambahan ====================
 			echo"<meta http-equiv=\"refresh\" content=\"0; url=../../main.php\">";
 		}else{
 			

@@ -53,8 +53,8 @@
 
 <!-- Styles Switcher
 ================================================== -->
-<link rel="stylesheet" type="text/css" href="css/switcher.css">
-<script src="js/switcher.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="css/switcher.css">
+<script src="js/switcher.js"></script> -->
 
 </head>
 <body>

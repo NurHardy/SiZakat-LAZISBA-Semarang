@@ -12,7 +12,9 @@
 				}else{
 					$edit = "";
 				}
-				echo "<li title='".$dd['keterangan']."'><span >".$dd['kode'].' '.$dd['namaakun']."&nbsp;&nbsp;$edit</span>";
+				echo "<li title='".$dd['keterangan']."'><span>";
+				echo "<a href=\"main.php?s=akun&amp;action=detail&amp;id={$dd['idakun']}\">".$dd['kode'].' '.$dd['namaakun']."</a>";
+				echo "&nbsp;&nbsp;$edit</span>";
 				setTree($dd['idakun']);
 				echo "</li>";
 			}

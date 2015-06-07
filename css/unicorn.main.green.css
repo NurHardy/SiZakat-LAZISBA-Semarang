@@ -208,6 +208,7 @@ a {
     position: relative;
     width: 220px;
     z-index: 16;
+	font-size: 12px;
 }
 
 #sidebar > ul, #jPanelMenu-menu > ul {
@@ -231,7 +232,7 @@ a {
 }
 
 #sidebar > ul > li > a, #jPanelMenu-menu > ul > li > a {
-	padding: 10px 0 10px 15px;
+	padding: 10px 5px 10px 15px;
 	display: block;
 	color: #FFFFFF;
 }
@@ -261,7 +262,7 @@ a {
 	display: block;
 }
 #sidebar > ul ul li a, #jPanelMenu-menu > ul ul li a {
-	padding: 10px 0 10px 25px;
+	padding: 10px 5px 10px 25px;
 	display: block;
 	color: #FFF;
 }
@@ -1676,7 +1677,7 @@ div.dataTables_wrapper .ui-widget-header {
     height: 8px;
 }
 .modal {
-	z-index: 1040 !important;
+	z-index: 1041 !important;
 }
 .modal-backdrop {
 	opacity: 0.5;

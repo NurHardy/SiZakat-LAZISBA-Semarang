@@ -22,9 +22,7 @@
 						}
 					});
 				}
-			});
-
-			
+			});			
 		});
 	});
 </script>
@@ -58,7 +56,7 @@
 					  <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Tanggal Transaksi</label>
 						<div class="controls span3">
-						  <input type="text" data-date="12-02-2012" data-date-format="yyyy-mm-dd" value="<?php echo date('Y-m-d');?>" class="datepicker form-control input-small tgl" name="tgl" required="required" style='width:80%;' />
+						  <input type="text" data-date-format="yyyy-mm-dd" value="<?php echo date('Y-m-d');?>" class="datepicker form-control input-small tgl" name="tgl" required="required" style='width:80%;' />
 						</div>
 					  </div>
 					  
@@ -86,14 +84,7 @@
 						</div>
 					  </div>
 					  
-					  <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">Jumlah Penyaluran</label>
-						<div class="controls span5">
-						  <input type="text" id="normal-field" class="form-control input-small jmlsalur" value="" name="jumlah" required="required" style='width:80%;'>
-						</div>
-					  </div>
-					  
-					   <div class="form-row control-group row-fluid form_sumber">
+					  <div class="form-row control-group row-fluid form_sumber">
 						<label class="control-label span3" for="normal-field">Sumber Dana</label>
 						<div class="controls span5">
 						  <select name="sumber" class='sumber11' style='width:80%;' data-placeholder='--Pilih Jenis--' required="required">
@@ -135,8 +126,12 @@
 						</div>
 					  </div>
 						  
-
-					  
+					  <div class="form-row control-group row-fluid">
+						<label class="control-label span3" for="normal-field">Jumlah Penyaluran</label>
+						<div class="controls span5">
+						  <input type="text" id="normal-field" class="form-control input-small jmlsalur" value="" name="jumlah" required="required" style='width:80%;'>
+						</div>
+					  </div>
 
 					  </div>
 					  
@@ -148,7 +143,7 @@
 					  </div>
 				
 					<div class="form-actions">
-						<button type="submit" name="save" class="btn btn-primary btn-small">Simpan</button> atau <a class="text-danger" href="#">Batal</a>
+						<button type="submit" name="save" class="btn btn-primary btn-small">Simpan</button>
 					</div>
 					</form>
 				</div>

@@ -22,4 +22,54 @@
 	//sample
 	//$str = clear_injection("Is your name O'reilly? <a>hahaha</a>");
 	//echo $str;
-?>
+	
+	/**
+	 * Library Name :	Rupiah currency formatter
+	 * Description 	:  	Pemformat angka menjadi format rupiah
+	 * Created By 	: 	Muhammad Nur Hardyanto
+	 * URL 			:	http://nurhardyanto.web.id
+	 * Version		:	1.0
+	**/
+	function to_rupiah($nilai) {
+		return "Rp. ".number_format($nilai, 0, ',', '.');
+	}
+	
+	// Menampilkan halaman error (harus disertakan dengan template)
+	function show_error_page($errDesc) {
+		$errorDescription = $errDesc;
+		include COMPONENT_PATH."/file/pages/error.php";
+	}
+	
+	// Validasi format tanggal
+	function validate_date($date, $format = 'Y-m-d')
+	{
+		$d = DateTime::createFromFormat($format, $date);
+		return $d && $d->format($format) == $date;
+	}
+	
+	// Format : date('D, d M Y', strtotime('06/04/1993'));
+	function tanggal_indonesia($tanggal) {
+		$format = array(
+				'Sun' => 'Minggu',
+				'Mon' => 'Senin',
+				'Tue' => 'Selasa',
+				'Wed' => 'Rabu',
+				'Thu' => 'Kamis',
+				'Fri' => 'Jumat',
+				'Sat' => 'Sabtu',
+				'Jan' => 'Januari',
+				'Feb' => 'Februari',
+				'Mar' => 'Maret',
+				'Apr' => 'April',
+				'May' => 'Mei',
+				'Jun' => 'Juni',
+				'Jul' => 'Juli',
+				'Aug' => 'Agustus',
+				'Sep' => 'September',
+				'Oct' => 'Oktober',
+				'Nov' => 'November',
+				'Dec' => 'Desember'
+		);
+	
+		return strtr($tanggal, $format);
+	}

@@ -57,7 +57,7 @@
 					  <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Tanggal Transaksi</label>
 						<div class="controls span3">
-						  <input type="text" data-date="12-02-2012" data-date-format="dd-mm-yyyy" value="<?php echo date('d-m-Y');?>" class="datepicker form-control input-small" name="tgl" required="required" style='width:80%;' />
+						  <input type="text" data-date-format="yyyy-mm-dd" value="<?php echo date('Y-m-d');?>" class="datepicker form-control input-small" name="tgl" required="required" style='width:80%;' />
 						</div>
 					  </div>
 					  
@@ -69,14 +69,7 @@
 						  <input type="text" id="normal-field" class="form-control input-small" name="no_transaksi" value="" required="required" style='width:80%;'>
 						</div>
 					  </div>-->
-					  
-					 <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">Jumlah Pengeluaran</label>
-						<div class="controls span5">
-						  <input type="text" id="normal-field" class="form-control input-small" value="" name="jumlah" required="required" style='width:80%;'>
-						</div>
-					  </div>
-					  
+					  					  
 					  <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Jenis Transaksi</label>
 						<div class="controls span5">
@@ -91,7 +84,7 @@
 								}
 							?>
 							</select>
-							<a href="main.php?s=akun_pengeluaran"><button type="submit" class="btn btn-info btn-mini" name='save'>Tambah Jenis Transaksi </button></a>
+							<a href="main.php?s=akun_pengeluaran" class="btn btn-info btn-mini">Tambah Jenis Transaksi</a>
 						</div>
 					  </div>
 					  
@@ -138,6 +131,12 @@
 						</div>
 					  </div>
 					  
+					  <div class="form-row control-group row-fluid">
+						<label class="control-label span3" for="normal-field">Jumlah Pengeluaran</label>
+						<div class="controls span5">
+						  <input type="text" id="normal-field" class="form-control input-small" value="" name="jumlah" required="required" style='width:80%;'>
+						</div>
+					  </div>
 
 					  </div>
 					  
@@ -149,7 +148,7 @@
 					  </div>
 				
 					<div class="form-actions">
-						<button type="submit" name="save" class="btn btn-primary btn-small">Simpan</button> atau <a class="text-danger" href="#">Batal</a>
+						<button type="submit" name="save" class="btn btn-primary btn-small">Simpan</button>
 					</div>
 					</div>
 					</form>
