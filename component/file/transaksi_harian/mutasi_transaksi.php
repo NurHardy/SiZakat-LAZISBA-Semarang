@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+	
 	$month1 = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 	
 	// Set origin form
@@ -38,7 +40,9 @@
 			  </div>
 			  
 			  </form>
-					  
+					 <a href="main.php?s=transaksi&amp;action=import">
+					 	<span class="glyphicon glyphicon-open-file"></span> Impor data transaksi
+					 </a>
 				<div class="widget-box">  
                             <div class="widget-title">
                                 <ul class="nav nav-tabs">

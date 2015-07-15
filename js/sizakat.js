@@ -7,6 +7,9 @@
 var isLoading = false;
 var _ov_msg;
 
+$(document).ready(function(){
+	if (typeof(initPage) == "function") initPage();
+});
 function show_overlay(_msg) {
 	if (_msg === '') {$("#siz_loading_msg").html('Sedang memproses... Mohon tunggu...');}
 	else $("#siz_loading_msg").html(_msg);

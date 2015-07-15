@@ -5,16 +5,16 @@
 	define('SIZ_VERSION', "SiZakat v.1.4.1 (14 Mei 2015)");
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 	define('FCPATH', str_replace(SELF, '', __FILE__));
-	define('COMPONENT_PATH', FCPATH.'\component');
+	define('COMPONENT_PATH', FCPATH."\\component");
 	
 	// Untuk menghitung waktu eksekusi
 	$timeStart = microtime(true);
 	$queryCount = 0;
 	
-	session_start();	
+	session_start();
 	
-	require_once COMPONENT_PATH."\config\koneksi.php";
-	require_once COMPONENT_PATH."\libraries\injection.php";
+	require_once COMPONENT_PATH."\\config\\koneksi.php";
+	require_once COMPONENT_PATH."\\libraries\\injection.php";
 	
 	$breadCrumbPath = array();
 	$errorDescription = "";
@@ -22,7 +22,11 @@
 	//================= AJAX HANDLER ====
 	if ($_GET['s']=='ajax') {
 		if ($_GET['m'] == 'perencanaan') {
-			include COMPONENT_PATH."\modules\perencanaan\ajax.php";
+			include COMPONENT_PATH."\\modules\\perencanaan\\ajax.php";
+		} else if ($_GET['m'] == 'transaksi') {
+			include COMPONENT_PATH."\\file\\transaksi_harian\\ajax.php";
+		} else if ($_GET['m'] == 'akun') {
+			include COMPONENT_PATH."\\file\\akun\\ajax.php";
 		} else {
 			die("Module not found!");
 		}
@@ -362,7 +366,7 @@
 					}
 					
 					else if($_GET['s'] == 'persamaan_akun'){
-						include"component/file/persamaan_akun.php";
+						include"component/file/akun/persamaan_akun.php";
 					}
 					else if($_GET['s'] == 'transaksi_kubah_detail'){
 						include"component/file/transaksi_kubah_detail.php";

@@ -1,6 +1,15 @@
 a.red_link {color: #CC0000;}
 a.red_link:hover {color:#FF0000;}
 
+.alert-icon {
+	padding-left: 64px;
+}
+.alert-icon-warning {
+	background-image: url('../images/icons/warning.png');
+	background-repeat: no-repeat;
+	background-position: 15px 15px;
+}
+
 .siz-fullwidth {width:100%;}
 .siz-operation-table {font-size:0.9em;}
 
@@ -16,6 +25,21 @@ a.red_link:hover {color:#FF0000;}
 .siz-table-ra-kegiatan input[type=number],
  {width: 100%;}
 .siz-row-highlight-fordelete td {background-color: #F4BABA !important;}
+.siz-table-timeline {
+	font-size:0.8em;
+}
+.siz-table-timeline td {
+	padding: 3px !important;
+}
+.siz-table-timeline th.tm-day {
+	width: 32px;
+}
+
+.siz-table-withcheck tr td:first-child,
+.siz-table-withcheck tr th:first-child {
+	width: 10px;
+	text-align: center;
+}
 .siz-p-conclude {
 	font-size: 1.1em;
 }
@@ -42,6 +66,70 @@ textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100
 }
 #siz-benchmark {color: #A1DDBC;text-shadow:none;}
 
+/* ================ Style untuk AM_SIZ_BANKLIST ======== */
+.siz_bank_logo {
+	width: 175px;
+}
+/* ================ Style untuk AM_SIZ_PERSMN_AKUN ===== */
+.siz_pers_parent_ctr {
+	padding-left: 10px;
+	margin: 10px 0;
+}
+.siz_pers_parent_ctr .parent_title {
+	background-color:#EFEDF2;
+	padding: 5px;
+}
+.out_container {
+	background-color:#EFEDF2;
+	padding: 5px;
+	border-right: solid 5px #6C6B6D;
+}
+.siz_perimbangan_boxsumber {
+	width: 300px;
+	max-width: 300px;
+	background-color: #f9f9f9;
+}
+.siz_perimbangan_boxsumber .siz_item_sumber {
+	background-color: #DAEAE0;
+	border-left: solid 5px #1F7044;
+	padding: 5px;
+	margin: 3px;
+	position: relative;
+}
+.siz_item_sumber .nama_akun {
+	width: 70%;
+}
+.siz_item_sumber .control_akun {
+	position: absolute;
+	width: 38px;
+	right: 0px;
+	top: 5px;
+	font-size: 0.9em;
+}
+.siz_item_sumber .meta {
+	font-size: 0.9em;
+}
+.siz_item_sumber.highlight {
+	background-color: #ECF954;
+}
+.siz_item_sumber.editing {
+	background-color: #EFEDD0;
+}
+.siz_perimbangan_boxsumber .siz_form_tambahsumber {
+	background-color: #DDD;
+	border-left: solid 5px #AAA;
+	padding: 5px;
+	margin: 3px;
+}
+.siz_item_control {
+	padding: 5px;
+	margin: 3px;
+}
+/* ================ Style untuk AM_SIZ_RA_HOME ======== */
+.siz-ra-home-monthseparator {
+	background-color:#EEECF1;
+	padding: 10px;
+}
 /* ================ Style untuk AM_SIZ_RA_REKAPTHN ==== */
 .siz_kegiatan_bulan {
 	display: block;

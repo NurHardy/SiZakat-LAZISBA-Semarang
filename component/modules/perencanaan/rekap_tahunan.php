@@ -8,6 +8,12 @@
  * Note: Jumlah anggaran masing2 agenda diambil dari cache jumlah_anggaran di tabel agenda
  */
 
+	// Cek privilege
+	if (!ra_check_privilege()) return;
+
+	$divisiUser		= $_SESSION['siz_divisi'];
+	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
+	
 	// Query rekap kegiatan dalam satu tahun
 	$queryRekap  = "SELECT c.id_kegiatan, k.nama_kegiatan, k.divisi ";
 	$queryRekap .= "FROM ra_catatan_kegiatan AS c, ra_kegiatan AS k ";
@@ -34,7 +40,17 @@
 		
 		<div class="widget-content">
 			Silakan atur list kegiatan pada halaman
-			<a href="<?php echo ra_gen_url("list",$tahunDokumen); ?>">Master Kegiatan</a>.
+			<a href="<?php echo ra_gen_url("list",$tahunDokumen); ?>">
+				<i class="glyphicon glyphicon-list"></i> Master Kegiatan</a>.
+			<div>
+				<a href="<?php echo htmlspecialchars(ra_gen_url("export",$tahunDokumen,"type=xlsx")); ?>"
+					class="btn btn-default">
+					<i class="glyphicon glyphicon-file"></i> Export ke Excel</a>.
+
+				<a href="<?php echo htmlspecialchars(ra_gen_url("timeline",$tahunDokumen)); ?>"
+					class="btn btn-default">
+					<i class="glyphicon glyphicon-calendar"></i> Lihat Timeline</a>.
+			</div>
 <?php if (mysqli_num_rows($resultQueryRekap) > 0) { //==================== JIKA ADA KEGIATAN ========== ?>
 			<table class="table table-bordered table-hover siz-operation-table">
 				<tr>
@@ -50,6 +66,7 @@
 					} ?>
 				</tr>
 		<?php
+		$grandTotalAnggaran	= 0;
 		$counterKegiatan	= 0;
 		$totalAnggaran		= 0;
 		$anggaranKegiatan	= 0;
@@ -63,24 +80,28 @@
 			if ($currDivisi != $rowKegiatan['divisi']) {
 				if ($currDivisi != -1) {
 					// Baris tambah kegiatan
-					echo "<tr class=\"siz_add_kegiatan\">\n";
-					echo "	<td>&nbsp;</td>\n";
-					echo "	<td><a href=\"".htmlspecialchars(ra_gen_url("tambah-kegiatan",$tahunDokumen,"div=".$currDivisi));
-					echo "\" class=\"btn btn-primary btn-xs\"><span class=\"glyphicon glyphicon-plus\">";
-					echo "</span> Tambah Kegiatan</a></td>\n";
-					echo "  <td colspan=\"12\">&nbsp;</td>";
-					echo "	<td>&nbsp;</td>\n";
-					echo "	<td>&nbsp;</td>\n";
-					echo "</tr>\n";
+					if ($isAdmin || ($divisiUser == $rowKegiatan['divisi'])) {
+						echo "<tr class=\"siz_add_kegiatan\">\n";
+						echo "	<td>&nbsp;</td>\n";
+						echo "	<td><a href=\"".htmlspecialchars(ra_gen_url("tambah-kegiatan",$tahunDokumen,"div=".$currDivisi));
+						echo "\" class=\"btn btn-primary btn-xs\"><span class=\"glyphicon glyphicon-plus\">";
+						echo "</span> Tambah Kegiatan</a></td>\n";
+						echo "  <td colspan=\"12\">&nbsp;</td>";
+						echo "	<td>&nbsp;</td>\n";
+						echo "	<td>&nbsp;</td>\n";
+						echo "</tr>\n";
+					}
 			
 					// Baris jumlah anggaran per divisi
 					echo "<tr><td colspan=\"14\"><b>Jumlah</b></td>";
-					echo "<td>".to_rupiah($totalAnggaran)."</td><td>&nbsp;</td></tr>\n";
+					echo "<td><b>".to_rupiah($totalAnggaran)."</b></td><td>&nbsp;</td></tr>\n";
+					$grandTotalAnggaran += $totalAnggaran;
 					$counterKegiatan = $totalAnggaran = 0;
 				}
 				$currDivisi = $rowKegiatan['divisi'];
 				echo "<tr id=\"siz_kegiatan_divisi_".$currDivisi."\">\n";
-				echo "<td colspan=\"16\"><b>Divisi ".$listDivisi[$currDivisi]."</b></td>";
+				echo "<td colspan=\"16\"><h4><span class=\"glyphicon glyphicon-star\"></span> ";
+				echo "Divisi ".$listDivisi[$currDivisi]."</h4></td>";
 				echo "</tr>\n";
 			}
 			$anggaranKegiatan	= 0;
@@ -92,7 +113,7 @@
 			echo "<tr id=\"siz_kegiatan_".$rowKegiatan['id_kegiatan']."\">\n";
 			echo "	<td>".$counterKegiatan."</td>\n";
 			$urlKegiatan = ra_gen_url('kegiatan',$tahunDokumen,'id='.$rowKegiatan['id_kegiatan']);
-			echo "	<td><a href=\"".$urlKegiatan."\">";
+			echo "	<td><a href=\"".htmlspecialchars($urlKegiatan)."\">";
 			echo htmlspecialchars($rowKegiatan['nama_kegiatan'])."</a></td>\n";
 			
 			$queryAgenda = sprintf(
@@ -138,7 +159,13 @@
 			$totalAnggaran += $anggaranKegiatan;
 			
 			echo "	<td>".to_rupiah($anggaranKegiatan)."</td>\n";
-			echo "	<td>&nbsp;</td>\n";
+			echo "	<td>";
+			if ($isAdmin || ($divisiUser == $rowKegiatan['divisi'])) {
+				echo "<a class=\"red_link\" href=\"";
+				echo htmlspecialchars(ra_gen_url("hapus-agenda-kegiatan",$tahunDokumen,"idk=".$rowKegiatan['id_kegiatan']));
+				echo "\"><span class=\"glyphicon glyphicon-trash\"></span> Hapus</a>";
+			}
+			echo "</td>\n";
 			echo "</tr>\n";
 			
 			$rowKegiatan = mysqli_fetch_array($resultQueryRekap);
@@ -146,23 +173,34 @@
 		} // End while
 		if ($currDivisi != -1) { // Untuk yang terakhir...
 			// Baris tambah kegiatan
-			echo "<tr class=\"siz_add_kegiatan\">\n";
-			echo "	<td>&nbsp;</td>\n";
-			echo "	<td><a href=\"".htmlspecialchars(ra_gen_url("tambah-kegiatan",$tahunDokumen,"div=".$currDivisi));
-			echo "\" class=\"btn btn-primary btn-xs\"><span class=\"glyphicon glyphicon-plus\">";
-			echo "</span> Tambah Kegiatan</a></td>\n";
-			echo "  <td colspan=\"12\">&nbsp;</td>";
-			echo "	<td>&nbsp;</td>\n";
-			echo "	<td>&nbsp;</td>\n";
-			echo "</tr>\n";
+			if ($isAdmin || ($divisiUser == $rowKegiatan['divisi'])) {
+				echo "<tr class=\"siz_add_kegiatan\">\n";
+				echo "	<td>&nbsp;</td>\n";
+				echo "	<td><a href=\"".htmlspecialchars(ra_gen_url("tambah-kegiatan",$tahunDokumen,"div=".$currDivisi));
+				echo "\" class=\"btn btn-primary btn-xs\"><span class=\"glyphicon glyphicon-plus\">";
+				echo "</span> Tambah Kegiatan</a></td>\n";
+				echo "  <td colspan=\"12\">&nbsp;</td>";
+				echo "	<td>&nbsp;</td>\n";
+				echo "	<td>&nbsp;</td>\n";
+				echo "</tr>\n";
+			}
 	
 			// Baris jumlah anggaran per divisi
 			echo "<tr><td colspan=\"14\"><b>Jumlah</b></td>";
-			echo "<td>".to_rupiah($totalAnggaran)."</td><td>&nbsp;</td></tr>\n";
+			echo "<td><b>".to_rupiah($totalAnggaran)."</b></td><td>&nbsp;</td></tr>\n";
+			$grandTotalAnggaran += $totalAnggaran;
 		}
 } // ==================================== END IF ADA KEGIATAN
 		?>
 			</table>
+			<div class="well">
+				Grand Total Anggaran Tahunan : <b><?php echo to_rupiah($grandTotalAnggaran); ?></b>
+			</div>
+			<a href="<?php echo ra_gen_url('tambah-kegiatan', $tahunDokumen); ?>"
+				class="btn btn-primary tip-right"
+				title="Tambah kegiatan baru pada perencanaan tahunan">
+				<span class="glyphicon glyphicon-plus"></span>
+				Tambah Kegiatan</a>
 		</div>
 	</div>
 </div>

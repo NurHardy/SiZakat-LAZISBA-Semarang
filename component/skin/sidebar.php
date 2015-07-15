@@ -1,12 +1,10 @@
 <div id="sidebar">
 	<!--<a href="#" class="hide"><i class="glyphicon glyphicon-home"></i> Dashboard</a>-->
 	<ul>
-		<?php 
-			if($_SESSION['level']==99){
-		?>
+<?php if($_SESSION['level']==99){ //================== JIKA ADMIN ===================== ?>
 		<li <?php setActiveMenu('home');?>><a href="main.php?s=home"><i class="glyphicon glyphicon-home"></i> <span>Dashboard</span></a></li>
 		<li <?php echo setActiveOpen(array('form_info_baru','daftar_info','edit_info','kirim_sms','daftar_sms','pengaturan_lain_lain'));?>>
-			<a href="#"><i class="glyphicon glyphicon-th-list"></i> <span>Informasi</span> <i class="arrow glyphicon glyphicon-chevron-right"></i></a>
+			<a href="#"><i class="glyphicon glyphicon-info-sign"></i> <span>Informasi</span></a>
 			<ul>
 				<li <?php setActiveMenu('form_info_baru');?>><a href="main.php?s=form_info_baru">Tambah Informasi Baru</a></li>
 				<li <?php setActiveMenu('daftar_info');?>><a href="main.php?s=daftar_info">Daftar Informasi</a></li>
@@ -26,14 +24,14 @@
 				  <li <?php setActiveMenu('daftarakun');?>><a href="main.php?s=daftarakun">Daftar Akun</a></li>
 				   <!-- ini yang baru di ubah-->
 				  <li <?php setActiveMenu('daftar_akun_lain');?>><a href="main.php?s=daftar_akun_lain">Daftar Akun Lain-lain</a></li>
-				 
+				  <li <?php setActiveMenu('bank');?>><a href="main.php?s=transaksi&amp;action=bank">Daftar Akun Bank</a></li>
 				 <!-- <li><a href="">Menu3</a></li>
 				  <li><a href="">Menu4</a></li>-->
 			</ul>
 		</li>
 		
 		<li <?php echo setActiveOpen(array('form_penerimaan','daftar_penerimaan','detail_bulanan','form_dana_zakat_s','daftar_penyaluran','detail_bulanan2','form_pengeluaran','lapbulanan','lapakun','lapbulan','lapblndetail','laplistakun'));?>>
-			<a href="#"><i class="glyphicon glyphicon-th-list"></i> <span>Transaksi Harian</span> <span class="label">5</span></a>
+			<a href="#"><i class="glyphicon glyphicon-transfer"></i> <span>Transaksi Harian</span> <span class="label">5</span></a>
 			<ul>
 				<li <?php setActiveMenu('form_penerimaan');?>><a href="main.php?s=form_penerimaan">Tambah Transaksi Penerimaan</a></li>
 				<li <?php setActiveMenu('form_dana_zakat_s');?>><a href="main.php?s=form_dana_zakat_s">Tambah Transaksi Penyaluran</a></li>
@@ -61,7 +59,7 @@
 		</li>-->
 		
 		<li <?php echo setActiveOpen(array('salur_kubah','cicil_kubah','daftar_ukm','form_ukm','transaksi_kubah','edit_ukm'));?>>
-			<a href="#"><i class="glyphicon glyphicon-th-list"></i> <span>Transaksi Kubah</span> <span class="label">5</span></a>
+			<a href="#"><i class="glyphicon glyphicon-credit-card"></i> <span>Transaksi Kubah</span> <span class="label">5</span></a>
 			<ul>
 				<li <?php setActiveMenu('form_ukm');?>><a href="main.php?s=form_ukm">Tambah Penerima Kubah</a></li>
 				<li <?php setActiveMenu('salur_kubah');?>><a href="main.php?s=salur_kubah">Transaksi Penyaluran Kubah</a></li>
@@ -74,7 +72,7 @@
 		<!-- BARU DIEDIT TANGGAL 9/01/2013-->
 		
 		<li <?php echo setActiveOpen(array('daftar_peserta_bus','daftar_peserta_wilayah'));?>>
-			<a href="#"><i class="glyphicon glyphicon-th-list"></i> <span>Manajemen BUS</span> <span class="label">2</span></a>
+			<a href="#"><i class="glyphicon glyphicon-user"></i> <span>Manajemen BUS</span> <span class="label">2</span></a>
 			<ul>
 				<li <?php setActiveMenu('daftar_peserta_bus');?>><a href="main.php?s=daftar_peserta_bus">Daftar Semua Peserta BUS</a></li>
 				<li <?php setActiveMenu('daftar_peserta_wilayah');?>><a href="main.php?s=daftar_peserta_wilayah">Daftar Peserta BUS per Wilayah</a></li>
@@ -122,7 +120,7 @@
 		
 		<!-- MODUL PERENCANAAN ANGGARAN -->
 		<li <?php echo setActiveOpen(array('perencanaan'));?>>
-			<a href="#"><i class="glyphicon glyphicon-th-list"></i> <span>Perencanaan</span> <span class="label">6</span></a>
+			<a href="#"><i class="glyphicon glyphicon-star"></i> <span>Perencanaan</span> <span class="label">6</span></a>
 			<ul>
 				
 				  <li <?php setActiveMenu('perencanaan');?>><a href="main.php?s=perencanaan">Perencanaan Anggaran</a></li>

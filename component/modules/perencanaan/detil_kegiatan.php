@@ -110,37 +110,6 @@
 				</tr>
 			</table>
 			<hr>
-			<!-- Tabel overview
-			<table class="table table-bordered table-hover">
-				<tr>
-					<th rowspan="2">Bulan</th>
-					<th colspan="31">Pelaksanaan</th>
-					<th rowspan="2">Jumlah Anggaran</th>
-					<th rowspan="2">Aksi</th>
-				</tr>
-				<tr>
-					<?php for ($tgl=1;$tgl<=31;$tgl++) {
-						echo "<th>".$tgl."</th>";
-					} ?>
-				</tr>
-			<?php
-				$ctrBulan = 1;
-				for ($ctrBulan=1;$ctrBulan<=12;$ctrBulan++) {
-					echo "<tr>\n";
-					echo "<td>{$ctrBulan}</td>\n";
-					$ctrTgl = 1;
-					$firstDate = sprintf("%04d-%02d-01", $tahunDokumen, $ctrBulan);
-					$dayOfWeek = intval(date("N", strtotime($firstDate)))-1;
-					for ($ctrTgl=1;$ctrTgl<=31;$ctrTgl++) {
-						echo "<td ".(($dayOfWeek==6)?"style=\"background-color: #fdd;\"":"").">&nbsp;</td>";
-						$dayOfWeek = ($dayOfWeek+1)%7;
-					}
-					echo "<td>Jumlah</td>\n";
-					echo "<td>-</td>\n";
-					echo "</tr>\n";
-				}
-			?>
-			</table>  -->
 	<div class="row">
 		<div class="col-lg-8">
 <?php if (mysqli_num_rows($listAgenda) > 0) { //==================== JIKA ADA KEGIATAN ========== ?>
@@ -186,10 +155,10 @@
 
 			// Generate string tanggal agenda
 			if ($rowAgenda['jenis_agenda']==1) {
-				$strTanggalAgenda = tanggal_indonesia(date('n M Y', strtotime($rowAgenda['tgl_mulai'])));
+				$strTanggalAgenda = tanggal_indonesia(date('j M Y', strtotime($rowAgenda['tgl_mulai'])));
 			} else if ($rowAgenda['jenis_agenda']==2) {
-				$strTanggalAgenda = tanggal_indonesia(date('n M Y', strtotime($rowAgenda['tgl_mulai'])));
-				$strTanggalAgenda .= " sampai ". tanggal_indonesia(date('n M Y', strtotime($rowAgenda['tgl_selesai'])));
+				$strTanggalAgenda = tanggal_indonesia(date('j M Y', strtotime($rowAgenda['tgl_mulai'])));
+				$strTanggalAgenda .= " sampai ". tanggal_indonesia(date('j M Y', strtotime($rowAgenda['tgl_selesai'])));
 			} else {
 				$strTanggalAgenda = "- undefined date -";
 			}
@@ -204,8 +173,12 @@
 				echo "</small>\n";
 			}
 			echo "</div>\n"; // Akhir judul agenda
-			echo "<div class=\"panel-body\">\n";
 			
+			if (!empty($rowAgenda['catatan'])) {
+				echo "<div class=\"panel-body\">\n";
+				echo nl2br(htmlspecialchars($rowAgenda['catatan']));
+				echo "</div>\n";
+			}
 			// Query mengambil rincian agenda
 			$queryRincian = sprintf(
 				"SELECT * FROM ra_rincian_agenda WHERE id_agenda=%d", $rowAgenda['id_agenda']
@@ -214,7 +187,8 @@
 			$queryCount++;
 			
 			$jumlahRincianKegiatan = 0;
-			echo "</div><table class=\"table table-bordered table-hover siz-operation-table\">\n";
+			
+			echo "<table class=\"table table-bordered table-hover siz-operation-table\">\n";
 			echo "<thead><tr><th style=\"width: 35%;\">Nama Rincian</th><th style=\"width: 35%;\">Jumlah Rincian</th><th>Aksi</th></tr>";
 			echo "</thead>";
 			echo "<tbody>\n";
@@ -237,15 +211,16 @@
 				}
 			}
 			echo "</tbody><tfoot>";
-			echo "<tr id=\"siz_tambah_rinc_ag_".$rowAgenda['id_agenda']."\">\n";
-			echo "	<td><input type=\"text\" name=\"txt_rinc_n_ag_".$rowAgenda['id_agenda']."\" ";
-			echo "placeholder=\"Tambah Rincian\" class=\"form-control input-sm\"></td>\n";
-			echo "	<td><input type=\"text\" name=\"txt_rinc_v_ag_".$rowAgenda['id_agenda']."\" ";
-			echo "placeholder=\"Jumlah Rincian\" class=\"form-control input-sm\"></td>\n";
-			echo "	<td><a href=\"#\" onclick=\"return submit_rincian_tambahan(".$rowAgenda['id_agenda'].");\" ";
-			echo "class=\"btn btn-sm btn-primary\"><span class=\"glyphicon glyphicon-plus\"></span> Tambah</a></td>\n";
-			echo "</tr>\n";
-			
+			if ($isAuthorized) {
+				echo "<tr id=\"siz_tambah_rinc_ag_".$rowAgenda['id_agenda']."\">\n";
+				echo "	<td><input type=\"text\" name=\"txt_rinc_n_ag_".$rowAgenda['id_agenda']."\" ";
+				echo "placeholder=\"Tambah Rincian\" class=\"form-control input-sm\"></td>\n";
+				echo "	<td><input type=\"text\" name=\"txt_rinc_v_ag_".$rowAgenda['id_agenda']."\" ";
+				echo "placeholder=\"Jumlah Rincian\" class=\"form-control input-sm\"></td>\n";
+				echo "	<td><a href=\"#\" onclick=\"return submit_rincian_tambahan(".$rowAgenda['id_agenda'].");\" ";
+				echo "class=\"btn btn-sm btn-primary\"><span class=\"glyphicon glyphicon-plus\"></span> Tambah</a></td>\n";
+				echo "</tr>\n";
+			}
 			echo "<tr id=\"siz_jml_rinc_ag_".$rowAgenda['id_agenda']."\">\n";
 			echo "	<td><b>Jumlah Anggaran Agenda</b></td>\n";
 			echo "	<td><b class=\"siz-total-anggaran\">".to_rupiah($jumlahRincianKegiatan)."</b></td>\n";
@@ -258,13 +233,6 @@
 			echo "\n</div> <!-- Akhir panel agenda -->\n";
 			// ======= Akhir dari agenda
 		}
-		//echo "<tr><td colspan=\"5\">&nbsp;</td><td>".to_rupiah($anggaranBulan)."</td>";
-		//echo "<td>&nbsp;</td></tr>\n";
-		
-		//echo "<tr><td colspan=\"5\"><i class=\"glyphicon glyphicon-list-alt\"></i> ";
-		//echo "<b>Jumlah Anggaran</b></td><td><b>".to_rupiah($totalAnggaran)."</b></td>";
-		//cho "<td>&nbsp;</td></tr>\n";
-		//echo "</table>\n";
 		if ($rowAgenda['bulan'] != $bulanSekarang) {
 			//==== End of month
 			if ($bulanSekarang != 0) {
@@ -330,10 +298,10 @@
 			echo "	<td colspan=\"4\">".$strTanggalAgenda." ";
 			if ($isAuthorized) {
 				echo "<small>";
-				echo "<a href=\"".ra_gen_url("edit-agenda",$tahunDokumen,"id=".$rowAgenda['id_agenda']).
+				echo "<a href=\"".htmlspecialchars(ra_gen_url("edit-agenda",$tahunDokumen,"id=".$rowAgenda['id_agenda'])).
 					"\"><span class=\"glyphicon glyphicon-pencil\"></span> Edit</a>\n";
-				echo "<a href=\"".ra_gen_url("hapus-agenda",$tahunDokumen,"id=".$rowAgenda['id_agenda']).
-				"\" class=\"red_link\" onclick=\"return hapus_agenda(".$rowAgenda['id_agenda'].");\"><span class=\"glyphicon glyphicon-trash\"></span> Hapus</a>";
+				echo "<a href=\"".htmlspecialchars(ra_gen_url("hapus-agenda",$tahunDokumen,"id=".$rowAgenda['id_agenda'])).
+				"\" class=\"red_link\"><span class=\"glyphicon glyphicon-trash\"></span> Hapus</a>";
 				echo "</small>";
 			}
 			echo "</td>\n";
@@ -396,13 +364,14 @@
 		echo "<td>&nbsp;</td></tr>\n";
 		echo "</table>\n";
 } // ==================================== END IF
-		?>
-			
+
+if ($isAuthorized) { //==================== ?>
 			<a href="<?php echo ra_gen_url('tambah-agenda', $tahunDokumen, "idk=".$idKegiatan); ?>"
 				class="btn btn-primary tip-right"
 				title="Tambah agenda kegiatan baru pada tanggal tertentu">
 				<span class="glyphicon glyphicon-plus"></span>
 				Tambah Agenda Kegiatan</a>
+<?php } //=================== END IF ===========?>
 		</div>
 	</div>
 </div>
@@ -411,5 +380,3 @@
 <script>var AJAX_URL = "<?php echo RA_AJAX_URL; ?>"; </script>
 <script src="js/jquery.gritter.min.js"></script>
 <script src="js/perencanaan/detil_kegiatan.js"></script>
-
-

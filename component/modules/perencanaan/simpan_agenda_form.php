@@ -1,7 +1,11 @@
 <?php
-	// simpan_agenda_form.php
-	// ==> Proses menyimpan agenda kegiatan dan menampilkannya berupa form
-	
+/*
+ * simpan_agenda_form.php
+ * ==> Proses menyimpan agenda kegiatan dan menampilkannya berupa form
+ *
+ * AM_SIZ_RA_FRMAGENDA | Form Agenda Kegiatan
+ * ------------------------------------------------------------------------
+ */
 	// Cek privilege
 	ra_check_privilege();
 	
@@ -130,6 +134,7 @@
 				$dataAgendaKegiatan['jumlah_anggaran']	= $jmlAnggaran;
 				$dataAgendaKegiatan['id_kegiatan']	= $idKegiatan;
 				$dataAgendaKegiatan['tgl_ubah']	= $tglSekarang;
+				$dataAgendaKegiatan['id_user']	= $_SESSION['iduser'];
 			}
 			require_once COMPONENT_PATH."\libraries\querybuilder.php";
 			$querySimpan  = ($isEditing?"UPDATE":"INSERT INTO")." ra_agenda SET ";

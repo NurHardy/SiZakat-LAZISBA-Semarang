@@ -6,7 +6,6 @@
 		
 		$pers_akun = $_POST['akun_'.$id];
 		if(count($pers_akun > 0)){
-			$sql = mysqli_query($mysqli, "INSERT INTO persamaan_akun (id_penerimaan,id_penyaluran) VALUES ('$p1[kode]','$pers_akun[]')");
+			$sql = mysqli_query($mysqli, "INSERT INTO persamaan_akun (id_penerimaan,id_penyaluran) VALUES ('{$p1[kode]}','{$pers_akun[0]}')");
 		}
 	}
-?>

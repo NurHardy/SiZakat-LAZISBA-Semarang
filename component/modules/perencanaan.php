@@ -53,13 +53,22 @@
 	if ($actionWord == "ajax") {
 		include MODULE_NAME."/ajax.php";
 	
+	/************* Dokumen Perencanaan ****************/
 	} else if ($actionWord == "document") {
 		$tahunDokumen = $_GET['th'];
 		include MODULE_NAME."/dokumen_perencanaan.php";
 	} else if ($actionWord == "rekap") {
 		$tahunDokumen = $_GET['th'];
 		include MODULE_NAME."/rekap_tahunan.php";
-		
+	} else if ($actionWord == "timeline") {
+		include MODULE_NAME."/timeline_perencanaan.php";
+	} else if ($actionWord == "export") {
+		$fType = $_GET['type'];
+		if ($fType == 'xlsx') {
+			include MODULE_NAME."/export_loader.php";
+		} else {
+			show_error_page("Format kurang/belum didukung.");
+		}
 	/************* Kegiatan dan Agenda ****************/
 	// CRUD kegiatan
 	} else if ($actionWord == "kegiatan") {
@@ -83,6 +92,8 @@
 		} else {
 			include MODULE_NAME."/simpan_agenda_form.php";
 		}
+	} else if ($actionWord == "hapus-agenda") {
+		include MODULE_NAME."/hapus_agenda_confirm.php";
 	} else if ($actionWord == "tambah-agenda") {
 		$tahunDokumen	= $_GET['th'];
 		include MODULE_NAME."/simpan_agenda_form.php";

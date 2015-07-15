@@ -23,21 +23,42 @@ if ($ajaxAct == "get.rincian") {
 		'length' => count($jsonResult),
 		'data'	 => $jsonResult
 	));
+	
+//============ HAPUS AGENDA
+} else if ($ajaxAct == "agenda.hapus") {
+	require("ajax/hapus_agenda.php");
+	
+//============ RINCIAN
 } else if ($ajaxAct == "agenda.rincian.add") {
 	require("ajax/agenda_simpan_rincian.php");
 } else if ($ajaxAct == "agenda.rincian.edit") {
 	require("ajax/agenda_simpan_rincian.php");
 } else if ($ajaxAct == "agenda.rincian.delete") {
 	require("ajax/agenda_hapus_rincian.php");
+	
+//============ MASTER KEGIATAN
 } else if ($ajaxAct == "mastkegiatan.rincian.add") {
 	require("ajax/master_simpan_rincian.php");
 } else if ($ajaxAct == "mastkegiatan.rincian.edit") {
 	require("ajax/master_simpan_rincian.php");
 } else if ($ajaxAct == "mastkegiatan.rincian.delete") {
 	require("ajax/master_hapus_rincian.php");
+	
+//=========== EKSPOR DOKUMEN
+} else if ($ajaxAct == "export.perencanaan.dokumen") {
+	$fileType = $_POST['type'];
+	$fileType = strtolower($fileType);
+	if ($fileType == "xlsx") {
+		require("ajax/export_dokumen_perencanaan_xlsx.php");
+	} else {
+		echo json_encode(array(
+				'status' => 'error',
+				'error'	=> 'Unrecognized export format.'
+		));
+	}
 } else {
 	echo json_encode(array(
 			'status' => 'error',
-			'error'	=> 'Unrecognized action!'
+			'error'	=> 'Unrecognized action.'
 	));
 }

@@ -1,3 +1,14 @@
+<?php 
+/*
+ * dokumen_perencanaan.php
+ * ==> Lihat list lengkap perencanaan tahunan
+ *
+ * AM_SIZ_RA_DOKPERENC | Dokumen Perencanaan
+ * ------------------------------------------------------------------------
+ */
+	// Cek privilege
+	if (!ra_check_privilege()) return;
+?>
 <script>
 function appendRincian(idAgenda, dataRincian) {
 	try {

@@ -46,6 +46,7 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				if (typeof(init_page) === 'function') init_page();
+				$(".siz-use-select2").select2();
 			});
 			tinyMCE.init({
 				// General options

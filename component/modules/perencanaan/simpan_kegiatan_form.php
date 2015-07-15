@@ -122,10 +122,6 @@
 	
 
 if ($showForm) { //============================== FORM DITAMPILKAN === ?>
-<script>
-
-</script>
-
 	<form action="<?php echo htmlspecialchars($formActionUrl); ?>" method="POST">
 	<div class="col-md-6">
 		<div class="panel panel-default">
