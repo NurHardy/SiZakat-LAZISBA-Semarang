@@ -29,7 +29,9 @@
 			$objWorksheet = $objPHPExcel->getActiveSheet();
 			
 			if ($doProcess == "penerimaan-cash") {
+				// Begin transaction...
 				mysqli_autocommit($mysqli, false);
+				
 				$trxCount = 0;
 				$trxCountSuccess = 0;
 				$rowSkipped = 0;
@@ -86,7 +88,8 @@
 							$txtThnRamadhan = intval($txtThnRamadhan);
 						}
 					}
-					preg_replace("/\s/", "", )
+					// Hilangkan karakter spasi pada nomor nota
+					$noNotaTrx = preg_replace("/\s/", "", $noNotaTrx);
 					
 					$tanggalTrx = date("Y-m-d", PHPExcel_Shared_Date::ExcelToPHP($tanggalTrxExcel));
 					
@@ -100,7 +103,7 @@
 							'nama_amilin' => $txtAmilin,
 							'jumlah'	=> $jumlahTrx,
 							'keterangan' => $keteranganTrx,
-							'id_akun'	=> 0,
+							'kode_akun'	=> '0',
 							'ket_akun'	=> $keteranganTrx,
 							'id_bank'	=> 0,
 							'nama_bank'	=> $txtBank,

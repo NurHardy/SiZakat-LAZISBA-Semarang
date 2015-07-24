@@ -45,7 +45,7 @@ function getAccountArray($jenisAkun, $idParent) {
 	while ( $rowAkun = mysqli_fetch_array ( $resultListAkun ) ) {
 		$grandChildArray = null;
 		$grandChildTotal = 0;
-		// Menghindaru forever loop
+		// Menghindari forever loop
 		if ($rowAkun['idakun'] != $idParent) {
 			$grandChildArray = getAccountArray($jenisAkun, $rowAkun['idakun']);
 		}

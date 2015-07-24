@@ -13,7 +13,7 @@
         <!-- <link rel="stylesheet" href="css/colorpicker.css" /> -->
         <link rel="stylesheet" href="css/bootstrap-datepicker3.min.css" />
 		<link rel="stylesheet" href="css/icheck/flat/blue.css" />
-		<link rel="stylesheet" href="css/select2.css" />		
+		<link rel="stylesheet" href="css/select2.min.css" />		
 		<link rel="stylesheet" href="css/jquery.treeview.css" />
 		<link rel="stylesheet" href="css/jquery-ui.css" />
 		<link rel="stylesheet" href="css/sizakat.css" />

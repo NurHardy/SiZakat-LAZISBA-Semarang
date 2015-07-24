@@ -11,9 +11,9 @@ $(document).ready(function(){
     	radioClass: 'iradio_flat-blue'
 	});
 	
-	//$('select').select2({
-	//	minimumResultsForSearch: 10
-	//});
+	$('select.use_select2').select2({
+		minimumResultsForSearch: 10
+	});
     //$('.colorpicker').colorpicker();
     $('.datepicker').datepicker();
 });

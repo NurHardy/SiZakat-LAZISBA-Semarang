@@ -11,9 +11,30 @@ a.red_link:hover {color:#FF0000;}
 }
 
 .siz-fullwidth {width:100%;}
-.siz-operation-table {font-size:0.9em;}
+
+/* =========== SIZ MODAL DIALOG ===========- */
+#siz_overlaydlg_loading {
+	padding: 20px 10px;
+	text-align: center;
+	display:none;
+}
 
 /* =========== SIZ TABLES ================== */
+.siz-operation-table {font-size:0.9em;}
+.siz-operation-table .loading-circle {display:none;}
+.siz-operation-table tr.editing_row td,
+.siz-operation-table tr.editing_row td:hover {
+	background-color: #EFEDD0 !important;
+}
+.siz-operation-table tr.editing_row td:first-child {
+	border-left: solid 5px #C9C7B1;
+}
+.siz-operation-table tr.form_row td {
+	background-color: #DDDDDD !important;
+}
+.siz-operation-table tr.form_row td:first-child {
+	border-left: solid 5px #AAAAAA;
+}
 .siz-table-detail, .siz-table-detail-input {width: 100%;}
 .siz-table-detail tr td, .siz-table-detail-input tr td {padding: 5px;}
 .siz-table-detail tr td:first-child {vertical-align: top;width: 200px;}
@@ -24,6 +45,7 @@ a.red_link:hover {color:#FF0000;}
 .siz-table-ra-kegiatan input[type=text],
 .siz-table-ra-kegiatan input[type=number],
  {width: 100%;}
+ 
 .siz-row-highlight-fordelete td {background-color: #F4BABA !important;}
 .siz-table-timeline {
 	font-size:0.8em;
@@ -40,6 +62,7 @@ a.red_link:hover {color:#FF0000;}
 	width: 10px;
 	text-align: center;
 }
+
 .siz-p-conclude {
 	font-size: 1.1em;
 }

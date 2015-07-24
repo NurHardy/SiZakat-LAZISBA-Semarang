@@ -13,12 +13,30 @@
 			</div>
 		</div>
 
-<div id="siz_loading_overlay">
-	<div id="siz_loading_infobox">
-		<img src="images/loader.gif" alt="Loading" />
-		<span id="siz_loading_msg">Loading...</span>
-	</div>
-</div>
+		<!-- Modal -->
+		<div class="modal fade" id="siz_overlaydlg_formctr" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    	<div id="siz_overlaydlg_loading">
+					<img src="images/loader.32.gif" alt="Loading..." /> Memuat Konten...
+				</div>
+				<form action='#submit' method='POST' id='siz_overlaydlg_form' class="form-horizontal">
+				<div id="siz_overlaydlg_body">
+		      
+		    	</div>
+		    	</form>
+		    </div>
+		  
+		  </div>
+		</div>
+		
+		<!-- Loading overlay -->
+		<div id="siz_loading_overlay">
+			<div id="siz_loading_infobox">
+				<img src="images/loader.gif" alt="Loading" />
+				<span id="siz_loading_msg">Loading...</span>
+			</div>
+		</div>
 
 		<!-- Basic Scripts -->
 		<script src="js/jquery-ui.custom.js"></script>

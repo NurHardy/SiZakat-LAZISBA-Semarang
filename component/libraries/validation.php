@@ -113,5 +113,21 @@
 		
 		echo "</div>";
 	  }
-	  
-?>
+	 
+	
+	/**
+	 * Mengecek nilai dari field yang 'required'
+	 * @param array $fieldArray Array dengan [fieldname] => [value]
+	 * @return NULL|string Mengembalikan pesan error jika ada yang kosong, NULL jika terisi semua
+	 * @author Muhammad Nur Hardyanto (nurhardyanto@if.undip.ac.id)
+	 */
+	function check_required_fields($fieldArray) {
+		$errorMsg = null;
+		foreach ($fieldArray as $fieldName => $fieldValue) {
+			if (empty($fieldValue)) {
+				$errorMsg = "Isian ".$fieldName." tidak boleh kosong.";
+				break;
+			}
+		}
+		return $errorMsg;
+	}

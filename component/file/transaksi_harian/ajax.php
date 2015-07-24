@@ -26,6 +26,12 @@ if ($ajaxAct == "get.dashboard.html") {
 		'length' => count($jsonResult),
 		'data'	 => $jsonResult
 	));
+
+//============ IMPOR TRANSAKSI ==========
+} else if ($ajaxAct == "get.stagepenerimaan.form") {
+	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\form_stg_penerimaan.php";
+} else if ($ajaxAct == "get.stagepenerimaan.simpan") {
+	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\simpan_stg_penerimaan.php";
 	
 } else {
 	echo json_encode(array(

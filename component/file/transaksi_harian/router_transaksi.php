@@ -12,7 +12,13 @@ if ($actionWord=="edit-out") {
 	
 //================ Import transaksi
 } else if ($actionWord=="import") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import_penerimaan_cash.php";
+	include COMPONENT_PATH."\\file\\transaksi_harian\\import_transaksi.php";
+	
+} else if ($actionWord=="import-penerimaan") {
+	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\stage_penerimaan.php";
+
+} else if ($actionWord=="mapping-penerimaan") {
+	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\mapping_penerimaan.php";
 	
 //================ Mengelola bank ===========
 } else if ($actionWord=="bank") {
@@ -25,6 +31,6 @@ if ($actionWord=="edit-out") {
 	include COMPONENT_PATH."\\file\\transaksi_harian\\bank_form_simpan.php";
 
 } else { // Default: Lihat mutasi transaksi untuk bulan dan tahun tertentu
-	update_cache(2013, 9);
+	//update_cache(2013, 9);
 	include COMPONENT_PATH."\\file\\transaksi_harian\\mutasi_transaksi.php";
 }

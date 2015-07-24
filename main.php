@@ -27,6 +27,8 @@
 			include COMPONENT_PATH."\\file\\transaksi_harian\\ajax.php";
 		} else if ($_GET['m'] == 'akun') {
 			include COMPONENT_PATH."\\file\\akun\\ajax.php";
+		} else if ($_GET['m'] == 'user') {
+			include COMPONENT_PATH."\\file\\user\\ajax.php";
 		} else {
 			die("Module not found!");
 		}
@@ -228,6 +230,11 @@
 				
 				if($_GET['s'] == 'perencanaan'){
 					$breadCrumbPath[] = array("Perencanaan","main.php?s=perencanaan",false);
+				} else if ($_GET['s'] == 'transaksi') {
+					$breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",false);
+					if ($_GET['action']=='import') {
+						$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
+					}
 				}
 				foreach ($breadCrumbPath as $pathItem) {
 					echo "<a href=\"".$pathItem[1]."\" ";
