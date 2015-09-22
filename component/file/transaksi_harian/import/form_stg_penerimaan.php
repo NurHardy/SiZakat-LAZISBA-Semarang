@@ -39,6 +39,7 @@
 ?>
 <tr class="editing_row" id="siz_frm_stgpenerimaan_<?php echo $idStage; ?>">
 	<td colspan='9'>
+		<small>Tanggal load: <b><?php echo $trxData['tgl_load']; ?></b></small>
 <?php if ($showForm) { // =========== IF SHOW FORM ====================== ?>
 	<div class="editing-form-ctr" style="display:none;">
 		<form action="#save" method="post"
@@ -109,12 +110,29 @@
 									<span class="glyphicon glyphicon-envelope"></span> <?php
 	echo htmlspecialchars ( $trxData ['alamat_donatur'] );
 	?></div>
+	<?php
+				$linkTambah = "main.php?s=form_muzakki&nama=".urlencode($trxData ['nama_donatur']).
+								"&amp;alamat=".urlencode($trxData ['alamat_donatur']);
+				echo "<a href=\"".$linkTambah."\" target=\"_blank\">
+					<i class='glyphicon glyphicon-plus'></i> Tambah Donatur Baru</a>\n";
+				?>
 							</div>
 							<div>
 								<select name='muzakki' id="select2_muzakki" style='width: 80%;'
 									data-placeholder="-- Pilih Muzakki --" required>
-									<option value="0" selected="selected">- Selected -</option>
+									<option value="">- Selected -</option>
 					<?php
+	if ($trxData['id_donatur'] > 0) {
+		require_once COMPONENT_PATH."\\libraries\\helper_user.php";
+		$dataDonatur = cek_user_id($trxData['id_donatur']);
+		if ($dataDonatur != null) {
+			echo "<option value='{$trxData['id_donatur']}' selected>";
+			echo $dataDonatur['nama'];
+			echo "</option>\n";
+		}
+	} else {
+		
+	}
 	// $q3 = mysqli_query ( $mysqli, "SELECT * FROM user WHERE level = 1" );
 	// while ( $p3 = mysqli_fetch_array ( $q3 ) ) {
 	// $isSelected = ($trxData ['id_donatur'] == $p3 ['id_user']);
@@ -127,6 +145,7 @@
 						</div>
 					</div>
 
+					<div>Amilin: <b><?php echo htmlspecialchars($trxData ['nama_amilin']); ?></b></div>
 					<div class="form-row control-group row-fluid form-group"
 						id="field_amilin" style="display: block;">
 						<label class="control-label span3" for="normal-field">Amilin</label>
@@ -137,7 +156,7 @@
 					<?php
 	$sql = mysqli_query ( $mysqli, "SELECT * FROM user WHERE level = 99" );
 	while ( $pecah = mysqli_fetch_array ( $sql ) ) {
-		$isSelected = ($trxData ['id_petugas'] == $pecah ['id_user']);
+		$isSelected = ($trxData ['id_teller'] == $pecah ['id_user']);
 		echo "<option value=\"{$pecah[id_user]}\" " . ($isSelected ? "selected" : "") . ">";
 		echo $pecah ['id_user'] . " - " . $pecah ['nama'] . "</option>";
 	}
@@ -193,15 +212,31 @@
 					</div>
 					<div class="form-row control-group row-fluid form-group"
 						id="field_th_kubah" style="display: block;">
-						<label class="control-label span3" for="siz-th-kubah">
-						Tahun Penyaluran (khusus KUBAH)</label>
-						<div class="controls span5">
-							<input type="text" id="siz-th-kubah"
-								class="form-control input-small" name="th_kubah"
-								style='width: 80%;' value="<?php
-	echo (isset ( $trxData ['th_kubah'] ) ? $trxData ['th_kubah'] : "");
-	?>" />
+						<div class='row'>
+							<div class='col-md-6'>
+								<label class="control-label span3" for="siz-th-kubah">
+								Tahun Penyaluran (khusus KUBAH)</label>
+								<div class="controls span5">
+									<input type="text" id="siz-th-kubah"
+										class="form-control input-small" name="th_kubah"
+										style='width: 80%;' value="<?php
+			echo (isset ( $trxData ['th_kubah'] ) ? $trxData ['th_kubah'] : "");
+			?>" />
+								</div>
+							</div>
+							<div class='col-md-6'>
+								<label class="control-label span3" for="siz-th-ramadhan">
+								Tahun Ramadhan</label>
+								<div class="controls span5">
+									<input type="text" id="siz-th-ramadhan"
+										class="form-control input-small" name="th_ramadhan"
+										style='width: 80%;' value="<?php
+			echo (isset ( $trxData ['th_ramadhan'] ) ? $trxData ['th_ramadhan'] : "");
+			?>" />
+								</div>
+							</div>
 						</div>
+						
 					</div>
 					<div class="form-footer">
 						<button type="button" class="btn btn-default siz_btncancel"
@@ -216,6 +251,7 @@
 				<!-- /col-4 -->
 			</div>
 			<!-- /row -->
+			<input type="hidden" name="act" value="set.stagepenerimaan" />
 		</form>
 	</div>
 <?php } //============== END IF showForm ============= ?>

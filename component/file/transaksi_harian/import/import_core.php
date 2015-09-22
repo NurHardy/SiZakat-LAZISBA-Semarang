@@ -1,4 +1,12 @@
 <?php
+/*
+ * import_core.php
+ * ==> Prosedur utama dalam proses ekstrak dari excel masuk ke stage
+ * 
+ * Included in: AM_SIZ_IMPORTTRX (Impor transaksi)
+ * Output: None (internal use only)
+ */
+
 	$doProcess = $_GET['do'];
 	$doProcess = strtolower($doProcess);
 	
@@ -28,7 +36,7 @@
 				
 			$objWorksheet = $objPHPExcel->getActiveSheet();
 			
-			if ($doProcess == "penerimaan-cash") {
+			if ($doProcess == "penerimaan") {
 				// Begin transaction...
 				mysqli_autocommit($mysqli, false);
 				
@@ -78,8 +86,8 @@
 						$jumlahTrx = intval($jumlahTrx);
 						$totalNominalImpor += $jumlahTrx;
 					}
-					if (!empty($thnRamadhan)) {
-						if (!is_numeric($thnRamadhan)) {
+					if (!empty($txtThnRamadhan)) {
+						if (!is_numeric($txtThnRamadhan)) {
 							$processWarnings[] = "Tahun Ramadhan pada record pada baris ".$rowIndex." (Nota: ".
 									htmlspecialchars($noNota).") harus numerik. Transaksi diload sebagai ".
 									"transaksi harian bukan Ramadhan.";
@@ -104,11 +112,10 @@
 							'jumlah'	=> $jumlahTrx,
 							'keterangan' => $keteranganTrx,
 							'kode_akun'	=> '0',
-							'ket_akun'	=> $keteranganTrx,
-							'id_bank'	=> 0,
+							'ket_akun'	=> $keteranganTrx.", dari ".$txtDonatur,
+							'id_bank'	=> (!empty($txtBank)?-1:0),
 							'nama_bank'	=> $txtBank,
 							'nama_ukm'	=> $txtUkmKubah,
-							'id_kubah'	=> 0,
 							'th_kubah'	=> 0,
 							'th_ramadhan' => $txtThnRamadhan,
 							'tgl_load'	=> $tglSekarang
@@ -138,6 +145,115 @@
 					
 				}
 				
+			} else if ($doProcess == "pengeluaran") {
+				// Begin transaction...
+				mysqli_autocommit($mysqli, false);
+				
+				$trxCount = 0;
+				$trxCountSuccess = 0;
+				$rowSkipped = 0;
+				$totalNominalImpor = 0;
+				
+				$rowIndex = 0;
+				foreach ($objWorksheet->getRowIterator() as $row) {
+					$tglSekarang = date("Y-m-d H:i:s");
+					$rowIndex = $row->getRowIndex();
+						
+					// Baris 1 adalah header, jadi diabaikan...
+					if ($rowIndex==1) continue;
+						
+					$cellIterator = $row->getCellIterator();
+					$cellIterator->setIterateOnlyExistingCells(FALSE);
+						
+					$tanggalTrxExcel	= $objWorksheet->getCellByColumnAndRow(0,$rowIndex)->getValue();
+					$keteranganTrx		= trim($objWorksheet->getCellByColumnAndRow(1,$rowIndex)->getValue());
+					
+						
+					// Jika tanggal atau keterangan kosong, maka dilewati...
+					if (empty($tanggalTrxExcel) || empty($keteranganTrx)) {
+						$rowSkipped++;
+						continue;
+					}
+						
+					$trxCount++;
+						
+					// Validasi record spreadsheet
+					$noNotaTrx			= trim($objWorksheet->getCellByColumnAndRow(2,$rowIndex)->getValue());
+					$jumlahTrx			= trim($objWorksheet->getCellByColumnAndRow(3,$rowIndex)->getValue());
+					$txtInfoTrx			= trim($objWorksheet->getCellByColumnAndRow(4,$rowIndex)->getValue());
+					$txtBank			= trim($objWorksheet->getCellByColumnAndRow(5,$rowIndex)->getValue());
+					$txtAmilin			= trim($objWorksheet->getCellByColumnAndRow(6,$rowIndex)->getValue());
+					$txtDonatur			= trim($objWorksheet->getCellByColumnAndRow(7,$rowIndex)->getValue());
+					
+					$txtUkmKubah		= trim($objWorksheet->getCellByColumnAndRow(8,$rowIndex)->getValue());
+					$txtThnRamadhan		= trim($objWorksheet->getCellByColumnAndRow(9,$rowIndex)->getValue());
+						
+					if (!is_numeric($jumlahTrx)) {
+						$processWarnings[] = "Record pada baris ".$rowIndex." (Nota: ".
+								htmlspecialchars($noNota).") gagal diload. Nominal transaksi harus numerik.";
+						continue;
+					} else {
+						$jumlahTrx = intval($jumlahTrx);
+						$totalNominalImpor += $jumlahTrx;
+					}
+					if (!empty($txtThnRamadhan)) {
+						if (!is_numeric($txtThnRamadhan)) {
+							$processWarnings[] = "Tahun Ramadhan pada record pada baris ".$rowIndex." (Nota: ".
+									htmlspecialchars($noNota).") harus numerik. Transaksi diload sebagai ".
+									"transaksi harian bukan Ramadhan.";
+							continue;
+						} else {
+							$txtThnRamadhan = intval($txtThnRamadhan);
+						}
+					}
+					// Hilangkan karakter spasi pada nomor nota
+					$noNotaTrx = preg_replace("/\s/", "", $noNotaTrx);
+						
+					$tanggalTrx = date("Y-m-d", PHPExcel_Shared_Date::ExcelToPHP($tanggalTrxExcel));
+						
+					$recordFields = array(
+							'no_nota'	=> $noNotaTrx,
+							'tanggal'	=> $tanggalTrx,
+							'id_donatur' => 0,
+							'nama_donatur' => $txtDonatur,
+							'alamat_donatur' => $txtAlamatDonatur,
+							'id_teller' => 0,
+							'nama_amilin' => $txtAmilin,
+							'jumlah'	=> $jumlahTrx,
+							'keterangan' => $keteranganTrx,
+							'kode_akun'	=> '0',
+							'ket_akun'	=> $keteranganTrx.", dari ".$txtDonatur,
+							'id_bank'	=> (!empty($txtBank)?-1:0),
+							'nama_bank'	=> $txtBank,
+							'nama_ukm'	=> $txtUkmKubah,
+							'th_kubah'	=> 0,
+							'th_ramadhan' => $txtThnRamadhan,
+							'tgl_load'	=> $tglSekarang
+					);
+						
+					$querySetPart = querybuilder_generate_set($recordFields);
+					$queryInsertStage = ("INSERT INTO stage_pengeluaran SET ".$querySetPart);
+						
+					$resultInsert = mysqli_query($mysqli, $queryInsertStage);
+					if ($resultInsert != null) {
+						$trxCountSuccess++;
+					} else {
+						$processWarnings[] = "Record pada baris ".$rowIndex." (Nota: ".
+								htmlspecialchars($noNota).") gagal diload. MySQL error: ".
+								mysqli_error($mysqli);
+						continue;
+					}
+						
+				} // end foreach
+				
+				if (empty($processErrors)) {
+					mysqli_commit($mysqli);
+					$processSuccess[] = "<b>".$trxCountSuccess." dari ".
+							$trxCount." record</b> berhasil dimuat (".$rowSkipped." dilewati).";
+					$processSuccess[] = "Jumlah nominal penerimaan yang berhasil di-load: <b>".to_rupiah($totalNominalImpor)."</b>";
+				} else {
+						
+				}
 			}
 		} catch (Exception $e) {
 			$processErrors[] = '[PHPExcel error] '.$e->getMessage().

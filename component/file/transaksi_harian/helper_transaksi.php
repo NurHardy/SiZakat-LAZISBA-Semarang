@@ -7,20 +7,35 @@
  * @return string HTML baris untuk AM_SIZ_STG_PENERIMAAN
  */
 function getHTMLRowTrxPenerimaan($rowTransaction) {
+	$isOK = ($rowTransaction['id_donatur'] != 0) && ($rowTransaction['kode_akun'] != '0');
+	$isOK &= ($rowTransaction['id_teller'] != 0) && ($rowTransaction['id_bank'] != -1);
+	
 	$txtDate = date("d/m/Y", strtotime($rowTransaction['tanggal']));
 	$stageId = $rowTransaction['id_stage'];
 	$mappingAkun = "";
+	$mappingDonatur = "";
+	// Jika akun sudah dimapping...
 	if ($rowTransaction['namaakun'] != null) {
 		$mappingAkun = "<span class='glyphicon glyphicon-circle-arrow-right'></span> ".
 				htmlspecialchars($rowTransaction['namaakun']);
 	} else {
 		$mappingAkun = "<a href=\"#\">Set Akun</a>";
 	}
+	
+	// Jika donatur sudah dimapping...
+	if ($rowTransaction['nama_mapdonatur'] != null) {
+		$mappingDonatur = "<span class='glyphicon glyphicon-circle-arrow-right'></span> ".
+				htmlspecialchars($rowTransaction['nama_mapdonatur']);
+	} else {
+		$mappingDonatur = "<a href=\"#\">Set Donatur</a>";
+	}
 	$chkBoxId = "siz_check_item_".$stageId;
 	$output = "
- 		<tr>
  			<td><input type='checkbox' name=\"".$chkBoxId."\" id=\"".$chkBoxId."\"
- 					value=\"".$rowTransaction['id_stage']."\"/></td>
+ 					value=\"".$rowTransaction['id_stage']."\"/>&nbsp;".
+ 					($isOK?"<img src='images/icons/icon_check_16.png' alt='OK' />":
+ 						   "<img src='images/icons/icon_wrong_16.png' alt='-' />")
+ 					."</td>
  			<td><label for=\"".$chkBoxId."\">".($txtDate)."</label></td>
 			<td>".htmlspecialchars($rowTransaction['no_nota'])."</td>
 			<td><div>".htmlspecialchars($rowTransaction['ket_akun'])."</div>
@@ -29,7 +44,8 @@ function getHTMLRowTrxPenerimaan($rowTransaction) {
 			<td>".htmlspecialchars($rowTransaction['nama_amilin'])."</td>
 			<td><div>".htmlspecialchars($rowTransaction['nama_donatur'])."</div>
 				<div><span class='glyphicon glyphicon-envelope'></span> ".
-					htmlspecialchars($rowTransaction['alamat_donatur'])."</div></td>
+					htmlspecialchars($rowTransaction['alamat_donatur'])."
+					</div><div>(".$mappingDonatur.")</div></td>
 			<td>".nl2br(htmlspecialchars($rowTransaction['keterangan']))."</td>
 			<td>
 				<div class='control-box'>
@@ -42,7 +58,6 @@ function getHTMLRowTrxPenerimaan($rowTransaction) {
 					<img src=\"images/loader.gif\" alt=\"Loading\" />
 				</div>
 			</td>
- 		</tr>
  		";
 	return $output;
 }

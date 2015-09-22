@@ -13,9 +13,16 @@
 	if (isset ( $_GET ['do'] )) {
 		require COMPONENT_PATH . '\\file\\transaksi_harian\\import\\import_core.php';
 	}
+	
+	require_once COMPONENT_PATH.'\\libraries\\querybuilder.php';
+	$jmlStagePenerimaan = querybuilder_getscalar("SELECT COUNT(*) FROM stage_penerimaan");
+	$jmlStagePengeluaran = querybuilder_getscalar("SELECT COUNT(*) FROM stage_pengeluaran");
+	
 	?>
-	<div class="col-md-12">
+<div class="col-md-12">
 	<?php
+	import_submodule_printinfo();
+	
 	if (! empty ( $processErrors )) {
 		echo "<div class='alert alert-danger'>";
 		echo "<div><span class='glyphicon glyphicon-warning-sign'></span>
@@ -56,13 +63,14 @@
 				</div>
 				<div class="widget-content">
 					<form
-						action="main.php?s=transaksi&amp;action=import&amp;do=penerimaan-cash"
+						action="main.php?s=transaksi&amp;action=import&amp;do=penerimaan"
 						method="post" enctype="multipart/form-data">
 						<input type="file" name="siz_spreadsheet_file" accept=".xlsx" /> <input
 							type="submit" name="siz_submit" value="Import" />
 					</form>
-					<a href="main.php?s=transaksi&amp;action=import-penerimaan"
-						class="btn btn-block btn-default">Lihat Stage Impor <span
+					<a href="main.php?s=transaksi&amp;action=import&amp;proc=penerimaan"
+						class="btn btn-block btn-default">Lihat Stage Impor <?php
+						if ($jmlStagePenerimaan > 0) echo "<span class=\"badge\">{$jmlStagePenerimaan}</span>"; ?><span
 						class="glyphicon glyphicon-triangle-right"></span></a>
 					<div>
 						<h3>Ketentuan File</h3>
@@ -92,6 +100,10 @@
 						<input type="file" name="siz_spreadsheet_file" accept=".xlsx" /> <input
 							type="submit" name="siz_submit" value="Import" />
 					</form>
+					<a href="main.php?s=transaksi&amp;action=import&amp;proc=pengeluaran"
+						class="btn btn-block btn-default">Lihat Stage Impor <?php
+						if ($jmlStagePengeluaran > 0) echo "<span class=\"badge\">{$jmlStagePengeluaran}</span>"; ?><span
+						class="glyphicon glyphicon-triangle-right"></span></a>
 					<div>
 						<h3>Ketentuan File</h3>
 						<p>

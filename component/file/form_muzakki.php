@@ -22,6 +22,14 @@
 		$pass = $parse['password'];
 		$jns = $parse['jns_donatur'];
 		$action = "component/server/func_edit_data_muzakki.php?id=$id";
+	} else {
+		// Jika tambah muzakki baru...
+		if (isset($_GET['nama'])) {
+			$nama = @htmlspecialchars($_GET['nama']);
+		}
+		if (isset($_GET['alamat'])) {
+			$alamat = @htmlspecialchars($_GET['alamat']);
+		}
 	}
 ?>
 

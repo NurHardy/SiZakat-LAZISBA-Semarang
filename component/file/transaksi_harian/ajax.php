@@ -26,13 +26,35 @@ if ($ajaxAct == "get.dashboard.html") {
 		'length' => count($jsonResult),
 		'data'	 => $jsonResult
 	));
-
+	
+//============ BANK LIST SUGGESTION
+} else if ($ajaxAct == "get.bank.suggest") {
+	$jsonResult = array();
+	if (isset($_POST['q'])) {
+		$queryTerm = $_POST['q'];
+		$queryTerm = mysqli_real_escape_string($mysqli, $queryTerm);
+		$getQuery = ("SELECT * FROM bank WHERE (bank LIKE '%".$queryTerm."%')");
+		$resultQuery = mysqli_query($mysqli, $getQuery);
+	
+		while ($rowBank = mysqli_fetch_assoc($resultQuery)) {
+			$jsonResult[] = array(
+					'id' => $rowBank['id_bank'],
+					'text' => $rowBank['bank'],
+					'rek' => $rowBank['no_rekening'],
+					'logo' => $rowBank['logo']
+			);
+		}
+	}
+	echo json_encode($jsonResult);
 //============ IMPOR TRANSAKSI ==========
 } else if ($ajaxAct == "get.stagepenerimaan.form") {
 	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\form_stg_penerimaan.php";
-} else if ($ajaxAct == "get.stagepenerimaan.simpan") {
+} else if ($ajaxAct == "set.stagepenerimaan") {
 	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\simpan_stg_penerimaan.php";
-	
+} else if ($ajaxAct == "map.stagepenerimaan") {
+	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\map_stg_penerimaan.php";
+} else if ($ajaxAct == "flush.stage") {
+	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\load_core.php";
 } else {
 	echo json_encode(array(
 			'status' => 'error',

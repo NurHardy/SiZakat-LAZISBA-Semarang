@@ -173,3 +173,6 @@ textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100
 .siz_kegiatan_bulan:hover .siz_detail_tooltip {
 	display: block;
 }
+
+/* ================ Style untuk AM_SIZ_MAP_PENERIMAAN ==== */
+.siz_import_map_metainfo {font-size:0.8em;}

@@ -1,9 +1,9 @@
 <?php
 /*
- * stage_penerimaan.php
- * ==> Tampilan tabel stage impor penerimaan
+ * stage_pengeluaran.php
+ * ==> Tampilan tabel stage impor pengeluaran
  *
- * AM_SIZ_STG_PENERIMAAN | Tampilan stage penerimaan
+ * AM_SIZ_STG_PENGELUARAN | Tampilan stage pengeluaran
  * ------------------------------------------------------------------------
  */
 
@@ -11,7 +11,7 @@
 	
 	$queryGetStage =  sprintf(
 			"SELECT s.*, a.namaakun, u.nama AS nama_mapdonatur, u.alamat AS alamat_mapdonatur ".
-			"FROM stage_penerimaan AS s ".
+			"FROM stage_pengeluaran AS s ".
 			"LEFT JOIN akun AS a ON s.kode_akun=a.kode ".
 			"LEFT JOIN user AS u ON s.id_donatur=u.id_user ".
 			"ORDER BY tanggal");
@@ -291,5 +291,3 @@ function hapus_trx_penerimaan(elmt, idStage) {
 		</tfoot>
 	</table>
 </div>
-
-

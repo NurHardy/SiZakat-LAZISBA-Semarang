@@ -12,13 +12,7 @@ if ($actionWord=="edit-out") {
 	
 //================ Import transaksi
 } else if ($actionWord=="import") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import_transaksi.php";
-	
-} else if ($actionWord=="import-penerimaan") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\stage_penerimaan.php";
-
-} else if ($actionWord=="mapping-penerimaan") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\mapping_penerimaan.php";
+	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\router_import.php";
 	
 //================ Mengelola bank ===========
 } else if ($actionWord=="bank") {

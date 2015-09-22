@@ -30,7 +30,7 @@
 			</ul>
 		</li>
 		
-		<li <?php echo setActiveOpen(array('form_penerimaan','daftar_penerimaan','detail_bulanan','form_dana_zakat_s','daftar_penyaluran','detail_bulanan2','form_pengeluaran','lapbulanan','lapakun','lapbulan','lapblndetail','laplistakun'));?>>
+		<li <?php echo setActiveOpen(array('transaksi','form_penerimaan','daftar_penerimaan','detail_bulanan','form_dana_zakat_s','daftar_penyaluran','detail_bulanan2','form_pengeluaran','lapbulanan','lapakun','lapbulan','lapblndetail','laplistakun'));?>>
 			<a href="#"><i class="glyphicon glyphicon-transfer"></i> <span>Transaksi Harian</span> <span class="label">5</span></a>
 			<ul>
 				<li <?php setActiveMenu('form_penerimaan');?>><a href="main.php?s=form_penerimaan">Tambah Transaksi Penerimaan</a></li>
