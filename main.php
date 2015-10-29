@@ -1,34 +1,34 @@
 <?php
-	date_default_timezone_set ( "Asia/Jakarta" );
-
-	define('IS_DEBUGGING', false);
-	define('SIZ_VERSION', "SiZakat v.1.4.1 (14 Mei 2015)");
+	
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 	define('FCPATH', str_replace(SELF, '', __FILE__));
-	define('COMPONENT_PATH', FCPATH."\\component");
-	
+	define('COMPONENT_PATH', FCPATH."component");
+
 	// Untuk menghitung waktu eksekusi
 	$timeStart = microtime(true);
 	$queryCount = 0;
 	
 	session_start();
 	
-	require_once COMPONENT_PATH."\\config\\koneksi.php";
-	require_once COMPONENT_PATH."\\libraries\\injection.php";
+	require_once COMPONENT_PATH."/config/koneksi.php";
+	require_once COMPONENT_PATH."/libraries/injection.php";
 	
 	$breadCrumbPath = array();
 	$errorDescription = "";
 	
 	//================= AJAX HANDLER ====
 	if ($_GET['s']=='ajax') {
+		if (!isset($_SESSION['username']))
+			die("Access denied.");
+		
 		if ($_GET['m'] == 'perencanaan') {
-			include COMPONENT_PATH."\\modules\\perencanaan\\ajax.php";
+			include COMPONENT_PATH."/modules/perencanaan/ajax.php";
 		} else if ($_GET['m'] == 'transaksi') {
-			include COMPONENT_PATH."\\file\\transaksi_harian\\ajax.php";
+			include COMPONENT_PATH."/file/transaksi_harian/ajax.php";
 		} else if ($_GET['m'] == 'akun') {
-			include COMPONENT_PATH."\\file\\akun\\ajax.php";
+			include COMPONENT_PATH."/file/akun/ajax.php";
 		} else if ($_GET['m'] == 'user') {
-			include COMPONENT_PATH."\\file\\user\\ajax.php";
+			include COMPONENT_PATH."/file/user/ajax.php";
 		} else {
 			die("Module not found!");
 		}
@@ -36,8 +36,8 @@
 	}
 	
 	// Jika berlum login, maka tidak boleh mengakses
-	if ((!isset($_SESSION['username']))AND (!isset($_SESSION['passsword']))){
-		header("Location: login.php?next=".urlencode($_SERVER['REQUEST_URI']));
+	if ((!isset($_SESSION['username']))AND (!isset($_SESSION['password']))){
+		header("Location: index.php?s=login&next=".urlencode($_SERVER['REQUEST_URI']));
 		exit;
 	}
 
@@ -61,132 +61,132 @@
 	function getTitle(){
 		if(ISSET($_GET['s'])){
 					if($_GET['s'] == 'form_dana_zakat_s'){
-						echo "Tambah Transaksi Penyaluran";
+						return "Tambah Transaksi Penyaluran";
 					}else if($_GET['s'] == 'dashboard'){
-						echo "Dasboard";
+						return "Dasboard";
 					}else if($_GET['s'] == 'form_amilin'){
-						echo "Tambah Data Amilin";
+						return "Tambah Data Amilin";
 					}else if($_GET['s'] == 'form_muzakki'){
-						echo "Tambah Data Muzakki";
+						return "Tambah Data Muzakki";
 					}else if($_GET['s'] == 'form_mustahik'){
-						echo "Tambah Data Mustahik";
+						return "Tambah Data Mustahik";
 					}else if($_GET['s'] == 'editmuzakki'){
-						echo "Ubah Data Muzakki";
+						return "Ubah Data Muzakki";
 					}else if($_GET['s'] == 'daftar_muzakki'){
-						echo "Daftar Muzakki";
+						return "Daftar Muzakki";
 					}else if($_GET['s'] == 'edit_amilin'){
-						echo "Ubah Data Amilin";
+						return "Ubah Data Amilin";
 					}else if($_GET['s'] == 'view_amilin'){
-						echo "Daftar Amilin";
+						return "Daftar Amilin";
 					}else if($_GET['s'] == 'editmustahik'){
-						echo "Ubah Data Mustahik";
+						return "Ubah Data Mustahik";
 					}else if($_GET['s'] == 'daftarmustahik'){
-						echo "Daftar Mustahik";
+						return "Daftar Mustahik";
 					}else if($_GET['s'] == 'form_akun'){
-						echo "Tambah Akun Baru";
+						return "Tambah Akun Baru";
 					}else if($_GET['s'] == 'daftarakun'){
-						echo "Daftar Akun";
+						return "Daftar Akun";
 					}else if($_GET['s'] == 'editakun'){
-						echo "Ubah Akun";
+						return "Ubah Akun";
 					}else if($_GET['s'] == 'form_info_baru'){
-						echo "Tambah Informasi Baru";
+						return "Tambah Informasi Baru";
 					}else if($_GET['s'] == 'daftar_info'){
-						echo "Daftar Informasi";
+						return "Daftar Informasi";
 					}else if($_GET['s'] == 'edit_info'){
-						echo "Ubah Informasi";
+						return "Ubah Informasi";
 					}else if($_GET['s'] == 'hapus_info'){
-						echo "Hapus Informasi";
+						return "Hapus Informasi";
 					}else if($_GET['s'] == 'form_penerimaan'){
-						echo "Tambah Transaksi Penerimaan";
+						return "Tambah Transaksi Penerimaan";
 					}else if($_GET['s'] == 'daftar_penerimaan'){
-						echo "Daftar Transaksi penerimaan";
+						return "Daftar Transaksi penerimaan";
 					}else if($_GET['s'] == 'detail_bulanan'){
-						echo "Detail Transaksi Bulan ".getBulan($_GET['bulan']);
+						return "Detail Transaksi Bulan ".getBulan($_GET['bulan']);
 					}else if($_GET['s'] == 'daftar_penyaluran'){
-						echo "Daftar Transaksi Penyaluran";
+						return "Daftar Transaksi Penyaluran";
 					}else if($_GET['s'] == 'detail_bulanan2'){
-						echo "Detai Transaksi Bulan ".getBulan($_GET['bulan']);
+						return "Detai Transaksi Bulan ".getBulan($_GET['bulan']);
 					}else if($_GET['s'] == 'logout'){
 						include"component/server/logout.php";
 					}else if($_GET['s'] == 'home'){
-						echo "Beranda";
+						return "Beranda";
 					}else if($_GET['s'] == 'zakatku'){
-						echo "Daftar Donasiku";
+						return "Daftar Donasiku";
 					}else if($_GET['s'] == 'rekapzakat'){
-						echo "Rekapitulasi Donasi";
+						return "Rekapitulasi Donasi";
 					}else if($_GET['s'] == 'penerimaan_ramadhan'){
-						echo "Tambah Penerimaan Ramadhan";
+						return "Tambah Penerimaan Ramadhan";
 					}else if($_GET['s'] == 'penyaluran_ramadhan'){
-						echo "Tambah Penyaluran Ramadhan";
+						return "Tambah Penyaluran Ramadhan";
 					}else if($_GET['s'] == 'daftar_penerimaan_ramadhan'){
-						echo "Daftar Penerimaan Ramadhan";
+						return "Daftar Penerimaan Ramadhan";
 					}else if($_GET['s'] == 'daftar_penyaluran_ramadhan'){
-						echo "Daftar Penyaluran Ramadhan";
+						return "Daftar Penyaluran Ramadhan";
 					}else if($_GET['s'] == 'opsi_ramadhan'){
-						echo "Opsi Ramadhan";
+						return "Opsi Ramadhan";
 					}
 					//yang ini yang tambahan mas
 					else if($_GET['s'] == 'form_pengeluaran'){
-						echo "Tambah Transaksi Pengeluaran";
+						return "Tambah Transaksi Pengeluaran";
 					}else if($_GET['s'] == 'pengaturan_bus'){
-						echo "Pengaturan Jumlah Dana BUS";
+						return "Pengaturan Jumlah Dana BUS";
 					}else if($_GET['s'] == 'pengaturan_saldo'){
-						echo "Pengaturan Saldo Awal";
+						return "Pengaturan Saldo Awal";
 					}
 					//baru di edit
 					else if($_GET['s'] == 'daftar_ukm'){
-						echo "Daftar UKM";
+						return "Daftar UKM";
 					}else if($_GET['s'] == 'form_ukm'){
-						echo "Tambah UKM";
+						return "Tambah UKM";
 					}else if($_GET['s'] == 'edit_ukm'){
-						echo "Edit UKM";
+						return "Edit UKM";
 					}else if($_GET['s'] == 'salur_kubah'){
-						echo "Tambah Transaksi Penyaluran Kubah";
+						return "Tambah Transaksi Penyaluran Kubah";
 					}else if($_GET['s'] == 'cicil_kubah'){
-						echo "Tambah Transaksi Cicilan Kubah";
+						return "Tambah Transaksi Cicilan Kubah";
 					}else if($_GET['s'] == 'transaksi_kubah'){
-						echo "Daftar Transaksi Kubah";
+						return "Daftar Transaksi Kubah";
 					}		
 					else if($_GET['s'] == 'ubah_akun_zakat'){
-						echo "Ubah Akun";
+						return "Ubah Akun";
 					}else if($_GET['s'] == 'ubah_akun_bus'){
-						echo "Ubah Akun";
+						return "Ubah Akun";
 					}//yang ini baru diubah
 					else if($_GET['s'] == 'akun_pengeluaran'){
-						echo "Tambah Akun Lain-Lain";
+						return "Tambah Akun Lain-Lain";
 					}else if($_GET['s'] == 'daftar_akun_lain'){
-						echo "Daftar Akun Lain-Lain";
+						return "Daftar Akun Lain-Lain";
 					}else if($_GET['s'] == 'edit_akun_pengeluaran'){
-						echo "Ubah Akun";
+						return "Ubah Akun";
 					}
 					else if($_GET['s'] == 'form_sabab'){
-						echo "Tambah Sabab";
+						return "Tambah Sabab";
 					}else if($_GET['s'] == 'daftar_sabab'){
-						echo "Daftar Sabab";
+						return "Daftar Sabab";
 					}else if($_GET['s'] == 'edit_sabab'){
-						echo "Ubah Data Sabab";
+						return "Ubah Data Sabab";
 					}else if($_GET['s'] == 'lihat_detail_sabab'){
-						echo "Detail Data Sabab";
+						return "Detail Data Sabab";
 					}
 					//terbaru 9/12/2013
 					else if($_GET['s'] == 'pengaturan_lain_lain'){
-						echo "Pengaturan lain lain";
+						return "Pengaturan lain lain";
 					}else if($_GET['s'] == 'ubah_akun_pribadi'){
-						echo "Ubah Akun Pribadi";
+						return "Ubah Akun Pribadi";
 					}
 					
 					
 					
 					else if($_GET['s'] == 'ubah_akun_sabab'){
-						echo "Ubah Data Pribadi";
+						return "Ubah Data Pribadi";
 					}
 					
 					//baruuuuuuuuuuuuuuuuuuuuu
 					else if($_GET['s'] == 'daftar_peserta_bus'){
-						echo "Daftar Peserta Bus";
+						return "Daftar Peserta Bus";
 					}
 					else{
-						echo "";
+						return "";
 					}
 				}
 	}
@@ -195,14 +195,16 @@
 		$month = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 		return ((ISSET($month[$bln])) &&($month[$bln] != ""))?$month[$bln]:"";
 	}
-	?>
-
-<?php include "component/skin/header.php"; ?>
-<?php include "component/skin/sidebar.php"; ?>
+	
+	// Start buffering...
+	ob_start();
+	include COMPONENT_PATH."/skin/backend_header.php";
+	include COMPONENT_PATH."/skin/backend_sidebar.php";
+?>
 		
 		<div id="content">
 			<div id="content-header">
-				<h1><i class="glyphicon glyphicon-edit"></i> <?php getTitle();?></h1>
+				<h1><i class="glyphicon glyphicon-edit"></i> %PAGE_TITLE%</h1>
 				<div class="btn-group">
 					<a class="btn btn-large" title="Tambah Transaksi Penerimaan" href="<?php
 						echo htmlspecialchars("main.php?s=form_penerimaan");
@@ -218,32 +220,8 @@
 				</div>
 			</div>
 			<div id="breadcrumb">
-			<?php //========= BREADCRUMB for navigation ==============
-			
-				if ($_GET['s']=="home") {
-					echo "<a class=\"current\" class=\"#\">";
-					echo "<i class=\"glyphicon glyphicon-home\"></i> Home</a>";
-				} else {
-					echo "<a href=\"main.php?s=home\" title=\"Go to Home\" class=\"tip-bottom\">";
-					echo "<i class=\"glyphicon glyphicon-home\"></i> Home</a>";
-				}
-				
-				if($_GET['s'] == 'perencanaan'){
-					$breadCrumbPath[] = array("Perencanaan","main.php?s=perencanaan",false);
-				} else if ($_GET['s'] == 'transaksi') {
-					$breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",false);
-					if ($_GET['action']=='import') {
-						$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
-					} else if ($_GET['action']=='mapping-penerimaan') {
-						$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
-						$breadCrumbPath[] = array("Map","main.php?s=transaksi&action=mapping-penerimaan",true);
-					}
-				}
-				foreach ($breadCrumbPath as $pathItem) {
-					echo "<a href=\"".$pathItem[1]."\" ";
-					echo ($pathItem[2]?"class=\"current\"":"").">".$pathItem[0]."</a>\n";
-				}
-			?></div>
+			%PAGE_BREADCRUMB%
+			</div>
 			<div class="container-fluid">
             <div class="row" style="margin-top: 10px;">
 			
@@ -567,4 +545,43 @@
 			</div>
 
 		</div><!-- End .content -->
-<?php include "component/skin/footer.php"; ?>
+<?php include COMPONENT_PATH."/skin/backend_footer.php";
+
+	if (empty($SIZPageTitle)) $SIZPageTitle = getTitle();
+	
+	//========= BREADCRUMB for navigation ==============
+	$SIZBreadCrumb = "";
+	if ($_GET['s']=="home") {
+		$SIZBreadCrumb .= "<a class=\"current\" class=\"#\">";
+		$SIZBreadCrumb .=  "<i class=\"glyphicon glyphicon-home\"></i> Home</a>";
+	} else {
+		$SIZBreadCrumb .=  "<a href=\"main.php?s=home\" title=\"Go to Home\" class=\"tip-bottom\">";
+		$SIZBreadCrumb .=  "<i class=\"glyphicon glyphicon-home\"></i> Home</a>";
+	}
+	
+	if($_GET['s'] == 'perencanaan'){
+		$breadCrumbPath[] = array("Perencanaan","main.php?s=perencanaan",false);
+	} else if ($_GET['s'] == 'transaksi') {
+		$breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",false);
+		if ($_GET['action']=='import') {
+			$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
+		} else if ($_GET['action']=='mapping-penerimaan') {
+			$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
+			$breadCrumbPath[] = array("Map","main.php?s=transaksi&action=mapping-penerimaan",true);
+		}
+	}
+	
+	
+	foreach ($breadCrumbPath as $pathItem) {
+		$SIZBreadCrumb .= "<a href=\"".$pathItem[1]."\" ";
+		$SIZBreadCrumb .= ($pathItem[2]?"class=\"current\"":"").">".$pathItem[0]."</a>\n";
+	}
+
+	$pageOutput = ob_get_contents();
+	ob_end_clean();
+	
+	$pageOutput = str_replace("%PAGE_TITLE%", $SIZPageTitle, $pageOutput);
+	$pageOutput = str_replace("%PAGE_BREADCRUMB%", $SIZBreadCrumb, $pageOutput);
+	echo $pageOutput;
+
+?>

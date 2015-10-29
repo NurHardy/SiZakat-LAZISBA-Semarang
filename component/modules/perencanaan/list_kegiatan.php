@@ -8,7 +8,7 @@
  */
 
 	// Cek privilege
-	ra_check_privilege();
+	if (!ra_check_privilege()) exit;
 
 	// List seluruh kegiatan yang diadakan oleh divisi
 	

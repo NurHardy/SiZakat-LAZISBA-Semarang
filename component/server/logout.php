@@ -14,7 +14,7 @@
 		session_destroy();
 		/*mengalihkan ke halaman login  lagi*/
 		//echo mysql_error();
-		echo "<meta http-equiv=\"refresh\" content=\"0; url=login.php\">";
+		echo "<meta http-equiv=\"refresh\" content=\"0; url=index.php?s=login\">";
 	};
 
 ?>

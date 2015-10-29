@@ -22,7 +22,7 @@
 	</head>
 	<body>
 		<div id="header">
-			<h1><a href="">LAZISBA</a></h1>	
+			<h1><a href="main.php">LAZISBA</a></h1>	
 			<a id="menu-trigger" href="#"><i class="glyphicon glyphicon-align-justify"></i></a>	
 		</div>
 		<?php

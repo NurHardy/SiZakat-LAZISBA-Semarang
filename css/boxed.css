@@ -9,6 +9,18 @@
 		-webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
 		-webkit-text-size-adjust: 100%;
 		overflow-x: hidden;
+		
+		background-color: #2D5B00;
+		background-image: url('../images/bg/siz-bg.png');
+		background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#7fd02f), to(#2D5B00));
+		background-image: -webkit-linear-gradient(top, #7fd02f 0%, #2D5B00 100%);
+	    background-image: -moz-linear-gradient(top, #7fd02f 0%, #2D5B00 100%);
+	    background-image: -ms-linear-gradient(top, #7fd02f 0%, #2D5B00 100%);
+	    background-image: -o-linear-gradient(top, #7fd02f 0%, #2D5B00 100%);
+	    background-image: linear-gradient(top, #7fd02f 0%, #2D5B00 100%);
+	    background-attachment: fixed;
+	    background-repeat: repeat-x;
+    
 	 }
 	 
 	#wrapper {

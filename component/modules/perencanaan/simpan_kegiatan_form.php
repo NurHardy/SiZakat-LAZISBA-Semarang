@@ -8,7 +8,7 @@
  */
 
 	// Cek privilege
-	ra_check_privilege();
+	if (!ra_check_privilege()) exit;
 	
 	// Proses simpan kegiatan
 	$tahunDokumen	= intval((isset($_GET['th'])?$_GET['th']:date("Y")));

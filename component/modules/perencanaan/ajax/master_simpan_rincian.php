@@ -86,7 +86,7 @@
 	
 	// Laksanakan query dan keluarkan output
 	if ($errorDesc == null) {
-		require_once COMPONENT_PATH."\libraries\querybuilder.php";
+		require_once COMPONENT_PATH."/libraries/querybuilder.php";
 		$dataSimpan = array(
 				'nama_rincian'		=> $namaRinc,
 				'jumlah_anggaran'	=> $nilaiRinc

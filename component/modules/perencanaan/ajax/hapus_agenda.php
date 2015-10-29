@@ -10,7 +10,7 @@
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == 99);
 	
-	require_once COMPONENT_PATH."\libraries\querybuilder.php";
+	require_once COMPONENT_PATH."/libraries/querybuilder.php";
 	
 	// Dapatkan list id-agenda yang akan dihapus
 	$listIdAgenda = $_POST['id'];

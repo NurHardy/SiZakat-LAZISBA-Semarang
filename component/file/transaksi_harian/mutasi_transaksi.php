@@ -1,11 +1,19 @@
 <?php
-
+	$SIZPageTitle = "Mutasi Transaksi";
 	
 	$month1 = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 	
 	// Set origin form
 	$_SESSION["siz_origin_url"] = $_SERVER["REQUEST_URI"];
 	
+	if (empty($_GET[th])) {
+		$thFilter = date("Y");
+		$blnFilter = date("m");
+	} else {
+		$thFilter = $_GET[th];
+		$blnFilter = $_GET[bln];
+	}
+	$qFilter = sprintf("%02d-%02d-__", $thFilter, $blnFilter);
 ?>
 <div class="col-12">
 	<div class="widget-box">
@@ -23,7 +31,8 @@
 					<?php 
 	$month1 = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 					foreach($month1 as $m => $v){
-						echo "<option value='$m'>$v</option>";
+						$isSelected = (intval($m) == $blnFilter);
+						echo "<option value='$m' ".($isSelected?"selected":"").">$v</option>";
 					}
 					?>
 					</select>
@@ -31,7 +40,8 @@
 					<?php 
 						$d = date('Y');
 						for($i=0;$i<5;$i++){
-							echo "<option value='".($d-$i)."'>".($d-$i)."</option>";
+							$isSelected = (intval($m) == $blnFilter);
+							echo "<option value='".($d-$i)."' ".($isSelected?"selected":"").">".($d-$i)."</option>";
 						}
 					?>
 				  </select>
@@ -65,13 +75,15 @@
 									</thead>
 									<tbody>
 					<?php
+						
+						
 						$sql = $mysqli->query("SELECT p.id_penerimaan, p.tanggal, p.id_akun, p.no_nota, a.idakun, a.namaakun, p.jumlah, u.id_user, u.nama, p.keterangan
 											FROM penerimaan p 
 											LEFT JOIN akun a 
 												ON p.id_akun = a.kode 
 											LEFT JOIN user u
 												ON p.id_donatur = u.id_user
-											WHERE tanggal LIKE '$_GET[th]-$_GET[bln]-__' ORDER BY tanggal");
+											WHERE tanggal LIKE '".$qFilter."' ORDER BY tanggal");
 						$i = $totalMasuk = 0;
 						while($f = $sql->fetch_array(MYSQLI_ASSOC)){
 							$i++;
@@ -126,7 +138,7 @@
 												ON p.id_akun = a.kode
 											LEFT JOIN pengeluaran l
 												ON p.id_akun = l.kode
-											WHERE tanggal LIKE '$_GET[th]-$_GET[bln]-__'");
+											WHERE tanggal LIKE '".$qFilter."' ORDER BY tanggal");
 						$i = $totalKeluar = 0;
 						while($f = $sql->fetch_array(MYSQLI_ASSOC)){
 							$i++;
@@ -153,7 +165,7 @@
 										<tr>
 											<td colspan='3'><h5>Total</h5></td>
 											<td width='5%'>:</td>
-											<td align='right'><?php echo ''.number_format($totalKeluar , 0 , ',' , '.' ); ?></td>
+											<td align='right'><b>Rp. <?php echo ''.number_format($totalKeluar , 0 , ',' , '.' ); ?></b></td>
 										</tr>
 									</table>
 								</div> <!-- End tab container Pengeluaran -->

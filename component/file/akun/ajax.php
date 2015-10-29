@@ -31,9 +31,9 @@ if ($ajaxAct == "get.akun.penerimaan") {
 	
 		while ($rowAkun = mysqli_fetch_assoc($resultQuery)) {
 			$jsonResult[] = array(
-					'id' => $rowAkun['idakun'],
+					'id' => $rowAkun['kode'],
 					'text' => $rowAkun['namaakun'],
-					'code' => $rowAkun['kode'],
+					'id_akun' => $rowAkun['idakun'],
 					'desc' => $rowAkun['keterangan']
 			);
 		}
@@ -41,15 +41,15 @@ if ($ajaxAct == "get.akun.penerimaan") {
 	echo json_encode($jsonResult);
 // ============ FORM TAMBAH SUMBERDANA
 } else if ($ajaxAct == "get.form.tambahsumber") {
-	require COMPONENT_PATH."\\file\\akun\\akun_tambahsumberdana_form.php";
+	require COMPONENT_PATH."/file/akun/akun_tambahsumberdana_form.php";
 	
 // ============ HAPUS
 } else if ($ajaxAct == "sumberdana.hapus") {
-	require COMPONENT_PATH."\\file\\akun\\akun_hapussumberdana.php";
+	require COMPONENT_PATH."/file/akun/akun_hapussumberdana.php";
 	
 // ============ TAMBAH / EDIT
 } else if ($ajaxAct == "sumberdana.simpan") {
-	require COMPONENT_PATH."\\file\\akun\\akun_simpansumberdana.php";
+	require COMPONENT_PATH."/file/akun/akun_simpansumberdana.php";
 		
 } else {
 	echo json_encode ( array (

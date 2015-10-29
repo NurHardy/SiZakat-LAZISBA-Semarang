@@ -61,7 +61,7 @@
 		// Tidak ada error
 		if (empty($submitError)) {
 			// Kita butuh ini untuk upload...
-			require_once COMPONENT_PATH."\\libraries\\helper_upload.php";
+			require_once COMPONENT_PATH."/libraries/helper_upload.php";
 			
 			$uploadLogoSetting = array(
 				'path' => 'images/bank',
@@ -75,7 +75,7 @@
 			if (($uploadResult == null) && ($uploadErrorDesc != null)) {
 				$submitError[] = $uploadErrorDesc;
 			} else {
-				require_once COMPONENT_PATH."\\libraries\\querybuilder.php";
+				require_once COMPONENT_PATH."/libraries/querybuilder.php";
 				
 				//=== Proses simpan ke database
 				$fieldToSave = array(

@@ -3,7 +3,7 @@
 $ajaxAct = $_POST['act'];
 $errorDesc = null;
 
-require_once(COMPONENT_PATH."\modules\perencanaan\helper_perencanaan.php");
+require_once(COMPONENT_PATH."/modules/perencanaan/helper_perencanaan.php");
 
 if ($ajaxAct == "get.rincian") {
 	$idAgenda = intval($_POST['id']);

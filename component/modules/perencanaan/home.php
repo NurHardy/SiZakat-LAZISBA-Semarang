@@ -7,7 +7,9 @@
  * ------------------------------------------------------------------------
  */
 	// Cek privilege
-	ra_check_privilege();
+	if (!ra_check_privilege()) exit;
+	
+	$SIZPageTitle = "Perencanaan";
 
 	$yearNow = intval(date("Y"));
 	ra_print_status($namaDivisiUser); ?>

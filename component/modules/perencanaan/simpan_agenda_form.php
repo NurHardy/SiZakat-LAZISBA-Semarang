@@ -7,7 +7,7 @@
  * ------------------------------------------------------------------------
  */
 	// Cek privilege
-	ra_check_privilege();
+	if (!ra_check_privilege()) exit;
 	
 	$formActionUrl	= $_SERVER['REQUEST_URI']; // Aksi ke script ini lagi.
 	
@@ -136,7 +136,7 @@
 				$dataAgendaKegiatan['tgl_ubah']	= $tglSekarang;
 				$dataAgendaKegiatan['id_user']	= $_SESSION['iduser'];
 			}
-			require_once COMPONENT_PATH."\libraries\querybuilder.php";
+			require_once COMPONENT_PATH."/libraries/querybuilder.php";
 			$querySimpan  = ($isEditing?"UPDATE":"INSERT INTO")." ra_agenda SET ";
 			$querySimpan .= querybuilder_generate_set($dataAgendaKegiatan);
 			if ($isEditing) $querySimpan .= " WHERE id_agenda=".$idAgenda;

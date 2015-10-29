@@ -8,7 +8,7 @@
  */
 
 	// Cek privilege
-	ra_check_privilege();
+	if (!ra_check_privilege()) exit;
 	
 	// Proses simpan kegiatan
 	$idKegiatan		= (isset($_GET['id'])?intval($_GET['id']):-1);
@@ -75,7 +75,7 @@
 				"divisi"				=> $mKegiatanDivisi,
 				"prioritas"				=> $mKegiatanPrioritas
 			);
-			require_once COMPONENT_PATH."\libraries\querybuilder.php";
+			require_once COMPONENT_PATH."/libraries/querybuilder.php";
 			$querySimpan  = ($isEditing?"UPDATE ":"INSERT INTO ")." ra_kegiatan SET ";
 			$querySimpan .= querybuilder_generate_set($dataMasterKegiatan);
 			if ($isEditing) $querySimpan .= " WHERE id_kegiatan=".$idKegiatan;

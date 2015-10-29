@@ -7,7 +7,7 @@
  * ------------------------------------------------------------------------
  */
 
-	require_once COMPONENT_PATH.'\\libraries\\querybuilder.php';
+	require_once COMPONENT_PATH.'/libraries/querybuilder.php';
 	
 	//============ Proses mengambil rekap pemasukan dan pengeluaran tahunan
 	$tahunSekarang = intval(date("Y"));

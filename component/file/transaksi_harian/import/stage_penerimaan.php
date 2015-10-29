@@ -6,8 +6,9 @@
  * AM_SIZ_STG_PENERIMAAN | Tampilan stage penerimaan
  * ------------------------------------------------------------------------
  */
+	$SIZPageTitle = "Stage Penerimaan";
 
-	require_once COMPONENT_PATH."\\file\\transaksi_harian\\helper_transaksi.php";
+	require_once COMPONENT_PATH."/file/transaksi_harian/helper_transaksi.php";
 	
 	$queryGetStage =  sprintf(
 			"SELECT s.*, a.namaakun, u.nama AS nama_mapdonatur, u.alamat AS alamat_mapdonatur ".
@@ -70,14 +71,19 @@ function submit_trx_penerimaan(idStage) {
 	var formFields = $("#siz_frm_stgpenerimaan_"+idStage+" form").serialize();
 
 	_ajax_send("id="+idStage+"&"+formFields, function(data){
-		var rowElmt = $("#siz_check_item_"+idStage).closest("tr");
-		$(rowElmt).html(data.html);
-		// Reinit the iCheck plugin
-		$(rowElmt).find('input[type=checkbox],input[type=radio]').iCheck({
-	    	checkboxClass: 'icheckbox_flat-blue',
-	    	radioClass: 'iradio_flat-blue'
-		});
-		close_form_trx_penerimaan(idStage);
+		if (data.status == "ok") {
+			var rowElmt = $("#siz_check_item_"+idStage).closest("tr");
+			$(rowElmt).html(data.html);
+			// Reinit the iCheck plugin
+			$(rowElmt).find('input[type=checkbox],input[type=radio]').iCheck({
+		    	checkboxClass: 'icheckbox_flat-blue',
+		    	radioClass: 'iradio_flat-blue'
+			});
+			close_form_trx_penerimaan(idStage);
+		} else {
+			alert(data.error);
+		}
+		
 	}, "Memproses...", "main.php?s=ajax&m=transaksi");
 	//alert(formFields);
 	return false;

@@ -35,7 +35,7 @@
 	}
 	
 	//========== EXPORT EXCEL DENGAN PHPEXCEL
-	require_once COMPONENT_PATH."\\libraries\\phpexcel\\PHPExcel.php";
+	require_once COMPONENT_PATH."/libraries/phpexcel/PHPExcel.php";
 	
 	/** Create a new PHPExcel Object **/
 	$objPHPExcel = new PHPExcel();
@@ -347,7 +347,7 @@
 		// Simpan file
 		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 		$objWriter->setPreCalculateFormulas(true);
-		$objWriter->save(FCPATH."\\downloads\\".$exportFileName);
+		$objWriter->save(FCPATH."/downloads/".$exportFileName);
 		
 		echo json_encode(array(
 				'status'	=> 'ok',

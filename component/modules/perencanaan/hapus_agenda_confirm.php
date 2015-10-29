@@ -8,12 +8,12 @@
  */
 
 	// Cek privilege
-	ra_check_privilege();
+	if (!ra_check_privilege()) exit;
 	
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	$backUrl		= "javascript:backAway();";
-	require_once COMPONENT_PATH."\libraries\querybuilder.php";
+	require_once COMPONENT_PATH."/libraries/querybuilder.php";
 	
 	// Dapatkan list id-agenda yang akan dihapus
 	$listIdAgenda = (isset($_POST['id'])?$_POST['id']:$_GET['id']);

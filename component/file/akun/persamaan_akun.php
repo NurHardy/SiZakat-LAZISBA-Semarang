@@ -1,5 +1,5 @@
 <?php
-	require_once COMPONENT_PATH . "\\file\\akun\\helper_akun.php";
+	require_once COMPONENT_PATH . "/file/akun/helper_akun.php";
 
 	$accountTree = getAccountArray(2, 0);
 	function generateAccountRows($accountArray) {

@@ -14,19 +14,20 @@ $actionWord = $_GET['proc'];
 
 //================ DOKUMENTASI ===========
 if ($actionWord=="doc") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\documentation.php";
+	include COMPONENT_PATH."/file/transaksi_harian/import/documentation.php";
 
 //================ IMPORT ===========
 } else if ($actionWord=="load") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\load_loader.php";
+	include COMPONENT_PATH."/file/transaksi_harian/import/load_loader.php";
 } else if ($actionWord=="penerimaan") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\stage_penerimaan.php";
+	include COMPONENT_PATH."/file/transaksi_harian/import/stage_penerimaan.php";
 } else if ($actionWord=="pengeluaran") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\stage_pengeluaran.php";
+	include COMPONENT_PATH."/file/transaksi_harian/import/stage_pengeluaran.php";
 } else if ($actionWord=="mapping-penerimaan") {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\mapping_penerimaan.php";
-
+	include COMPONENT_PATH."/file/transaksi_harian/import/mapping_penerimaan.php";
+} else if ($actionWord=="mapping-pengeluaran") {
+	include COMPONENT_PATH."/file/transaksi_harian/import/mapping_pengeluaran.php";
 //================ HALAMAN DEFAULT ===========
 } else {
-	include COMPONENT_PATH."\\file\\transaksi_harian\\import\\import_transaksi.php";
+	include COMPONENT_PATH."/file/transaksi_harian/import/import_transaksi.php";
 }

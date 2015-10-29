@@ -34,6 +34,8 @@
 		echo "Master Kegiatan</a> |\n";
 		echo "  <a href=\"".htmlspecialchars(ra_gen_url("rekap",$tahunSekarang))."\">";
 		echo "<span class=\"glyphicon glyphicon-file\"></span> Dokumen Perencanaan ".$tahunSekarang."</a> |\n";
+		echo "  <a href=\"".htmlspecialchars(ra_gen_url("realisasi",$tahunSekarang))."\">";
+		echo "<span class=\"glyphicon glyphicon-file\"></span> Laporan Realisasi</a> |\n";
 		echo "  <span class=\"glyphicon glyphicon-user\"></span> Status/Divisi Anda : \n";
 		echo "<strong>".$namaDivisiUser."</strong>\n\n";
 		

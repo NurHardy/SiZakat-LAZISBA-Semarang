@@ -78,7 +78,7 @@
 					// Query berhasil
 					if ($resultSimpan != null) {
 						$idPersamaan = mysqli_insert_id($mysqli);
-						require_once COMPONENT_PATH."\\file\\akun\\helper_akun.php";
+						require_once COMPONENT_PATH."/file/akun/helper_akun.php";
 						$htmlListBaru = getHTMLSumberDana($kodePengeluaran);
 					} else {
 						$errorDesc = "Terjadi kesalahan internal: ".mysqli_error($mysqli);
@@ -103,7 +103,7 @@
 					$resultSimpan = mysqli_query($mysqli, $queryEditSumberDana);
 					// Query berhasil
 					if ($resultSimpan != null) {
-						require_once COMPONENT_PATH."\\file\\akun\\helper_akun.php";
+						require_once COMPONENT_PATH."/file/akun/helper_akun.php";
 						$htmlListBaru = getHTMLSumberDana($kodePengeluaran);
 					} else {
 						$errorDesc = "Terjadi kesalahan internal: ".mysqli_error($mysqli);

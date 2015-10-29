@@ -10,9 +10,9 @@
 	// Ada data POST
 	if (isset($_POST['id'])) {
 		// Load library untuk validasi
-		require_once COMPONENT_PATH."\\libraries\\validation.php";
-		require_once COMPONENT_PATH."\\libraries\\helper_akun.php";
-		require_once COMPONENT_PATH."\\libraries\\helper_user.php";
+		require_once COMPONENT_PATH."/libraries/validation.php";
+		require_once COMPONENT_PATH."/libraries/helper_akun.php";
+		require_once COMPONENT_PATH."/libraries/helper_user.php";
 		
 		//== Inisialisasi, ambil data input lalu Validasi ==
 		$stageId = intval($_POST['id']);
@@ -90,7 +90,7 @@
 		
 		//== Cek amilin
 		if ($processError == null) {
-			$dataAmilin = cek_user_id($idAmilin);
+			$dataAmilin = cek_user($idAmilin);
 			if ($dataAmilin != null) {
 				if ($dataAmilin['level'] != 99) {
 					$processError = "ID Amilin/teller tidak valid.";
@@ -130,7 +130,7 @@
 		
 		// Tidak ada error, maka data dianggap telah valid
 		if (empty($processError)) {
-			require_once COMPONENT_PATH."\\libraries\\querybuilder.php";
+			require_once COMPONENT_PATH."/libraries/querybuilder.php";
 			
 			$updateFields = array(
 				'no_nota'	=> $noNota, 
@@ -157,7 +157,7 @@
 						"LEFT JOIN akun AS a ON s.kode_akun=a.kode");
 				$dataTrx = mysqli_fetch_assoc($resultReFetch);
 					
-				require_once COMPONENT_PATH."\\file\\transaksi_harian\\helper_transaksi.php";
+				require_once COMPONENT_PATH."/file/transaksi_harian/helper_transaksi.php";
 				$htmlRecord = getHTMLRowTrxPenerimaan($dataTrx);
 			}
 		} // End if (empty($processError))

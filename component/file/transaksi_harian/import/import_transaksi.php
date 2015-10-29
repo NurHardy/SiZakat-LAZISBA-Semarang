@@ -6,15 +6,17 @@
  * AM_SIZ_IMPORTTRX | Tampilan form impor transaksi
  * ------------------------------------------------------------------------
  */
+	$SIZPageTitle = "Impor Transaksi dari Microsoft Excel";
+
 	$processErrors = array ();
 	$processWarnings = array ();
 	$processSuccess = array ();
 	
 	if (isset ( $_GET ['do'] )) {
-		require COMPONENT_PATH . '\\file\\transaksi_harian\\import\\import_core.php';
+		require COMPONENT_PATH . '/file/transaksi_harian/import/import_core.php';
 	}
 	
-	require_once COMPONENT_PATH.'\\libraries\\querybuilder.php';
+	require_once COMPONENT_PATH.'/libraries/querybuilder.php';
 	$jmlStagePenerimaan = querybuilder_getscalar("SELECT COUNT(*) FROM stage_penerimaan");
 	$jmlStagePengeluaran = querybuilder_getscalar("SELECT COUNT(*) FROM stage_pengeluaran");
 	
@@ -69,7 +71,8 @@
 							type="submit" name="siz_submit" value="Import" />
 					</form>
 					<a href="main.php?s=transaksi&amp;action=import&amp;proc=penerimaan"
-						class="btn btn-block btn-default">Lihat Stage Impor <?php
+						class="btn btn-block btn-default <?php
+							if ($jmlStagePenerimaan == 0) echo "disabled"; ?>">Lihat Stage Impor <?php
 						if ($jmlStagePenerimaan > 0) echo "<span class=\"badge\">{$jmlStagePenerimaan}</span>"; ?><span
 						class="glyphicon glyphicon-triangle-right"></span></a>
 					<div>
@@ -83,6 +86,8 @@
 							<li>Tidak ada tanda baca pada nominal (Misal: 20000)</li>
 						</ul>
 					</div>
+					<a href="uploads/template-penerimaan.xlsx">
+						<span class="glyphicon glyphicon-download"></span>&nbsp;Download Template</a>
 				</div>
 			</div>
 		</div>
@@ -101,7 +106,8 @@
 							type="submit" name="siz_submit" value="Import" />
 					</form>
 					<a href="main.php?s=transaksi&amp;action=import&amp;proc=pengeluaran"
-						class="btn btn-block btn-default">Lihat Stage Impor <?php
+						class="btn btn-block btn-default <?php
+							if ($jmlStagePengeluaran == 0) echo "disabled"; ?>">Lihat Stage Impor <?php
 						if ($jmlStagePengeluaran > 0) echo "<span class=\"badge\">{$jmlStagePengeluaran}</span>"; ?><span
 						class="glyphicon glyphicon-triangle-right"></span></a>
 					<div>
@@ -115,6 +121,8 @@
 							<li>Tidak ada tanda baca pada nominal (Misal: 20000)</li>
 						</ul>
 					</div>
+					<a href="uploads/template-pengeluaran.xlsx">
+						<span class="glyphicon glyphicon-download"></span>&nbsp;Download Template</a>
 				</div>
 			</div> <!-- /widget -->
 		</div> <!-- /col-6 -->

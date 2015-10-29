@@ -123,8 +123,8 @@
 									<option value="">- Selected -</option>
 					<?php
 	if ($trxData['id_donatur'] > 0) {
-		require_once COMPONENT_PATH."\\libraries\\helper_user.php";
-		$dataDonatur = cek_user_id($trxData['id_donatur']);
+		require_once COMPONENT_PATH."/libraries/helper_user.php";
+		$dataDonatur = cek_user($trxData['id_donatur']);
 		if ($dataDonatur != null) {
 			echo "<option value='{$trxData['id_donatur']}' selected>";
 			echo $dataDonatur['nama'];

@@ -1,5 +1,5 @@
 <?php
-	include "component/config/koneksi.php";
+	include "../../config/koneksi.php";
 ?>
 
 	<div class="col-12"><br/>

@@ -34,6 +34,9 @@
 		return "Rp. ".number_format($nilai, 0, ',', '.');
 	}
 	
+	function _base_url($_path) {return SITE_PATH.$_path;}
+	function _complete_url($_path) {return SITE_DOMAIN._base_url($_path);}
+
 	// Menampilkan halaman error (harus disertakan dengan template)
 	function show_error_page($errDesc) {
 		$errorDescription = $errDesc;

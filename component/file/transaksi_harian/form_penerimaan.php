@@ -16,7 +16,7 @@
 		$transactionData = ($transactionResult == null ? null : $transactionResult->fetch_array ( MYSQLI_ASSOC ));
 		if ($transactionData == null) {
 			$errorDescription = "Data transaksi penerimaan tidak ditemukan dalam database.";
-			include COMPONENT_PATH . "\\file\\pages\\error.php";
+			include COMPONENT_PATH . "/file/pages/error.php";
 			return;
 		}
 		$trxData ['tanggal'] = date ( "Y-m-d", strtotime ( $transactionData ['tanggal'] ) );

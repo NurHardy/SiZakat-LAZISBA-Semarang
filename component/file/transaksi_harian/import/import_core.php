@@ -11,12 +11,12 @@
 	$doProcess = strtolower($doProcess);
 	
 	// Load library untuk upload dan query
-	require COMPONENT_PATH.'\\libraries\\helper_upload.php';
-	require COMPONENT_PATH.'\\libraries\\querybuilder.php';
+	require COMPONENT_PATH.'/libraries/helper_upload.php';
+	require COMPONENT_PATH.'/libraries/querybuilder.php';
 	
 	$uploadError = null;
 	$uploadSetting = array(
-			'path' => '\\uploads',
+			'path' => '/uploads',
 			'exts' => array('xlsx'),
 			'size' => 2 * 1024 * 1024,
 			'name' => 'siz_spreadsheet_file',
@@ -27,7 +27,7 @@
 	if ($uploadResult != null) {
 		$spreadsheetUrl = FCPATH.$uploadResult['url'];
 		// Baca spreadsheet yang terupload...
-		require_once COMPONENT_PATH."\\libraries\\phpexcel\\PHPExcel.php";
+		require_once COMPONENT_PATH."/libraries/phpexcel/PHPExcel.php";
 		
 		try {
 			$objReader = PHPExcel_IOFactory::createReader('Excel2007');
@@ -36,6 +36,9 @@
 				
 			$objWorksheet = $objPHPExcel->getActiveSheet();
 			
+			/*=====================================================================
+			 * Impor Transaksi Penerimaan
+			 *=====================================================================*/
 			if ($doProcess == "penerimaan") {
 				// Begin transaction...
 				mysqli_autocommit($mysqli, false);
@@ -59,8 +62,8 @@
 					$tanggalTrxExcel	= $objWorksheet->getCellByColumnAndRow(0,$rowIndex)->getValue();
 					$noNotaTrx			= trim($objWorksheet->getCellByColumnAndRow(1,$rowIndex)->getValue());
 					
-					// Jika tanggal atau no nota kosong, maka dilewati...
-					if (empty($tanggalTrxExcel) || empty($noNotaTrx)) {
+					// Jika no nota kosong, maka dilewati...
+					if (empty($noNotaTrx)) {
 						$rowSkipped++;
 						continue;
 					}
@@ -78,14 +81,22 @@
 					$txtUkmKubah		= trim($objWorksheet->getCellByColumnAndRow(8,$rowIndex)->getValue());
 					$txtThnRamadhan		= trim($objWorksheet->getCellByColumnAndRow(9,$rowIndex)->getValue());
 					
-					if (!is_numeric($jumlahTrx)) {
-						$processWarnings[] = "Record pada baris ".$rowIndex." (Nota: ".
-							htmlspecialchars($noNota).") gagal diload. Nominal transaksi harus numerik.";
-						continue;
+					if (!empty($jumlahTrx)) {
+						if (!is_numeric($jumlahTrx)) {
+							$processWarnings[] = "Record pada baris ".$rowIndex." (Nota: ".
+									htmlspecialchars($noNotaTrx).") gagal diload. Nominal transaksi harus numerik.";
+							continue;
+						} else {
+							$jumlahTrx = intval($jumlahTrx);
+							$totalNominalImpor += $jumlahTrx;
+						}
 					} else {
-						$jumlahTrx = intval($jumlahTrx);
-						$totalNominalImpor += $jumlahTrx;
+						$processWarnings[] = "Record pada baris ".$rowIndex." (Nota: ".
+								htmlspecialchars($noNotaTrx).") gagal diload. Nominal kosong.";
+						$rowSkipped++;
+						continue;
 					}
+					
 					if (!empty($txtThnRamadhan)) {
 						if (!is_numeric($txtThnRamadhan)) {
 							$processWarnings[] = "Tahun Ramadhan pada record pada baris ".$rowIndex." (Nota: ".
@@ -110,9 +121,9 @@
 							'id_teller' => 0,
 							'nama_amilin' => $txtAmilin,
 							'jumlah'	=> $jumlahTrx,
-							'keterangan' => $keteranganTrx,
+							'keterangan' => $keteranganTrx.", dari ".$txtDonatur,
 							'kode_akun'	=> '0',
-							'ket_akun'	=> $keteranganTrx.", dari ".$txtDonatur,
+							'ket_akun'	=> $keteranganTrx,
 							'id_bank'	=> (!empty($txtBank)?-1:0),
 							'nama_bank'	=> $txtBank,
 							'nama_ukm'	=> $txtUkmKubah,
@@ -144,7 +155,10 @@
 				} else {
 					
 				}
-				
+			
+			/*=====================================================================
+			 * Impor Transaksi Pengeluaran
+			 *=====================================================================*/
 			} else if ($doProcess == "pengeluaran") {
 				// Begin transaction...
 				mysqli_autocommit($mysqli, false);
@@ -169,8 +183,8 @@
 					$keteranganTrx		= trim($objWorksheet->getCellByColumnAndRow(1,$rowIndex)->getValue());
 					
 						
-					// Jika tanggal atau keterangan kosong, maka dilewati...
-					if (empty($tanggalTrxExcel) || empty($keteranganTrx)) {
+					// Jika keterangan kosong, maka dilewati...
+					if (empty($keteranganTrx)) {
 						$rowSkipped++;
 						continue;
 					}
@@ -183,14 +197,14 @@
 					$txtInfoTrx			= trim($objWorksheet->getCellByColumnAndRow(4,$rowIndex)->getValue());
 					$txtBank			= trim($objWorksheet->getCellByColumnAndRow(5,$rowIndex)->getValue());
 					$txtAmilin			= trim($objWorksheet->getCellByColumnAndRow(6,$rowIndex)->getValue());
-					$txtDonatur			= trim($objWorksheet->getCellByColumnAndRow(7,$rowIndex)->getValue());
+					$txtPenerima		= trim($objWorksheet->getCellByColumnAndRow(7,$rowIndex)->getValue());
 					
 					$txtUkmKubah		= trim($objWorksheet->getCellByColumnAndRow(8,$rowIndex)->getValue());
 					$txtThnRamadhan		= trim($objWorksheet->getCellByColumnAndRow(9,$rowIndex)->getValue());
 						
 					if (!is_numeric($jumlahTrx)) {
 						$processWarnings[] = "Record pada baris ".$rowIndex." (Nota: ".
-								htmlspecialchars($noNota).") gagal diload. Nominal transaksi harus numerik.";
+								htmlspecialchars($noNotaTrx).") gagal diload. Nominal transaksi harus numerik.";
 						continue;
 					} else {
 						$jumlahTrx = intval($jumlahTrx);
@@ -210,19 +224,19 @@
 					$noNotaTrx = preg_replace("/\s/", "", $noNotaTrx);
 						
 					$tanggalTrx = date("Y-m-d", PHPExcel_Shared_Date::ExcelToPHP($tanggalTrxExcel));
-						
+					
+					$ketAkun = $keteranganTrx.(empty($txtDonatur)? "" : " untuk ".$txtDonatur)." (".$txtInfoTrx.")";
 					$recordFields = array(
 							'no_nota'	=> $noNotaTrx,
 							'tanggal'	=> $tanggalTrx,
-							'id_donatur' => 0,
-							'nama_donatur' => $txtDonatur,
-							'alamat_donatur' => $txtAlamatDonatur,
-							'id_teller' => 0,
-							'nama_amilin' => $txtAmilin,
+							'id_penerima' => (!empty($txtPenerima)?-1:0),
+							'nama_penerima' => $txtPenerima,
+							'id_pj' => (!empty($txtAmilin)?-1:0),
+							'nama_pj' => $txtAmilin,
 							'jumlah'	=> $jumlahTrx,
-							'keterangan' => $keteranganTrx,
+							'keterangan' => $ketAkun,
 							'kode_akun'	=> '0',
-							'ket_akun'	=> $keteranganTrx.", dari ".$txtDonatur,
+							'ket_akun'	=> $keteranganTrx,
 							'id_bank'	=> (!empty($txtBank)?-1:0),
 							'nama_bank'	=> $txtBank,
 							'nama_ukm'	=> $txtUkmKubah,
@@ -250,7 +264,7 @@
 					mysqli_commit($mysqli);
 					$processSuccess[] = "<b>".$trxCountSuccess." dari ".
 							$trxCount." record</b> berhasil dimuat (".$rowSkipped." dilewati).";
-					$processSuccess[] = "Jumlah nominal penerimaan yang berhasil di-load: <b>".to_rupiah($totalNominalImpor)."</b>";
+					$processSuccess[] = "Jumlah nominal pengeluaran yang berhasil di-load: <b>".to_rupiah($totalNominalImpor)."</b>";
 				} else {
 						
 				}

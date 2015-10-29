@@ -45,7 +45,7 @@ function do_upload($uploadSetting, &$errorDesc) {
 			$dateChunk = date("Ymd-His");
 			$saltChunk = substr(md5(uniqid(rand(), true)), 0, 5);
 			$uploadedFile = sprintf("%s/%s-%s.%s", $uploadPath, $dateChunk, $saltChunk, $ekstensi);
-			if (move_uploaded_file($_FILES[$fieldName]['tmp_name'], FCPATH."\\".$uploadedFile))  {
+			if (move_uploaded_file($_FILES[$fieldName]['tmp_name'], FCPATH."/".$uploadedFile))  {
 				// Berhasil
 				$urlGambar = $uploadedFile;
 			} else {

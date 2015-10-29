@@ -3,10 +3,10 @@
 $ajaxAct = $_POST['act'];
 $errorDesc = null;
 
-require_once COMPONENT_PATH."\\libraries\\helper_saldo.php";
+require_once COMPONENT_PATH."/libraries/helper_saldo.php";
 
 if ($ajaxAct == "get.dashboard.html") {
-	require COMPONENT_PATH."\\file\\transaksi_harian\\dashboard.php";
+	require COMPONENT_PATH."/file/transaksi_harian/dashboard.php";
 	
 } else if ($ajaxAct == "get.tabel.penerimaan") {
 	$idAgenda = intval($_POST['id']);
@@ -48,13 +48,19 @@ if ($ajaxAct == "get.dashboard.html") {
 	echo json_encode($jsonResult);
 //============ IMPOR TRANSAKSI ==========
 } else if ($ajaxAct == "get.stagepenerimaan.form") {
-	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\form_stg_penerimaan.php";
+	require COMPONENT_PATH."/file/transaksi_harian/import/form_stg_penerimaan.php";
+} else if ($ajaxAct == "get.stagepengeluaran.form") {
+	require COMPONENT_PATH."/file/transaksi_harian/import/form_stg_pengeluaran.php";
 } else if ($ajaxAct == "set.stagepenerimaan") {
-	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\simpan_stg_penerimaan.php";
+	require COMPONENT_PATH."/file/transaksi_harian/import/simpan_stg_penerimaan.php";
+} else if ($ajaxAct == "set.stagepengeluaran") {
+	require COMPONENT_PATH."/file/transaksi_harian/import/simpan_stg_pengeluaran.php";
 } else if ($ajaxAct == "map.stagepenerimaan") {
-	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\map_stg_penerimaan.php";
+	require COMPONENT_PATH."/file/transaksi_harian/import/map_stg_penerimaan.php";
+} else if ($ajaxAct == "map.stagepengeluaran") {
+	require COMPONENT_PATH."/file/transaksi_harian/import/map_stg_pengeluaran.php";
 } else if ($ajaxAct == "flush.stage") {
-	require COMPONENT_PATH."\\file\\transaksi_harian\\import\\load_core.php";
+	require COMPONENT_PATH."/file/transaksi_harian/import/load_core.php";
 } else {
 	echo json_encode(array(
 			'status' => 'error',

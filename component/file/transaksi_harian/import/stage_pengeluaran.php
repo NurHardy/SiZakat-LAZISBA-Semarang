@@ -7,13 +7,15 @@
  * ------------------------------------------------------------------------
  */
 
-	require_once COMPONENT_PATH."\\file\\transaksi_harian\\helper_transaksi.php";
+	$SIZPageTitle = "Stage Pengeluaran";
+	
+	require_once COMPONENT_PATH."/file/transaksi_harian/helper_transaksi.php";
 	
 	$queryGetStage =  sprintf(
-			"SELECT s.*, a.namaakun, u.nama AS nama_mapdonatur, u.alamat AS alamat_mapdonatur ".
+			"SELECT s.*, a.namaakun, u.nama AS nama_mappenerima ".
 			"FROM stage_pengeluaran AS s ".
 			"LEFT JOIN akun AS a ON s.kode_akun=a.kode ".
-			"LEFT JOIN user AS u ON s.id_donatur=u.id_user ".
+			"LEFT JOIN user AS u ON s.id_penerima=u.id_user ".
 			"ORDER BY tanggal");
 	$resultGetStage = mysqli_query($mysqli, $queryGetStage);
 	
@@ -30,21 +32,21 @@
 	$unmappedDonatur = 0;
 	$unmappedBank = 0;
 	//== Dimasukkan ke variabel dulu untuk dihitung...
-	$dumpTrxPenerimaan = array();
+	$dumpTrxPengeluaran = array();
 	$dumpIdx = 0;
 	while ($rowTransaction = mysqli_fetch_assoc($resultGetStage)) {
-		$dumpTrxPenerimaan[] = $rowTransaction;
+		$dumpTrxPengeluaran[] = $rowTransaction;
 		$jmlNominal += $rowTransaction['jumlah'];
 		$jmlTrx++;
 		if (($rowTransaction['kode_akun'] != '0') &&
-			($rowTransaction['id_donatur'] != 0) &&
-			($rowTransaction['id_teller'] != 0) &&
+			($rowTransaction['id_donatur'] != -1) &&
+			($rowTransaction['id_teller'] != -1) &&
 			($rowTransaction['id_bank'] != -1)) {
 				$jmlTrxValid++;
 		} else {
 			if ($rowTransaction['kode_akun'] == '0') $unmappedAkun++;
-			if ($rowTransaction['id_donatur'] == 0) $unmappedDonatur++;
-			if ($rowTransaction['id_teller'] == 0) $unmappedAmilin++;
+			if ($rowTransaction['id_donatur'] == -1) $unmappedDonatur++;
+			if ($rowTransaction['id_teller'] == -1) $unmappedAmilin++;
 			if ($rowTransaction['id_bank'] == -1) $unmappedBank++;
 		}
 	}
@@ -66,37 +68,41 @@ function formatItemDonatur (elmtDonatur) {
   );
   return $(elmtOutput);
 };
-function submit_trx_penerimaan(idStage) {
-	var formFields = $("#siz_frm_stgpenerimaan_"+idStage+" form").serialize();
+function submit_trx_pengeluaran(idStage) {
+	var formFields = $("#siz_frm_stgpengeluaran_"+idStage+" form").serialize();
 
 	_ajax_send("id="+idStage+"&"+formFields, function(data){
-		var rowElmt = $("#siz_check_item_"+idStage).closest("tr");
-		$(rowElmt).html(data.html);
-		// Reinit the iCheck plugin
-		$(rowElmt).find('input[type=checkbox],input[type=radio]').iCheck({
-	    	checkboxClass: 'icheckbox_flat-blue',
-	    	radioClass: 'iradio_flat-blue'
-		});
-		close_form_trx_penerimaan(idStage);
+		if (data.status == "ok") {
+			var rowElmt = $("#siz_check_item_"+idStage).closest("tr");
+			$(rowElmt).html(data.html);
+			// Reinit the iCheck plugin
+			$(rowElmt).find('input[type=checkbox],input[type=radio]').iCheck({
+		    	checkboxClass: 'icheckbox_flat-blue',
+		    	radioClass: 'iradio_flat-blue'
+			});
+			close_form_trx_pengeluaran(idStage);
+		} else {
+			alert(data.error);
+		}
 	}, "Memproses...", "main.php?s=ajax&m=transaksi");
 	//alert(formFields);
 	return false;
 }
-function close_form_trx_penerimaan(idStage) {
-	$('#siz_frm_stgpenerimaan_'+idStage+' .editing-form-ctr').slideUp(250,function(){
+function close_form_trx_pengeluaran(idStage) {
+	$('#siz_frm_stgpengeluaran_'+idStage+' .editing-form-ctr').slideUp(250,function(){
 		var rowElmt = $("#siz_check_item_"+idStage).closest("tr");
 		$(rowElmt).show();
-		$('#siz_frm_stgpenerimaan_'+idStage).remove();
+		$('#siz_frm_stgpengeluaran_'+idStage).remove();
 	});
 	return false;
 }
-function edit_trx_penerimaan(idStage) {
+function edit_trx_pengeluaran(idStage) {
 	var rowElmt = $("#siz_check_item_"+idStage).closest("tr");
 	$.ajax({
 		type: 'post',
 		url: AJAX_URL,
 		data: {
-			act: 'get.stagepenerimaan.form',
+			act: 'get.stagepengeluaran.form',
 			id: idStage
 		},
 		beforeSend: function( xhr ) {
@@ -108,10 +114,10 @@ function edit_trx_penerimaan(idStage) {
 			$(rowElmt).hide();
 
 			//=== Init editing row ===
-			$('#siz_frm_stgpenerimaan_'+idStage+' select.use_select2').select2({
+			$('#siz_frm_stgpengeluaran_'+idStage+' select.use_select2').select2({
 				minimumResultsForSearch: 10,
 			});
-			$('#siz_frm_stgpenerimaan_'+idStage+' select#select2_muzakki').select2({
+			$('#siz_frm_stgpengeluaran_'+idStage+' select#select2_muzakki').select2({
 			    ajax: {
 			        // The number of milliseconds to wait for the user to stop typing before
 			        // issuing the ajax request.
@@ -144,11 +150,11 @@ function edit_trx_penerimaan(idStage) {
 			      minimumInputLength: 3,
 			      templateResult: formatItemDonatur
 			});
-			$('#siz_frm_stgpenerimaan_'+idStage+' .datepicker').datepicker({
+			$('#siz_frm_stgpengeluaran_'+idStage+' .datepicker').datepicker({
 				autoclose: true,
 			});
 
-			$('#siz_frm_stgpenerimaan_'+idStage+' .editing-form-ctr').slideDown(250);
+			$('#siz_frm_stgpengeluaran_'+idStage+' .editing-form-ctr').slideDown(250);
 		},
 		error: function() {
 			
@@ -157,67 +163,9 @@ function edit_trx_penerimaan(idStage) {
 		$(rowElmt).find('.control-box').show();
 		$(rowElmt).find('.loading-circle').hide();
 	});
-	
-	
-	/*
-	show_form_overlay("Test", "main.php?s=ajax&m=transaksi", {
-		act: 'get.stagepenerimaan.form',
-		id: idStage
-	}, function(event) {
-		var formFields = $("#siz_overlaydlg_form").serialize();
-		alert(formFields);
-		event.preventDefault();
-	}, function() {
-		// Init here...!
-		$('#siz_overlaydlg_form select.use_select2').select2({
-			minimumResultsForSearch: 10,
-			dropdownParent: '#siz_overlaydlg_formctr'
-		});
-		$('#siz_overlaydlg_form select#select2_muzakki').select2({
-			dropdownParent: '#siz_overlaydlg_formctr',
-		    ajax: {
-		        // The number of milliseconds to wait for the user to stop typing before
-		        // issuing the ajax request.
-		        type: 'post',
-		        delay: 250,
-		        dataType: 'json',
-		        url: "main.php?s=ajax&m=user",
-		        data: function (params) {
-		          var queryParameters = {
-		            q: params.term,
-		            act: 'get.user.donatur'
-		          };
-		          return queryParameters;
-		        },
-		        // You can modify the results that are returned from the server, allowing you
-		        // to make last-minute changes to the data, or find the correct part of the
-		        // response to pass to Select2. Keep in mind that results should be passed as
-		        // an array of objects.
-		        //
-		        // @param data The data as it is returned directly by jQuery.
-		        // @returns An object containing the results data as well as any required
-		        //   metadata that is used by plugins. The object should contain an array of
-		        //   data objects as the `results` key.
-		        processResults: function (data) {
-		          return {
-		            results: data
-		          };
-		        },
-		      },
-		      minimumInputLength: 3,
-		      templateResult: formatItemDonatur
-		});
-		$('#siz_overlaydlg_form .datepicker').datepicker({
-			autoclose: true,
-			container: '#siz_overlaydlg_form'
-		});
-	});
-	*/
-	//$('#siz_overlaydlg_body').html("Showing form stage #"+idStage);
-	
 	return false;
 }
-function hapus_trx_penerimaan(elmt, idStage) {
+function hapus_trx_pengeluaran(elmt, idStage) {
 	var userConfirm = confirm("Hapus transaksi yang Anda pilih?");
 	if (!userConfirm) return false;
 	// On success:
@@ -231,16 +179,16 @@ function hapus_trx_penerimaan(elmt, idStage) {
 	<fieldset>
 		<legend>Mapping</legend>
 		<div class="btn-group" role="group">
-			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-penerimaan&amp;col=akun" class="btn btn-default btn-lg">
+			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-pengeluaran&amp;col=akun" class="btn btn-default btn-lg">
 				<span class="glyphicon glyphicon-transfer"></span>&nbsp;Map Akad transaksi
 					<?php if ($unmappedAkun > 0) echo "<span class=\"badge\">{$unmappedAkun}</span>"; ?></a>
-			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-penerimaan&amp;col=donatur" class="btn btn-default btn-lg">
-				<span class="glyphicon glyphicon-transfer"></span>&nbsp;Map muzakki/donatur
+			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-pengeluaran&amp;col=penerima" class="btn btn-default btn-lg">
+				<span class="glyphicon glyphicon-transfer"></span>&nbsp;Map penerima
 					<?php if ($unmappedDonatur > 0) echo "<span class=\"badge\">{$unmappedDonatur}</span>"; ?></a>
-			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-penerimaan&amp;col=amilin" class="btn btn-default btn-lg">
-				<span class="glyphicon glyphicon-transfer"></span>&nbsp;Map amilin
+			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-pengeluaran&amp;col=pj" class="btn btn-default btn-lg">
+				<span class="glyphicon glyphicon-transfer"></span>&nbsp;Map Penanggung-jawab
 					<?php if ($unmappedAmilin > 0) echo "<span class=\"badge\">{$unmappedAmilin}</span>"; ?></a>
-			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-penerimaan&amp;col=bank" class="btn btn-default btn-lg">
+			<a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-pengeluaran&amp;col=bank" class="btn btn-default btn-lg">
 				<span class="glyphicon glyphicon-transfer"></span>&nbsp;Map bank
 					<?php if ($unmappedBank > 0) echo "<span class=\"badge\">{$unmappedBank}</span>"; ?></a>
 		</div>
@@ -248,7 +196,7 @@ function hapus_trx_penerimaan(elmt, idStage) {
 	</fieldset>
 	<p>Stage valid : <?php
 		echo sprintf("<b>%d</b> dari <b>%d</b> transaksi.", $jmlTrxValid, $jmlTrx);?>
-	| <a href="main.php?s=transaksi&amp;action=import&amp;proc=load&amp;do=penerimaan"
+	| <a href="main.php?s=transaksi&amp;action=import&amp;proc=load&amp;do=pengeluaran"
 		class="btn btn-success <?php if ($jmlTrxValid == 0) echo "disabled"; ?>">
 		<span class="glyphicon glyphicon-ok"></span>&nbsp;Masukkan ke transaksi.</a></p>
 	<div class="progress">
@@ -264,27 +212,25 @@ function hapus_trx_penerimaan(elmt, idStage) {
 				<th><input type='checkbox' name='siz_checkall'/></th>
 				<th>Tanggal</th>
 				<th>No. Nota</th>
-				<th>Akad/Akun Penerimaan
-					<div><a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-penerimaan&amp;col=akun">Map</a></div></th>
+				<th>Akad/Akun Pengeluaran
+					<div><a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-pengeluaran&amp;col=akun">Map</a></div></th>
 				<th style='min-width:140px;'>Nominal</th>
-				<th>Amilin
-					<div><a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-penerimaan&amp;col=amilin">Map</a></div></th>
-				<th>Donatur
-					<div><a href="main.php?s=transaksi&amp;action=import&amp;proc=mapping-penerimaan&amp;col=donatur">Map</a></div></th>
+				<th>Penanggung-Jawab</th>
+				<th>Penerima</th>
 				<th>Keterangan</th>
 				<th style='min-width: 100px;'>Aksi</th>
 			</tr>
 		</thead>
 		<tbody>
 <?php 
-	foreach ($dumpTrxPenerimaan as $rowTransaction) {
-		$rowHtml = getHTMLRowTrxPenerimaan($rowTransaction);
+	foreach ($dumpTrxPengeluaran as $rowTransaction) {
+		$rowHtml = getHTMLRowTrxPengeluaran($rowTransaction);
 		echo "<tr>".$rowHtml."</tr>\n";
 	}
 ?>
 		</tbody>
 		<tfoot>
-			<tr><td colspan='4'>&Sigma; Jumlah Penerimaan</td>
+			<tr><td colspan='4'>&Sigma; Jumlah Pengeluaran</td>
 			<td><b><?php echo to_rupiah($jmlNominal)?></b></td>
 			<td colspan='4'>&Sigma; Jumlah Transaksi: <b><?php echo $jmlTrx; ?></b></td>
 			</tr>

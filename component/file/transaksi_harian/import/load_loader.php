@@ -13,7 +13,7 @@
 	if ($doProcess == "penerimaan") {
 		$stageName = "penerimaan";
 	} else if ($doProcess == "pengeluaran") {
-		// TODO: Selesaikan load stage penerimaan
+		$stageName = "pengeluaran";
 	} else {
 		show_error_page("Tabel stage tidak dikenali!");
 		return;
@@ -34,6 +34,9 @@
 		</div>
 		<div class="widget-content">
 			<div class="alert alert-danger" style="display:none" id="siz-export-alert"></div>
+			<div class="alert alert-success" id="siz-loader-success" style="display:none;">
+				<span class="glyphicon glyphicon-ok"></span>&nbsp;<span class="siz-msg"></span>
+			</div>
 			<div class="row">
 				<div class="col-sm-offset-3 col-sm-6" id="siz-export-panel">
 					<h3>Processing...</h3>
@@ -52,7 +55,9 @@ function do_load() {
 		if (response.status == 'ok') {
 			var downloadHTML = "";
 			downloadHTML += response.message;
-			$("#siz-export-panel").html(downloadHTML);
+			$("#siz-export-panel").hide();
+			$("#siz-loader-success .siz-msg").html(downloadHTML);
+			$("#siz-loader-success").fadeIn(250);
 		} else {
 			$("#siz-export-panel").hide();
 			$("#siz-export-alert")

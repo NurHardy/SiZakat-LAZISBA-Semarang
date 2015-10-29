@@ -1,3 +1,5 @@
+.divclear {clear:both;}
+
 a.red_link {color: #CC0000;}
 a.red_link:hover {color:#FF0000;}
 
@@ -176,3 +178,4 @@ textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100
 
 /* ================ Style untuk AM_SIZ_MAP_PENERIMAAN ==== */
 .siz_import_map_metainfo {font-size:0.8em;}
+

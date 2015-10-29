@@ -62,6 +62,8 @@
 		include MODULE_NAME."/rekap_tahunan.php";
 	} else if ($actionWord == "timeline") {
 		include MODULE_NAME."/timeline_perencanaan.php";
+	} else if ($actionWord == "realisasi") {
+		include MODULE_NAME."/laporan_realisasi.php";
 	} else if ($actionWord == "export") {
 		$fType = $_GET['type'];
 		if ($fType == 'xlsx') {
@@ -122,7 +124,7 @@
 		} else {
 			include MODULE_NAME."/detil_kegiatan_master.php";
 		}
-		
+	
 	/****************** Home *********************/
 	} else {
 		include MODULE_NAME."/home.php";

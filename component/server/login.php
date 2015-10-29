@@ -2,8 +2,9 @@
 	session_start();
 	include "../config/koneksi.php";
 	if(ISSET($_POST['login'])){
-		$username = $_POST['username'];
-		$password = sha1(sha1(md5($_POST['password'])));
+		$username = trim($_POST['siz_uname']);
+		$username = mysqli_real_escape_string($mysqli, $username);
+		$password = sha1(sha1(md5($_POST['siz_upass'])));
 		$sql = mysqli_query($mysqli, "SELECT * FROM user WHERE username='$username' AND password = '$password'");
 		$csql = mysqli_num_rows($sql);
 		
