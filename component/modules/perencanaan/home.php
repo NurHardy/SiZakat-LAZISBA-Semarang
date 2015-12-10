@@ -8,10 +8,18 @@
  */
 	// Cek privilege
 	if (!ra_check_privilege()) exit;
+	$divisiUser		= $_SESSION['siz_divisi'];
+	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	
 	$SIZPageTitle = "Perencanaan";
-
+	// Default Page - Set the BreadCrumb
+	end($breadCrumbPath);
+	$lastBreadCrumbId = key($breadCrumbPath);
+	$breadCrumbPath[$lastBreadCrumbId][2] = true;
+	
 	$yearNow = intval(date("Y"));
+	
+	
 	ra_print_status($namaDivisiUser); ?>
 <div class="col-md-6">
 	<div class="widget-box">
@@ -23,23 +31,29 @@
 		</div>
 		<div class="widget-content">
 			<div class="row"><div class='col-md-12'>
+<?php if ($isAdmin) { //========= Jika user adalah ADMIN ========== ?>
+				<a href="<?php echo ra_gen_url("tambah-dokumen"); ?>" class="btn btn-default btn-block"
+					><span class="glyphicon glyphicon-plus"></span>&nbsp;Tambah Dokumen Perencanaan</a>
+<?php } //======================= End If ========================== ?>
 				<div class="list-group">
 				<?php
 					// Proses list dokumen perencanaan berdasarkan tahun
-					$groupQuery  = "SELECT tahun, SUM(anggaran) AS jumlah_anggaran FROM ((SELECT '".$yearNow."' AS tahun, 0 AS anggaran) UNION ALL ";
-					$groupQuery .= "(SELECT YEAR(tgl_mulai) AS tahun, jumlah_anggaran AS anggaran FROM ra_agenda)) AS rat GROUP BY tahun ORDER BY tahun DESC";
+					$groupQuery  = "SELECT * FROM ra_dokumen LEFT JOIN (".
+						"SELECT YEAR(tgl_mulai) AS tahun, SUM(jumlah_anggaran) AS anggaran FROM ra_agenda ".
+						"GROUP BY tahun) as a ";
+					$groupQuery .= "ON tahun_dokumen=a.tahun ORDER BY tahun_dokumen DESC";
 					$groupQueryResult = mysqli_query($mysqli, $groupQuery);
 					$queryCount++;
 					
 					if ($groupQueryResult) {
 						while ($documentRow = mysqli_fetch_array($groupQueryResult)) {
-							echo "<a href=\"main.php?s=perencanaan&amp;action=rekap&amp;th=".$documentRow['tahun']."\" class=\"list-group-item\">\n";
+							echo "<a href=\"main.php?s=perencanaan&amp;action=rekap&amp;th=".$documentRow['tahun_dokumen']."\" class=\"list-group-item\">\n";
 							echo "<div class=\"media-left\">\n";
 							echo "	<img class=\"media-object\" src=\"images/logo.png\" alt=\"...\" style=\"width: 64px;\">\n";
 							echo "</div>\n";
 							echo "<div class=\"media-body\">\n";
-							echo "  <h4 class=\"media-heading\">Perencanaan Tahun ".$documentRow['tahun']."</h4>\n";
-							echo "  Rencana Pengeluaran : ".to_rupiah($documentRow['jumlah_anggaran'])."\n";
+							echo "  <h4 class=\"media-heading\">Perencanaan Tahun ".$documentRow['tahun_dokumen']."</h4>\n";
+							echo "  Rencana Pengeluaran : ".to_rupiah($documentRow['anggaran'])."\n";
 							echo "</div>\n";
 							echo " </a>\n";
 						}

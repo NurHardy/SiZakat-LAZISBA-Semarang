@@ -23,7 +23,7 @@ if ($ajaxAct == "get.rincian") {
 		'length' => count($jsonResult),
 		'data'	 => $jsonResult
 	));
-	
+
 //============ HAPUS AGENDA
 } else if ($ajaxAct == "agenda.hapus") {
 	require("ajax/hapus_agenda.php");
@@ -43,6 +43,14 @@ if ($ajaxAct == "get.rincian") {
 	require("ajax/master_simpan_rincian.php");
 } else if ($ajaxAct == "mastkegiatan.rincian.delete") {
 	require("ajax/master_hapus_rincian.php");
+} else if ($ajaxAct == "masterkgt.quickdelete") {
+	require("ajax/hapus_master_kegiatan.php");
+} else if ($ajaxAct == "masterkgt.delete") {
+	$needConfirm = false;
+	require("ajax/hapus_master_kegiatan.php");
+//=========== HAPUS DOKUMEN
+} else if ($ajaxAct == "dokumen.delete") {
+	require("ajax/dokumen_hapus.php");
 	
 //=========== EKSPOR DOKUMEN
 } else if ($ajaxAct == "export.perencanaan.dokumen") {
@@ -56,6 +64,11 @@ if ($ajaxAct == "get.rincian") {
 				'error'	=> 'Unrecognized export format.'
 		));
 	}
+
+//=========== USER
+} else if ($ajaxAct == "uset.setpriv") {
+	require("ajax/user_setprivilege.php");
+	
 } else {
 	echo json_encode(array(
 			'status' => 'error',

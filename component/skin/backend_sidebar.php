@@ -81,11 +81,6 @@
 		</li>
 		
 		<!-- BARU DIEDIT TANGGAL 9/01/2013-->
-		
-		
-		
-		
-		
 		<li <?php echo setActiveOpen(array('form_amilin','form_mustahik','form_muzakki','view_amilin','daftarmustahik','daftar_muzakki','edit_amilin','editmustahik','editmuzakki','daftar_sabab','form_sabab','edit_sabab','lihat_detail_sabab'));?>>
 			<a href="#"><i class="glyphicon glyphicon-th-list"></i> <span>Data Master</span> <span class="label">6</span></a>
 			<ul>
@@ -125,7 +120,8 @@
 				
 				  <li <?php setActiveMenu('perencanaan');?>><a href="main.php?s=perencanaan">Perencanaan Anggaran</a></li>
 				  <li <?php setActiveMenu('perencanaan','list');?>><a href="main.php?s=perencanaan&amp;action=list">Master Kegiatan</a></li>
-
+				  <li <?php setActiveMenu('perencanaan','realisasi');?>><a href="main.php?s=perencanaan&amp;action=realisasi">Laporan Realisasi</a></li>
+				  <li <?php setActiveMenu('perencanaan','user');?>><a href="main.php?s=perencanaan&amp;action=user">Hak Akses</a></li>
 			</ul>
 		</li>
 		

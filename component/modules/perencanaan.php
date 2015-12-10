@@ -5,6 +5,8 @@
  *	Contact: nurhardyanto@if.undip.ac.id
  */
 
+	$breadCrumbPath[] = array("Perencanaan","main.php?s=perencanaan",false);
+
 	// Inisialisasi modul
 	define("MODULE_NAME"	, "perencanaan");
 	define("RA_AJAX_URL"	, "main.php?s=ajax&m=".MODULE_NAME);
@@ -17,7 +19,7 @@
 					"Juli","Agustus","September","Oktober","November","Desember"
 				);
 	$listValidDivisi = array(1,2,3,4,5);
-	$listDivisi = array("Guest",
+	$listDivisi = array("Amilin",
 					"Keuangan",
 					"Kantor",
 					"Marketing",
@@ -55,15 +57,15 @@
 	
 	/************* Dokumen Perencanaan ****************/
 	} else if ($actionWord == "document") {
-		$tahunDokumen = $_GET['th'];
 		include MODULE_NAME."/dokumen_perencanaan.php";
 	} else if ($actionWord == "rekap") {
-		$tahunDokumen = $_GET['th'];
 		include MODULE_NAME."/rekap_tahunan.php";
 	} else if ($actionWord == "timeline") {
 		include MODULE_NAME."/timeline_perencanaan.php";
-	} else if ($actionWord == "realisasi") {
-		include MODULE_NAME."/laporan_realisasi.php";
+	} else if ($actionWord == "tambah-dokumen") {
+		include MODULE_NAME."/simpan_dokumen_form.php";
+	} else if ($actionWord == "edit-catatan-dokumen") {
+		include MODULE_NAME."/simpan_dokumen_form.php";
 	} else if ($actionWord == "export") {
 		$fType = $_GET['type'];
 		if ($fType == 'xlsx') {
@@ -71,37 +73,34 @@
 		} else {
 			show_error_page("Format kurang/belum didukung.");
 		}
+	} else if ($actionWord == "hapus-dokumen") {
+		include MODULE_NAME."/hapus_dokumen_confirm.php";
+		
+	//------------ Laporan Realisasi -------------------
+	} else if ($actionWord == "realisasi") {
+		include MODULE_NAME."/laporan_realisasi.php";
+	} else if ($actionWord == "realisasi-bulan") {
+		include MODULE_NAME."/laporan_realisasi_detil.php";
+	
 	/************* Kegiatan dan Agenda ****************/
 	// CRUD kegiatan
 	} else if ($actionWord == "kegiatan") {
-		$tahunDokumen	= $_GET['th'];
-		$idKegiatan		= intval($_GET['id']);
-		if (empty($idKegiatan)||empty($tahunDokumen)) {
-			show_error_page("Argumen tidak lengkap.");
-		} else {
-			include MODULE_NAME."/detil_kegiatan.php";
-		}
+		include MODULE_NAME."/detil_kegiatan.php";
 	} else if ($actionWord == "tambah-kegiatan") {
-		$tahunDokumen	= $_GET['th'];
 		include MODULE_NAME."/simpan_kegiatan_form.php";
 		
 	// CRUD agenda
 	} else if ($actionWord == "edit-agenda") {
-		$tahunDokumen	= $_GET['th'];
-		$idKegiatan		= intval($_GET['id']);
-		if (empty($idKegiatan)||empty($tahunDokumen)) {
-			show_error_page("Argumen tidak lengkap.");
-		} else {
-			include MODULE_NAME."/simpan_agenda_form.php";
-		}
+		include MODULE_NAME."/simpan_agenda_form.php";
+	} else if ($actionWord == "tambah-agenda") {
+		include MODULE_NAME."/simpan_agenda_form.php";
+	// Hapus agenda kegiatan dalam dokumen perencanaan
+	} else if ($actionWord == "hapus-agenda-kegiatan") {
+		include MODULE_NAME."/hapus_agenda_confirm.php";
 	} else if ($actionWord == "hapus-agenda") {
 		include MODULE_NAME."/hapus_agenda_confirm.php";
-	} else if ($actionWord == "tambah-agenda") {
-		$tahunDokumen	= $_GET['th'];
-		include MODULE_NAME."/simpan_agenda_form.php";
-	
 	// CRUD rincian agenda
-	} else if ($actionWord == "edit-rincian-agenda") {
+	/*} else if ($actionWord == "edit-rincian-agenda") {
 		$tahunDokumen	= $_GET['th'];
 		$idAgenda		= intval($_GET['id']);
 		if (empty($idAgenda)||empty($tahunDokumen)) {
@@ -109,21 +108,21 @@
 		} else {
 			include MODULE_NAME."/simpan_rincian_agenda.php";
 		}
+	*/
 	/************* Master Kegiatan *********************/
 	} else if ($actionWord == "list") {
-		$tahunDokumen = $_GET['th'];
 		include MODULE_NAME."/list_kegiatan.php";
 	} else if ($actionWord == "tambah-kegiatan-master") {
 		include MODULE_NAME."/simpan_kegiatan_master_form.php";
 	} else if ($actionWord == "edit-kegiatan-master") {
 		include MODULE_NAME."/simpan_kegiatan_master_form.php";
 	} else if ($actionWord == "master-kegiatan") {
-		$idKegiatan		= intval($_GET['id']);
-		if (empty($idKegiatan)) {
-			show_error_page("ID Kegiatan tidak disertakan!");
-		} else {
-			include MODULE_NAME."/detil_kegiatan_master.php";
-		}
+		include MODULE_NAME."/detil_kegiatan_master.php";
+	} else if ($actionWord == "hapus-master-kegiatan") {
+		include MODULE_NAME."/hapus_kegiatan_confirm.php";
+	/****************** User *********************/
+	} else if ($actionWord == "user") {
+		include MODULE_NAME."/atur_user.php";
 	
 	/****************** Home *********************/
 	} else {

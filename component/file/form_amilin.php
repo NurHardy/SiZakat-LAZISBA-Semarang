@@ -70,7 +70,7 @@
 						<input type="text" class="form-control input-small" style='width:80%' name="nama" required='required' value='<?php echo (ISSET($nama))?$nama:"";?>'/>
 					</div>
 				</div>
-				
+				<!-- 
 				<div class="form-group">
 					<label class="control-label">Tempat Lahir</label>
 					<div class="controls"  class="span4">
@@ -84,7 +84,7 @@
 					<div class=" controls">
 						<input type="text" data-date="12-02-2012" style='width:80%' data-date-format="dd-mm-yyyy"  value="<?php echo (ISSET($tgl))?$tgl:"12-02-2012";?>" class="datepicker form-control input-small" name="tgl_lahir" value=''/>
 					</div>
-				</div>
+				</div>  -->
 				
 				<div class="form-group">
 					<label class="control-label">Alamat</label>
@@ -92,16 +92,16 @@
 						<input type="text" class="form-control input-small" style='width:80%' name="alamat" required='required' value='<?php echo (ISSET($alamat))?$alamat:"";?>'/>
 					</div>
 				</div>
-				
+				<!-- 
 				<div class="form-group">
 					<label class="control-label">Kota</label>
 					<div class="controls">
 						<input type="text" class="form-control input-small" name="kota" style='width:80%' required='required' value='<?php echo (ISSET($kota))?$kota:"";?>'/>
 					</div>
 				</div>
-				
+				 -->
 				<div class="form-group">
-					<label class="control-label">Hp</label>
+					<label class="control-label">Kontak</label>
 					<div class="controls">
 						<input type="text" class="form-control input-small" style='width:80%' name="hp" required='required' value='<?php echo (ISSET($hp))?$hp:"";?>'/>
 					</div>
@@ -110,12 +110,10 @@
 				<div class="form-group">
 					<label class="control-label">Email</label>
 					<div class="controls">
-						<input type="text" class="form-control input-small" style='width:80%' name="email" required='required' value='<?php echo (ISSET($email))?$email:"";?>'/>
+						<input type="email" class="form-control input-small" style='width:80%' name="email" required='required' value='<?php echo (ISSET($email))?$email:"";?>'/>
 					</div>
 				</div>
 				
-				
-					
 				 <div class="form-row control-group row-fluid">
 					<label class="control-label span3" for="normal-field">Username<span class="help-block"></span></label>
 					<div class="controls span5">
@@ -129,6 +127,7 @@
 					 <input type="password" id="normal-field"  style='width:80%' class="form-control input-small" name='passwords' value='' />
 					</div>
 				</div>
+				<!-- 
 				<div class="form-row control-group row-fluid">
 					<label class="control-label span3" for="normal-field">Status<span class="help-block"></span></label>
 					<div class="controls span5">
@@ -157,7 +156,7 @@
 						</select>
 					</div>
 				</div>
-		
+		 -->
 				<div class="form-actions">
 					<button type="submit" class="btn btn-primary btn-small" name='save'>Save</button> 
 				</div>

@@ -1,9 +1,9 @@
-<?php 
+<?php
+/*
 	include "component/config/koneksi.php";
 	
 	$sql = $mysqli->query("SELECT * FROM penyaluran");
-	
-	while($d = $sql->fetch_array(MYSQLI_ASSOC){
+	while ($d = $sql->fetch_array(MYSQLI_ASSOC)) {
 		$t = $d['tanggal'];
 		$t = explode('-',$t);
 		$t = $t[2].'-'.$t[1].'-'.$t[0];
@@ -12,5 +12,6 @@
 		echo "Update Finish<br />";
 	}
 	
+	
 	echo "Update Finish";
-?>
+*/

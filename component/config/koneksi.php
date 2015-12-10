@@ -4,7 +4,7 @@
  * =====================================
  * Konfigurasi koneksi database dan path sistem e-SIZ LAZISBA
  */
-	define('IS_DEBUGGING', false);
+	define('IS_DEBUGGING', true);
 	define('SIZ_VERSION', "SiZakat v.1.5.1 (20 Oktober 2015)");
 	
 	define('SITE_PATH', '/siz');

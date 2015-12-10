@@ -14,6 +14,9 @@
 	$tahunDokumen	= intval((isset($_GET['th'])?$_GET['th']:date("Y")));
 	$formActionUrl	= $_SERVER['REQUEST_URI']; // Aksi ke script ini lagi.
 	
+	// Cek Dokumen
+	if (!ra_cek_dokumen($tahunDokumen)) return;
+	
 	$showForm		= true;
 	$idKegiatan		= (isset($_GET['id'])?intval($_GET['id']):-1);
 	$isEditing		= ($idKegiatan > 0);
@@ -142,7 +145,7 @@ if ($showForm) { //============================== FORM DITAMPILKAN === ?>
 	<?php if ($isEditing) { //================= Jika sedang edit ====== ?>
 			<strong><?php echo $kegiatanNama; ?></strong>
 	<?php } else { //========================== Jika buat baru ======== ?>
-			<select name="kg-id" id="mast-kg-id" style="width:100%;" required
+			<select name="kg-id" id="mast-kg-id" class="siz-use-select2" style="width:100%;" required='required'
 				data-placeholder="- Pilih Kegiatan -">
 			<option></option>
 		<?php

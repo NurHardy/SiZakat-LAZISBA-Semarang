@@ -11,6 +11,26 @@
 	// Cek privilege
 	if (!ra_check_privilege()) return;
 	
+	$tahunDokumen	= $_GET['th'];
+	$idKegiatan		= intval($_GET['id']);
+	if (empty($idKegiatan)||empty($tahunDokumen)) {
+		show_error_page("Argumen tidak lengkap.");
+		return;
+	}
+	// Cek Dokumen
+	if (!ra_cek_dokumen($tahunDokumen)) return;
+	
+	$SIZPageTitle = "Rekap Agenda Kegiatan";
+	$breadCrumbPath[] = array("Tahun ".$tahunDokumen,ra_gen_url("rekap",$tahunDokumen),false);
+	$breadCrumbPath[] = array("Rekap Agenda",null,true);
+	
+	// Cek apakah kegiatan sudah ditambahkan ke dokumen perencanaan
+	$dataCatatan = ra_cek_catatan_kegiatan($idKegiatan, $tahunDokumen);
+	if ($dataCatatan==null) {
+		show_error_page("Kegiatan belum ditambahkan ke dalam dokumen perencanaan.");
+		return;
+	}
+	
 	// Query untuk keterangan kegiatan
 	$queryKegiatan = sprintf("SELECT * FROM ra_kegiatan WHERE id_kegiatan=%d", $idKegiatan);
 	$queryResult = mysqli_query($mysqli, $queryKegiatan);
@@ -71,6 +91,9 @@
 ?>
 <div class="col-12">
 	<?php ra_print_status($namaDivisiUser); ?>
+	<div class="row">
+		<div class="col-lg-8">
+
 	<div class="widget-box">
 		<div class="widget-title">
 			<span class="icon">
@@ -97,7 +120,7 @@
 					<td>Divisi</td>
 					<td><?php echo $namaDivisi; ?></td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td>Sumber Dana Kegiatan</td>
 					<td><br><?php
 	if (mysqli_num_rows($resultQuerySumber) > 0) {
@@ -107,11 +130,11 @@
 		}
 		echo "<br>";
 	} ?></td>
-				</tr>
+				</tr> -->
 			</table>
 			<hr>
 	<div class="row">
-		<div class="col-lg-8">
+		<div class="col-lg-12">
 <?php if (mysqli_num_rows($listAgenda) > 0) { //==================== JIKA ADA KEGIATAN ========== ?>
 		<?php
 		// Inisialisasi variabel
@@ -141,7 +164,7 @@
 				
 				echo "<div class=\"siz-container-month\">";
 				echo "<h3><i class=\"glyphicon glyphicon-calendar\"></i> ";
-				echo " Bulan ".$monthName[$bulanSekarang]."</h3>\n";
+				echo " Bulan ".$monthName[$bulanSekarang]." ".$tahunDokumen."</h3>\n";
 				
 				$tampilNamaBulan = true;
 			} else {
@@ -159,13 +182,15 @@
 			} else if ($rowAgenda['jenis_agenda']==2) {
 				$strTanggalAgenda = tanggal_indonesia(date('j M Y', strtotime($rowAgenda['tgl_mulai'])));
 				$strTanggalAgenda .= " sampai ". tanggal_indonesia(date('j M Y', strtotime($rowAgenda['tgl_selesai'])));
+			} else if ($rowAgenda['jenis_agenda']==3) {
+				$strTanggalAgenda = "Sepanjang bulan ".$monthName[$bulanSekarang];
 			} else {
 				$strTanggalAgenda = "- undefined date -";
 			}
 			echo " <b>".$strTanggalAgenda."</b> ";
 			// Tampilan control jika user berhak
 			if ($isAuthorized) {
-				echo "<small>";
+				echo " | <small>";
 				echo "<a href=\"".ra_gen_url("edit-agenda",$tahunDokumen,"id=".$rowAgenda['id_agenda']).
 					"\"><span class=\"glyphicon glyphicon-pencil\"></span> Edit</a>\n";
 				echo "<a href=\"".ra_gen_url("hapus-agenda",$tahunDokumen,"id=".$rowAgenda['id_agenda']).
@@ -242,7 +267,12 @@
 				echo "</div>";
 			}
 		}
-} // ==================================== END IF ?>
+} else { // =================================== TIDAK ADA AGENDA? ?>
+	<div class="siz-dok-empty">
+		<img src="images/icons/info.png" alt="INFO:" />
+			Ow-oh! Anda belum menambahkan satupun agenda untuk kegiatan ini.<br>
+	</div>
+<?php } // ==================================== END IF ?>
 		</div>
 	</div><!-- End row list agenda -->
 		
@@ -278,7 +308,7 @@
 				}
 				$bulanSekarang = $rowAgenda['bulan'];
 				echo "<tr><td colspan=\"7\"><i class=\"glyphicon glyphicon-calendar\"></i>\n";
-				echo " <b>Bulan ".$monthName[$bulanSekarang]."</b></td></tr>\n";
+				echo " <b>Bulan ".$monthName[$bulanSekarang]." ".$tahunDokumen."</b></td></tr>\n";
 				$anggaranBulan = 0;
 				
 				$tampilNamaBulan = true;
@@ -373,6 +403,8 @@ if ($isAuthorized) { //==================== ?>
 				Tambah Agenda Kegiatan</a>
 <?php } //=================== END IF ===========?>
 		</div>
+	</div>
+	</div>
 	</div>
 </div>
 

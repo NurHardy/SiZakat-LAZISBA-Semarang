@@ -1,6 +1,11 @@
 <?php
 	$SIZPageTitle = "Mutasi Transaksi";
 	
+	// Default Page - Set the BreadCrumb
+	end($breadCrumbPath);
+	$lastBreadCrumbId = key($breadCrumbPath);
+	$breadCrumbPath[$lastBreadCrumbId][2] = true;
+	
 	$month1 = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 	
 	// Set origin form
@@ -24,10 +29,10 @@
 			<h5>Detail Transaksi Untuk Bulan <?php echo $month1[$_GET['bln']]." ".$_GET['th'];?></h5>
 		</div>
 		<div class="widget-content">
-				<form action="main.php" method="GET">
+				<form action="main.php" method="GET" class="form-inline">
 				<input type='hidden' name='s' value='transaksi' />
 				<div class="form-row control-group row-fluid form-group">
-					<select name='bln'>
+					<select name='bln' class="form-control">
 					<?php 
 	$month1 = array('01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember');
 					foreach($month1 as $m => $v){
@@ -36,7 +41,7 @@
 					}
 					?>
 					</select>
-					<select name='th'>
+					<select name='th' class="form-control">
 					<?php 
 						$d = date('Y');
 						for($i=0;$i<5;$i++){

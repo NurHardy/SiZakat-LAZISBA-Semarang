@@ -1,6 +1,7 @@
 <?php
 
 define('IMPORT_MODULE_VER', 'v0.5 (19 September 2015)');
+$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
 
 function import_submodule_printinfo() {
 	echo "<div class='well well-sm'>";

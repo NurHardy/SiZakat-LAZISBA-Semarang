@@ -10,7 +10,21 @@
 
 	// Cek privilege
 	if (!ra_check_privilege()) return;
-
+	
+	$SIZPageTitle = "Perencanaan";
+	$tahunDokumen = $_GET['th'];
+	if (empty($tahunDokumen) || !is_numeric($tahunDokumen)) {
+		show_error_page("Argumen tidak lengkap.");
+		return;
+	}
+	
+	$SIZPageTitle .= " Tahun ".$tahunDokumen;
+	$breadCrumbPath[] = array("Tahun ".$tahunDokumen,ra_gen_url("rekap",$tahunDokumen),true);
+	
+	// Cek Dokumen
+	$rowDocument = ra_cek_dokumen($tahunDokumen);
+	if (!$rowDocument) return;
+	
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	
@@ -39,17 +53,30 @@
 		</div>
 		
 		<div class="widget-content">
+<?php 
+echo "<div class=\"well well-sm\"><b>Catatan Dokumen:</b>\n";
+echo "<a href=\"".ra_gen_url("edit-catatan-dokumen",$tahunDokumen)."\"><span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;Edit</a><br>\n";
+if (!empty($rowDocument['catatan'])) {
+	echo htmlspecialchars($rowDocument['catatan']); 
+}
+echo "</div>\n";
+?>
 			Silakan atur list kegiatan pada halaman
 			<a href="<?php echo ra_gen_url("list",$tahunDokumen); ?>">
 				<i class="glyphicon glyphicon-list"></i> Master Kegiatan</a>.
 			<div>
 				<a href="<?php echo htmlspecialchars(ra_gen_url("export",$tahunDokumen,"type=xlsx")); ?>"
 					class="btn btn-default">
-					<i class="glyphicon glyphicon-file"></i> Export ke Excel</a>.
+					<i class="glyphicon glyphicon-file"></i> Export ke Excel</a>
 
 				<a href="<?php echo htmlspecialchars(ra_gen_url("timeline",$tahunDokumen)); ?>"
 					class="btn btn-default">
-					<i class="glyphicon glyphicon-calendar"></i> Lihat Timeline</a>.
+					<i class="glyphicon glyphicon-calendar"></i> Lihat Timeline</a>
+<?php if ($isAdmin) { //========== Khusus Admin ============= ?>
+				<a href="<?php echo htmlspecialchars(ra_gen_url("hapus-dokumen",$tahunDokumen)); ?>"
+					class="btn btn-danger">
+					<i class="glyphicon glyphicon-erase"></i> Hapus Dokumen</a>
+<?php } //======================== End If =================== ?>
 			</div>
 <?php if (mysqli_num_rows($resultQueryRekap) > 0) { //==================== JIKA ADA KEGIATAN ========== ?>
 			<table class="table table-bordered table-hover siz-operation-table">
@@ -100,7 +127,7 @@
 				}
 				$currDivisi = $rowKegiatan['divisi'];
 				echo "<tr id=\"siz_kegiatan_divisi_".$currDivisi."\">\n";
-				echo "<td colspan=\"16\"><h4><span class=\"glyphicon glyphicon-star\"></span> ";
+				echo "<td colspan=\"16\"><h4><span class=\"glyphicon glyphicon-triangle-right\"></span> ";
 				echo "Divisi ".$listDivisi[$currDivisi]."</h4></td>";
 				echo "</tr>\n";
 			}
@@ -190,6 +217,17 @@
 			echo "<td><b>".to_rupiah($totalAnggaran)."</b></td><td>&nbsp;</td></tr>\n";
 			$grandTotalAnggaran += $totalAnggaran;
 		}
+} else { // == JIKA TIDAK ADA KEGIATAN ====================== ?>
+	<div class="siz-dok-empty">
+		<img src="images/icons/info.png" alt="INFO:" /> Belum ada kegiatan ditambahkan.<br>
+		<a href="<?php echo ra_gen_url('tambah-kegiatan', $tahunDokumen); ?>"
+					class="btn btn-primary btn-sm tip-right"
+					title="Tambah kegiatan baru pada perencanaan tahunan">
+					<span class="glyphicon glyphicon-plus"></span>
+					Tambah Kegiatan</a>
+	</div>
+	
+<?php
 } // ==================================== END IF ADA KEGIATAN
 		?>
 			</table>

@@ -64,7 +64,7 @@
 	// Laksanakan query dan keluarkan output
 	if ($errorDesc == null) {
 		$queryHapus  = sprintf(
-			"DELETE FROM ra_rincian_agenda WHERE id_rincian=%d", $idRincian
+			"DELETE FROM ra_rincian_awal WHERE id_rincian=%d", $idRincian
 		);
 		
 		$resultSimpan = (IS_DEBUGGING?true:mysqli_query($mysqli, $queryHapus));

@@ -124,7 +124,7 @@
 					'old_name'	=> htmlspecialchars($oldRincName),
 					'id_a'		=> $idAgenda,
 					't_agenda'	=> to_rupiah($jumlahBaru), // Total anggaran Agenda
-					't_bulan'	=> 'Rp. 0', // Total anggaran bulan
+					't_bulan'	=> 'Rp. 0', // TODO: Total anggaran bulan
 					't_total'	=> 'Rp. 0', // Total anggaran kegiatan
 			));
 		} else {

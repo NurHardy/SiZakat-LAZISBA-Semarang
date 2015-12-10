@@ -9,18 +9,30 @@
 	// Cek privilege
 	if (!ra_check_privilege()) exit;
 	
+	$tahunDokumen	= $_GET['th'];
+	if (empty($tahunDokumen)) {
+		show_error_page("Argumen tidak lengkap.");
+		return;
+	}
+	
+	// Cek Dokumen
+	if (!ra_cek_dokumen($tahunDokumen)) return;
+	
 	$formActionUrl	= $_SERVER['REQUEST_URI']; // Aksi ke script ini lagi.
 	
 	$showForm		= true;
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	$minDate		= sprintf("%04d-01-01", $tahunDokumen);
+	$maxDate		= sprintf("%04d-12-31", $tahunDokumen);
 	
 	// Cek ID agenda apabila tersedia...
+	$idKegiatan		= -1;
 	$idAgenda		= (isset($_GET['id'])?intval($_GET['id']):-1);
 	$isEditing		= ($idAgenda > 0);
 	$rowAgenda		= null;
 	if ($isEditing) {
+		$SIZPageTitle = "Edit Agenda Kegiatan";
 		$queryAgenda = sprintf("SELECT * FROM ra_agenda WHERE (id_agenda=%d)",$idAgenda);
 		$resultAgenda = mysqli_query($mysqli, $queryAgenda);
 		$queryCount++;
@@ -33,8 +45,10 @@
 			return;
 		}
 	} else {
+		$SIZPageTitle = "Tambah Agenda Kegiatan";
 		$idKegiatan		= (isset($_GET['idk'])?intval($_GET['idk']):-1);
 	}
+	
 	// Cek kegiatan yang akan diproses
 	$queryKegiatan = sprintf("SELECT * FROM ra_kegiatan WHERE (id_kegiatan=%d)",$idKegiatan);
 	$resultKegiatan = mysqli_query($mysqli, $queryKegiatan);
@@ -56,6 +70,10 @@
 	$backUrl		= ra_gen_url("kegiatan",$tahunDokumen,"id=".$idKegiatan);
 	if (isset($_GET['ref'])) $backUrl = $_GET['ref'];
 	
+	$breadCrumbPath[] = array("Tahun ".$tahunDokumen,ra_gen_url("rekap",$tahunDokumen),false);
+	$breadCrumbPath[] = array("Rekap Agenda",ra_gen_url("kegiatan",$tahunDokumen,"id=".$idKegiatan),false);
+	$breadCrumbPath[] = array($SIZPageTitle,null,true);
+	
 	// Proses simpan kegiatan
 	$submitError	= array();
 	$submitInfo		= null;
@@ -69,6 +87,13 @@
 	$jumlahRincian	= 0;
 	
 	if (isset($_POST['siz_submit'])) {
+		// Cek apakah kegiatan sudah ditambahkan ke dokumen perencanaan
+		$dataCatatan = ra_cek_catatan_kegiatan($idKegiatan, $tahunDokumen);
+		if ($dataCatatan==null) {
+			$submitError[] = "Kegiatan belum ditambahkan ke dalam dokumen perencanaan.";
+		}
+		
+		// Ambil parameter form
 		$agPrioritas	= intval($_POST['ag-prioritas']);
 		$agJenis		= intval($_POST['ag-jenis']); // Jenis pengadaan kegiatan		
 		$agCatatan		= trim($_POST['ag-catatan']);
@@ -99,7 +124,14 @@
 		if (validate_date($agTglMulai, "Y-m-d")) {
 			if (validate_date($agTglSelesai, "Y-m-d")) {
 				if (strtotime($agTglMulai) <= strtotime($agTglSelesai)) {
-					
+					// Tanggal mulai = tanggal selesai?
+					if ($agTglMulai == $agTglSelesai) {
+						$agJenis = 1; // Anggap event satu hari
+					}
+					$tahunAgenda = date("Y",strtotime($agTglMulai));
+					if ($tahunAgenda != $tahunDokumen) {
+						$submitError[] = "Tahun Agenda kegiatan bukan ".$tahunDokumen.".";
+					}
 				} else {
 					$submitError[] = "Range tanggal tidak valid!";
 				}
@@ -237,8 +269,9 @@ function update_input_jenis_agenda(idJenis) {
 function tambah_rincian() {
 	var newRowId = "siz_newrincian_"+currentNewRowId;
 	var newRow = "<tr id=\""+newRowId+"\" style=\"display:none;\">";
-	newRow += "<td><input type=\"text\" name=\"ag-n-rincian["+currentNewRowId+"]\" placeholder=\"Tulis nama rincian\" required/></td>";
-	newRow += "<td><input type=\"text\" name=\"ag-v-rincian["+currentNewRowId+"]\" placeholder=\"Tulis jumlah anggaran\" required/></td>";
+	newRow += "<td><input class=\"siz-fullwidth\" type=\"text\" name=\"ag-n-rincian["+currentNewRowId+"]\" placeholder=\"Tulis nama rincian\" required/></td>";
+	newRow += "<td><div class=\"input-group siz-input-anggaran\"><div class=\"input-group-addon\">Rp.</div>";
+	newRow += "<input type=\"text\" name=\"ag-v-rincian["+currentNewRowId+"]\" placeholder=\"Tulis jumlah anggaran\" required/></div></td>";
 	newRow += "<td><a href=\"#\" onclick=\"return hapus_rincian("+currentNewRowId+");\" ";
 	newRow += "class=\"btn btn-danger btn-xs\">Hapus</a></td></tr>";
 	$("#siz_row_tambah_rincian").before(newRow);
@@ -257,8 +290,8 @@ function hapus_rincian(idRincian) {
 	return false;
 }
 function init_page() {
-	$('#ag-1hari-tglmulai').datepicker({format: 'yyyy-mm-dd',autoclose:true,startDate:'<?php echo $minDate?>'});
-	$('.input-daterange').datepicker({format: 'yyyy-mm-dd',startDate:'<?php echo $minDate?>'});
+	$('#ag-1hari-tglmulai').datepicker({format: 'yyyy-mm-dd',autoclose:true,startDate:'<?php echo $minDate?>',endDate:'<?php echo $maxDate; ?>'});
+	$('.input-daterange').datepicker({format: 'yyyy-mm-dd',autoclose:true,startDate:'<?php echo $minDate?>'});
 	$('#siz_radio_bulan').on('ifChecked', function(event){
 		update_input_jenis_agenda(1);
 	});
@@ -397,11 +430,13 @@ function init_page() {
 					Rincian Anggaran Kegiatan</h3>
 			</div>
 			<div class="panel-body">
+				<span class="glyphicon glyphicon-info-sign"></span>&nbsp;Tuliskan jumlah anggaran
+					tanpa pemisah ribuan.
 				<table class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
-							<th style="width:200px;">Nama Rincian</th>
-							<th>Jumlah</th>
+							<th>Nama Rincian</th>
+							<th style="width:160px;">Jumlah</th>
 							<th style="width:75px;">Aksi</th>
 						</tr>
 					</thead>
@@ -413,10 +448,11 @@ function init_page() {
 			$jumlahAnggaran = intval($agNilaiRinc[$idx]);
 			$cRowId = "siz_newrincian_".$ctrIdRinc;
 			echo "<tr id=\"".$cRowId."\">";
-			echo "<td><input type=\"text\" name=\"ag-n-rincian[".$ctrIdRinc."]\" value=\"".
+			echo "<td><input class=\"siz-fullwidth\" type=\"text\" name=\"ag-n-rincian[".$ctrIdRinc."]\" value=\"".
 					htmlspecialchars($itemRincian)."\" placeholder=\"Tulis nama rincian\" required/></td>";
-			echo "<td><input type=\"text\" name=\"ag-v-rincian[".$ctrIdRinc."]\" value=\"".
-					$jumlahAnggaran."\" placeholder=\"Tulis jumlah anggaran\" required/></td>";
+			echo "<td><div class=\"input-group siz-input-anggaran\"><div class=\"input-group-addon\">Rp.</div>";
+   			echo "<input type=\"text\" name=\"ag-v-rincian[".$ctrIdRinc."]\" value=\"".
+					$jumlahAnggaran."\" placeholder=\"Tulis jumlah anggaran\" required/></div></td>";
 			echo "<td><a href=\"#\" onclick=\"return hapus_rincian(".$ctrIdRinc.");\" ";
 			echo "class=\"btn btn-danger btn-xs\">Hapus</a></td></tr>\n";
 			$ctrIdRinc++;
@@ -426,7 +462,7 @@ function init_page() {
 						<tr id="siz_row_tambah_rincian">
 							<td><a href="#" class="btn btn-xs btn-primary"
 								onclick="return tambah_rincian();">
-								<span class="glyphicon glyphicon-plus"></span> Tambah</a></td>
+								<span class="glyphicon glyphicon-plus"></span>&nbsp;Tambah</a></td>
 							<td>&nbsp;</td><td>&nbsp;</td>
 						</tr>
 					</tbody>

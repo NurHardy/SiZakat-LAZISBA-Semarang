@@ -5,6 +5,7 @@
 
 	// Jika sudah login, ngapain masuk halaman form login?
 	if (isset($_SESSION['username'])) {
+		ob_end_clean ( );
 		header("Location: main.php");
 		exit;
 	}
@@ -39,6 +40,7 @@
 			if (empty($nextUrl)) {
 				$nextUrl = "main.php";
 			}
+			ob_end_clean ( );
 			header("location: ".$nextUrl);
 			exit;
 		}else{
@@ -59,6 +61,12 @@ if (! empty ( $errorMessage )) {
 	echo "</div>\n";
 }
 ?>
+		<noscript>
+			<div class="alert alert-danger">
+				<span class="glyphicon glyphicon-alert"></span>Beberapa komponen sistem akan tidak
+					berfungsi karena JavaScript tidak didukung. Pastikan fitur JavaScript telah diaktifkan.
+			</div>
+		</noscript>
             <div id="loginbox">
 			<form id="loginform" method='post'
 				action="<?php

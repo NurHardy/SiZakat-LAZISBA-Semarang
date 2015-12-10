@@ -2,6 +2,7 @@
 
 $actionWord = $_GET['action'];
 require_once COMPONENT_PATH."/libraries/helper_saldo.php";
+$breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",$isHome);
 
 //================ EDIT TRANSAKSI ===========
 if ($actionWord=="edit-out") { 
@@ -28,3 +29,5 @@ if ($actionWord=="edit-out") {
 	//update_cache(2013, 9);
 	include COMPONENT_PATH."/file/transaksi_harian/mutasi_transaksi.php";
 }
+
+

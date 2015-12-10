@@ -18,8 +18,18 @@
 	$showForm		= true;
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
+	$activeDiv		= @$_GET['div'];
 	
 	$backUrl		= ($isEditing?ra_gen_url("master-kegiatan",null,"id=".$idKegiatan):ra_gen_url("list"));
+	$SIZPageTitle	= ($isEditing?"Edit Master Kegiatan":"Tambah Master Kegiatan");
+	$breadCrumbPath[] = array("Master Kegiatan",ra_gen_url("list"),false);
+	if ($isEditing) {
+		$breadCrumbPath[] = array("Detil Master Kegiatan",$backUrl,false);
+		$breadCrumbPath[] = array("Edit",ra_gen_url("edit-kegiatan-master",null,"id=".$idKegiatan),true);
+	} else {
+		$breadCrumbPath[] = array("Tambah Master Kegiatan",$formActionUrl,true);
+	}
+	
 	if (isset($_GET['ref'])) $backUrl = $_GET['ref'];
 	
 	$submitError	= array();
@@ -64,6 +74,30 @@
 			$submitError[] = "ID prioritas tidak valid.";
 		}
 		
+		// Validasi rincian awal
+		if (!$isEditing && (!empty($_POST['mast-kg-n-rincian']))) {
+			foreach ($mKegiatanNamaRinc as $idx => $itemRincian) {
+				$mKegiatanNamaRinc[$idx] = $itemRincian = trim($itemRincian);
+				if (empty($itemRincian)) {
+					$submitError[] = "Terdapat nama rincian yang kosong!";
+					break;
+				}
+				$lblRincian = "[Rincian '".htmlspecialchars($itemRincian)."'] ";
+				if (isset($mKegiatanNilaiRinc[$idx])) {
+					if (is_numeric($mKegiatanNilaiRinc[$idx])) {
+						$mKegiatanNilaiRinc[$idx] = intval($mKegiatanNilaiRinc[$idx]);
+						if ($mKegiatanNilaiRinc[$idx] < 0) {
+							$submitError[] = $lblRincian."Besar rincian tidak boleh negatif.";
+						}
+					} else {
+						$submitError[] = $lblRincian."Besar rincian harus berupa numerik.";
+					}
+				} else {
+					$submitError[] = $lblRincian."Besar rincian tidak boleh kosong.";
+				}
+				
+			}
+		}
 		// Bangun query jika tidak ada error.
 		if (empty($submitError)) {
 			$mysqli->autocommit(FALSE);
@@ -145,6 +179,7 @@
 				return;
 			}
 		} else { // Jika bukan edit (buat baru)
+			$mKegiatanDivisi	= $activeDiv;
 			$mKegiatanJenis		= 1; // Default adalah kegiatan rutin
 		}
 	}
@@ -169,8 +204,11 @@ var currentNewRowId = <?php echo $jumlahRincian; ?>;
 function tambah_rincian() {
 	var newRowId = "siz_newrincian_"+currentNewRowId;
 	var newRow = "<tr id=\""+newRowId+"\" style=\"display:none;\">";
-	newRow += "<td><input type=\"text\" name=\"mast-kg-n-rincian["+currentNewRowId+"]\" placeholder=\"Tulis nama rincian\" class=\"form-control\" required/></td>";
-	newRow += "<td><input type=\"text\" name=\"mast-kg-v-rincian["+currentNewRowId+"]\" placeholder=\"Tulis jumlah anggaran\" class=\"form-control\" required/></td>";
+	newRow += "<td><input type=\"text\" class=\"siz-fullwidth\" name=\"mast-kg-n-rincian["+currentNewRowId+"]\" placeholder=\"Tulis nama rincian\" class=\"form-control\" required/></td>";
+	newRow += "<td><div class=\"input-group siz-input-anggaran\">";
+	newRow +=  "<div class=\"input-group-addon\">Rp.</div><input type=\"text\" ";
+	newRow +=   "name=\"mast-kg-v-rincian["+currentNewRowId+"]\" placeholder=\"Tulis jumlah anggaran\" ";
+	newRow +=   "class=\"form-control\" required/></div></td>";
 	newRow += "<td><a href=\"#\" onclick=\"return hapus_rincian("+currentNewRowId+");\" ";
 	newRow += "class=\"btn btn-danger btn-xs\">Hapus</a></td></tr>";
 	$("#siz_row_tambah_rincian").before(newRow);
@@ -193,7 +231,7 @@ function hapus_rincian(idRincian) {
 	if (!empty($submitError)) {
 		echo "<div class=\"alert alert-danger\">\n";
 		foreach ($submitError as $itemError) {
-			echo $itemError."<br>\n";
+			echo "<div><span class=\"glyphicon glyphicon-warning-sign\"></span> ".$itemError."</div>\n";
 		}
 		echo "</div>\n";
 	}
@@ -225,7 +263,7 @@ function hapus_rincian(idRincian) {
 							<td>
 <?php if ($isAdmin) { // =========== Jika Admin ===== ?>
 							<select name="mast-kg-divisi" id="mast-kg-divisi" style="width:100%;" required
-									data-placeholder="- Pilih Divisi -">
+									data-placeholder="- Pilih Divisi -" class="siz-use-select2">
 								<option></option>
 							<?php
 								$ctrDivisi = 1;
@@ -245,7 +283,7 @@ function hapus_rincian(idRincian) {
 						<tr>
 							<td><label for="mast-kg-akun">Akun Pengeluaran</label></td>
 							<td><select name="mast-kg-akun" id="mast-kg-akun" style="width:100%;" required
-									data-placeholder="- Pilih Akun -">
+									data-placeholder="- Pilih Akun -" class="siz-use-select2">
 								<option></option>
 							<?php
 								while ($rowAkun = $resultGekAkun->fetch_array(MYSQLI_ASSOC)) {
@@ -258,7 +296,7 @@ function hapus_rincian(idRincian) {
 						<tr>
 							<td><label for="mast-kg-jenis">Jenis</label></td>
 							<td><select name="mast-kg-jenis" id="mast-kg-jenis" style="width:100%;" required
-									data-placeholder="- Pilih Jenis -">
+									data-placeholder="- Pilih Jenis -" class="siz-use-select2">
 							<?php
 								foreach ($listJenisKegiatan as $idxJenis => $lblJenis) {
 									echo "<option value=\"{$idxJenis}\" ";
@@ -271,7 +309,7 @@ function hapus_rincian(idRincian) {
 							<td><label for="mast-kg-prioritas">Prioritas</label> <a href="<?php echo htmlspecialchars(ra_gen_url("documentation")); ?>">
 									<span class="glyphicon glyphicon-question-sign"></span></a></td>
 							<td><select name="mast-kg-prioritas" id="mast-kg-prioritas" style="width:100%;" required
-									data-placeholder="- Pilih Prioritas -">
+									data-placeholder="- Pilih Prioritas -" class="siz-use-select2">
 								<option></option>
 							<?php
 								foreach ($listPrioritas as $idxPrioritas => $lblPrioritas) {
@@ -306,11 +344,13 @@ function hapus_rincian(idRincian) {
 					Rincian Awal Kegiatan</h3>
 			</div>
 			<div class="panel-body">
+				<span class="glyphicon glyphicon-info-sign"></span>&nbsp;Tuliskan jumlah anggaran
+					tanpa pemisah ribuan.
 				<table class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
-							<th style="width:200px;">Nama Rincian</th>
-							<th>Jumlah</th>
+							<th>Nama Rincian</th>
+							<th style="width:200px;">Jumlah</th>
 							<th style="width:75px;">Aksi</th>
 						</tr>
 					</thead>
@@ -324,10 +364,12 @@ function hapus_rincian(idRincian) {
 			echo "<tr id=\"".$cRowId."\">";
 			echo "<td><input type=\"text\" name=\"mast-kg-n-rincian[".$ctrIdRinc."]\" value=\"".
 					htmlspecialchars($itemRincian)."\" placeholder=\"Tulis nama rincian\" ".
-					"class=\"form-control\" required/></td>";
-			echo "<td><input type=\"text\" name=\"mast-kg-v-rincian[".$ctrIdRinc."]\" value=\"".
+					"class=\"form-control siz-fullwidth\" required/></td>";
+			echo "<td><div class=\"input-group siz-input-anggaran\">".
+					"<div class=\"input-group-addon\">Rp.</div>";
+			echo "<input type=\"text\" name=\"mast-kg-v-rincian[".$ctrIdRinc."]\" value=\"".
 					$jumlahAnggaran."\" placeholder=\"Tulis jumlah anggaran\" ".
-					"class=\"form-control\" required/></td>";
+					"class=\"form-control\" required/></div></td>";
 			echo "<td><a href=\"#\" onclick=\"return hapus_rincian(".$ctrIdRinc.");\" ";
 			echo "class=\"btn btn-danger btn-xs\">Hapus</a></td></tr>\n";
 			$ctrIdRinc++;

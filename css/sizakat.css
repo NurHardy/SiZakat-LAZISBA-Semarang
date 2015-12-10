@@ -11,9 +11,15 @@ a.red_link:hover {color:#FF0000;}
 	background-repeat: no-repeat;
 	background-position: 15px 15px;
 }
+.alert-icon-info {
+	background-image: url('../images/icons/info.png');
+	background-repeat: no-repeat;
+	background-position: 15px 10px;
+}
 
+.show_on_edit {display:none;}
 .siz-fullwidth {width:100%;}
-
+.siz-input-anggaran input[type="text"] {width:150px;}
 /* =========== SIZ MODAL DIALOG ===========- */
 #siz_overlaydlg_loading {
 	padding: 20px 10px;
@@ -75,7 +81,7 @@ a.red_link:hover {color:#FF0000;}
 	min-height: 100px;
 }
 textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100px;display:block; width: 100%;}
-.td-prioritas {text-align: center;width:100px;}
+.td-prioritas {text-align: center;width:75px;}
 
 .siz-container-month {
 	margin: 0px 10px 20px;
@@ -151,6 +157,10 @@ textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100
 	margin: 3px;
 }
 /* ================ Style untuk AM_SIZ_RA_HOME ======== */
+.siz-dok-empty {
+	padding: 20px;
+	text-align: center;
+}
 .siz-ra-home-monthseparator {
 	background-color:#EEECF1;
 	padding: 10px;

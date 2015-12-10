@@ -8,6 +8,9 @@
  */
 	// Cek privilege
 	if (!ra_check_privilege()) return;
+	
+	$tahunDokumen = $_GET['th'];
+	
 ?>
 <script>
 function appendRincian(idAgenda, dataRincian) {

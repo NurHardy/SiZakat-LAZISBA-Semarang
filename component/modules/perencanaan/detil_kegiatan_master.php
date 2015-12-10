@@ -8,12 +8,15 @@
  */
 	// Cek privilege
 	if (!ra_check_privilege()) exit;
-
+	
 	$isAuthorized = false;
 	$idKegiatan = -1;
 	
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
+	
+	$SIZPageTitle	= "Detil Master Kegiatan";
+	$breadCrumbPath[] = array("Master Kegiatan",ra_gen_url("list"),false);
 	
 	if(isset($_GET['id'])){
 		$idKegiatan = intval($_GET['id']);
@@ -25,6 +28,8 @@
 		$rowKegiatan = mysqli_fetch_array($resultKegiatan);
 		
 		if ($rowKegiatan != null) {
+			$breadCrumbPath[] = array("Detil Master Kegiatan",
+					ra_gen_url("master-kegiatan",null,"id=".$idKegiatan), true);
 			$isAuthorized = ($isAdmin || ($divisiUser==$rowKegiatan['divisi']));
 		}else {
 			show_error_page( "Data kegiatan tidak ditemukan dalam database." );
@@ -103,12 +108,15 @@
 				Rincian Awal Kegiatan</h3>
 		</div>
 		<div class="panel-body">
+<?php if ($isAuthorized)
+		echo "<span class=\"glyphicon glyphicon-info-sign\"></span>&nbsp;Tuliskan jumlah anggaran".
+					" tanpa pemisah ribuan."; ?>
 			<table class="table table-bordered table-striped table-hover" id="siz-tabel-rinc-awal">
 				<thead>
 					<tr>
 						<th>Nama Rincian</th>
-						<th>Jumlah</th>
-						<th>Aksi</th>
+						<th style="width:200px;">Jumlah</th>
+						<th style="width:75px;">Aksi</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -144,9 +152,13 @@
 				<tfoot>
 				<tr id="siz_row_tambah_rincian">
 					<td><input type="text" name="txt_nama_rincian" id="txt_nama_rincian" 
-						placeholder="Nama Rincian"/></td>
-					<td><input type="text" name="txt_anggaran_rincian" id="txt_anggaran_rincian"
-						placeholder="Nilai Rincian"/></td>
+						placeholder="Nama Rincian" class="siz-fullwidth"/></td>
+					<td>
+						<div class="input-group siz-input-anggaran">
+							<div class="input-group-addon">Rp.</div>
+							<input type="text" name="txt_anggaran_rincian" id="txt_anggaran_rincian"
+						placeholder="Nilai Rincian"/></div>
+					</td>
 					<td><a href="#" class="btn btn-xs btn-primary"
 						onclick="return submit_rincian_tambahan(<?php echo $idKegiatan; ?>);">
 						<span class="glyphicon glyphicon-plus"></span> Tambah</a></td>

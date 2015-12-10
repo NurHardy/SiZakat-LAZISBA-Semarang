@@ -8,15 +8,41 @@
  */
 
 	// Cek privilege
-	if (!ra_check_privilege()) exit;
+	if (!ra_check_privilege(RA_ID_ADMIN)) exit;
 	
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	$backUrl		= "javascript:backAway();";
+	$tahunDokumen	= $_GET['th'];
+	
 	require_once COMPONENT_PATH."/libraries/querybuilder.php";
 	
 	// Dapatkan list id-agenda yang akan dihapus
 	$listIdAgenda = (isset($_POST['id'])?$_POST['id']:$_GET['id']);
+	
+	// Jika masukan adalah id kegiatan...
+	$idKegiatan = $_GET['idk'];
+	$rowKegiatan	= null;
+	if ($idKegiatan) {
+		$queryCekKegiatan = sprintf("SELECT * FROM ra_kegiatan WHERE id_kegiatan=%d", $idKegiatan);
+		$resultKegiatan = mysqli_query($mysqli, $queryCekKegiatan);
+		$rowKegiatan = mysqli_fetch_assoc($resultKegiatan);
+		
+		if ($rowKegiatan) {
+			$listIdAgenda = array();
+			$queryListAgenda = sprintf(
+					"SELECT * FROM ra_agenda WHERE id_kegiatan=%d AND YEAR(tgl_mulai)=%d",
+					$idKegiatan, $tahunDokumen);
+			$resultListAgenda = mysqli_query($mysqli, $queryListAgenda);
+			while ($rowAgenda = mysqli_fetch_assoc($resultListAgenda)) {
+				$listIdAgenda[] = $rowAgenda['id_agenda'];
+			}
+		} else {
+			show_error_page( "Data master kegiatan tidak ditemukan." );
+			return;
+		}
+		
+	}
 	
 	if (!is_array($listIdAgenda)) {
 		if (is_numeric($listIdAgenda)) {
@@ -29,40 +55,46 @@
 		show_error_page( "Format argumen tidak valid." );
 		return;
 	}
-	if (empty($listIdAgenda)) {
+	if (empty($listIdAgenda) && empty($rowKegiatan)) {
 		show_error_page( "Argumen tidak lengkap." );
 		return;
 	}
-	$listIdAgendaQuery = implode(',', $listIdAgenda);
-	$listIdAgendaQuery = trim($listIdAgendaQuery, ','); // Hapus koma terakhir
-	
-	$queryGetAgenda = sprintf(
-			"SELECT a.*, k.nama_kegiatan, k.divisi FROM ra_agenda AS a, ra_kegiatan AS k ".
-			"WHERE k.id_kegiatan=a.id_kegiatan AND (a.id_agenda IN (%s))",
-			$listIdAgendaQuery);
-	$resultGetAgenda = mysqli_query($mysqli, $queryGetAgenda);
-	if ($resultGetAgenda == null) {
-		show_error_page( "Terjadi kesalahan internal: ".mysqli_error($mysqli) );
-		return;
-	}
-	
-	// Pengecekan tiap item agenda
-	$listAgenda = array();
-	$idx = 0;
-	$isAuthorized = true;
-	while ($rowAgenda = mysqli_fetch_array($resultGetAgenda)) {
-		if (!$isAdmin) {
-			if ($rowAgenda['divisi'] != $divisiUser) {
-				$isAuthorized = false;
-				break;
-			}
+	if (!empty($listIdAgenda)) {
+		$listIdAgendaQuery = implode(',', $listIdAgenda);
+		$listIdAgendaQuery = trim($listIdAgendaQuery, ','); // Hapus koma terakhir
+		
+		$queryGetAgenda = sprintf(
+				"SELECT a.*, k.nama_kegiatan, k.divisi FROM ra_agenda AS a, ra_kegiatan AS k ".
+				"WHERE k.id_kegiatan=a.id_kegiatan AND (a.id_agenda IN (%s))",
+				$listIdAgendaQuery);
+		$resultGetAgenda = mysqli_query($mysqli, $queryGetAgenda);
+		if ($resultGetAgenda == null) {
+			show_error_page( "Terjadi kesalahan internal: ".mysqli_error($mysqli) );
+			return;
 		}
-		$listAgenda[$idx] = $rowAgenda;
-		$idx++;
+		
+		// Pengecekan tiap item agenda
+		$listAgenda = array();
+		$idx = 0;
+		$isAuthorized = true;
+		while ($rowAgenda = mysqli_fetch_array($resultGetAgenda)) {
+			if (!$isAdmin) {
+				if ($rowAgenda['divisi'] != $divisiUser) {
+					$isAuthorized = false;
+					break;
+				}
+			}
+			$listAgenda[$idx] = $rowAgenda;
+			$idx++;
+		}
+		if (!$isAuthorized) {
+			show_error_page( "Terdapat item agenda yang tidak berhak Anda hapus." );
+			return;
+		}
 	}
-	if (!$isAuthorized) {
-		show_error_page( "Terdapat item agenda yang tidak berhak Anda hapus." );
-		return;
+	
+	if ($rowKegiatan) {
+		
 	}
 ?>
 <script>
@@ -147,6 +179,8 @@ function backAway(){
 </script>
 <div class="col-12">
 	<?php ra_print_status($namaDivisiUser); ?>
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
 	<form action="#" method="post" onsubmit="return submit_delete();" id="siz-form-chk-hpsagenda">
 	<div class="widget-box">
 		<div class="widget-title">
@@ -157,35 +191,32 @@ function backAway(){
 		</div>
 		<div class="widget-content">
 			<div class="alert alert-warning alert-icon alert-icon-warning" id="siz-alert-warning">
-				<b>Anda akan menghapus agenda kegiatan berikut beserta rinciannya.</b><br>
-				Jika Anda yakin dan mengerti
-				apa yang Anda dilakukan, klik 'Hapus Agenda'.
+				<b>Anda akan menghapus agenda berikut.</b><br>
+				Jika Anda yakin dan mengerti apa yang Anda dilakukan, klik 'Hapus Agenda'.
+				Data yang telah dihapus tidak dapat dikembalikan.
 			</div>
 			<div class="alert alert-danger" id="siz-alert-errors" style="display:none;"></div>
 			<div class="alert alert-success" id="siz-alert-infos" style="display:none;"></div>
-			<table class="table table-bordered table-striped table-hover siz-table-withcheck"
+			<table class="table table-bordered table-striped table-hover"
 				id="siz-list-select">
 				<thead>
 				<tr>
-					<th><input type="checkbox" name="siz-checkall" value="1" checked/></th>
-					<th>Nama Kegiatan</th>
-					<th>Divisi</th>
+					<th>Kegiatan</th>
 					<th>Pelaksanaan</th>
 					<th>Anggaran</th>
-					<th>Prioritas</th>
 				</tr>
 				</thead>
 				<tbody>
 					<?php 
 					foreach ($listAgenda as $itemAgenda) {
 						$idAgenda = $itemAgenda['id_agenda'];
-						echo "<tr class=\"siz-row-highlight-fordelete\"><td>";
-						echo "<input type=\"checkbox\" name=\"id[]\" value=\"".$idAgenda."\" id=\"siz-chk-ag-".$idAgenda."\" checked/></td>";
-						echo "<td><label for=\"siz-chk-ag-".$idAgenda."\">".htmlspecialchars($itemAgenda['nama_kegiatan'])."</label></td>";
-						echo "<td>".$listDivisi[$itemAgenda['divisi']]."</td>";
-						echo "<td>".($itemAgenda['tgl_mulai'])."</td>";
+						$tglMulai = tanggal_indonesia(date('d M Y', strtotime($itemAgenda['tgl_mulai'])));
+
+						echo "<tr>";
+						echo "<td>".htmlspecialchars($itemAgenda['nama_kegiatan'])."\n";
+						echo "<input type='hidden' name='id[]' value='".$idAgenda."' /></td>";
+						echo "<td>".$tglMulai."</td>";
 						echo "<td>".to_rupiah($itemAgenda['jumlah_anggaran'])."</td>";
-						echo "<td>".$listPrioritasHTML[$itemAgenda['prioritas_agenda']]."</td>";
 						echo "</tr>\n";
 					}
 					?>
@@ -201,11 +232,13 @@ function backAway(){
 					<a href="<?php echo htmlspecialchars($backUrl); ?>">
 						<span class="glyphicon glyphicon glyphicon-chevron-left"></span> Kembali</a> - 
 					<button type="submit" class="btn btn-danger" id="siz-btn-submit">
-						<span class="glyphicon glyphicon-trash"></span> Hapus Agenda Terpilih</button>
+						<span class="glyphicon glyphicon-trash"></span> Hapus Agenda</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	<input type="hidden" name="act" value="agenda.hapus" />
 	</form>
+	</div>
+	</div>
 </div>

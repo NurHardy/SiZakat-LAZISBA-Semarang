@@ -49,13 +49,15 @@
 	 * @return int Mengembalikan jumlah rincian agenda, jika query gagal, mengembalikan -1
 	 */
 	function update_anggaran_agenda($idAgenda) {
-		global $mysqli;
+		global $mysqli, $queryCount;
 		
 		$queryJumlahRinc = sprintf(
 				"SELECT SUM(jumlah_anggaran) AS ja FROM ra_rincian_agenda WHERE id_agenda=%d",
 				$idAgenda
 		);
 		$resultJumlah = mysqli_query($mysqli, $queryJumlahRinc);
+		$queryCount++;
+		
 		$dataJumlahRinc = mysqli_fetch_array($resultJumlah);
 		$jumlahRincAgenda = $dataJumlahRinc['ja'];
 		$queryUpdateRinc = sprintf(
@@ -63,6 +65,49 @@
 				$jumlahRincAgenda, $idAgenda
 		);
 		$resultUpdate = mysqli_query($mysqli, $queryUpdateRinc);
+		$queryCount++;
+		
 		if ($resultUpdate) return $jumlahRincAgenda;
 		else return -1;
+	}
+	
+	/**
+	 * Ambil record catatan dokumen tahunan
+	 * @param integer $tahunDokumen Tahun dokumen yang ingin diambil
+	 * @param boolean $printErrorMsg TRUE akan menampilkan pesan error jika record tidak ditemukan
+	 * @return array|null Kembali NULL jika record tidak ditemukan, atau array record jika ditemukan
+	 */
+	function ra_cek_dokumen($tahunDokumen, $printErrorMsg = true) {
+		global $mysqli, $queryCount;
+		
+		$queryCekDokumen = sprintf("SELECT * FROM ra_dokumen WHERE tahun_dokumen=%d",
+				intval($tahunDokumen));
+		$resultCekDokumen = mysqli_query($mysqli, $queryCekDokumen);
+		$queryCount++;
+		
+		$dataDokumen = mysqli_fetch_assoc($resultCekDokumen);
+		if (($dataDokumen==null)&&($printErrorMsg)) {
+			show_error_page("Dokumen perencanaan tidak ditemukan atau belum dibuat.");
+		}
+		return $dataDokumen;
+	}
+	
+	/**
+	 * Ambil record catatan kegiatan untuk tahun tertentu
+	 * @param integer $idKegiatan ID Kegiatan yang akan diperiksa
+	 * @param integer $tahunDokumen Tahun Pelaksanaan kegiatan
+	 * @return array|NULL Kembali NULL jika record tidak ditemukan, atau array record jika ditemukan
+	 */
+	function ra_cek_catatan_kegiatan($idKegiatan, $tahunDokumen) {
+		global $mysqli, $queryCount;
+		
+		$queryCekKegiatan = sprintf("SELECT * FROM ra_catatan_kegiatan ".
+				"WHERE id_kegiatan=%d AND tahun=%d",
+				intval($idKegiatan),
+				intval($tahunDokumen));
+		$resultCekKegiatan = mysqli_query($mysqli, $queryCekKegiatan);
+		$queryCount++;
+		
+		$dataCatatanKegiatan = mysqli_fetch_assoc($resultCekKegiatan);
+		return $dataCatatanKegiatan;
 	}

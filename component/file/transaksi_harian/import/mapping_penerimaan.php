@@ -7,6 +7,8 @@
  * ------------------------------------------------------------------------
  */
 
+$breadCrumbPath[] = array("Map","main.php?s=transaksi&action=mapping-penerimaan",true);
+
 $colName = $_GET ['col'];
 
 $tblSourceLabel = "Label pada Excel";

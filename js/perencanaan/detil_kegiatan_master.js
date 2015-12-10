@@ -18,8 +18,10 @@
 				"<input type='text' name='"+tagPrefix+"n-edit' id='"+tagPrefix+
 				"n-edit' value=\""+namaRincian+"\" class=\"form-control input-sm\"/>");
 		$(divNilaiRincian).hide().after(
-				"<input type='text' name='"+tagPrefix+"v-edit' id='"+tagPrefix+
-				"v-edit' value=\""+jumlahRincian+"\" class=\"form-control input-sm\"/>");
+				"<div class=\"input-group siz-input-anggaran\" id=\""+tagPrefix+"v-container\">"+
+				"<div class=\"input-group-addon\">Rp.</div>"+
+				 "<input type='text' name='"+tagPrefix+"v-edit' id='"+tagPrefix+
+				  "v-edit' value=\""+jumlahRincian+"\" class=\"form-control input-sm\"/></div>");
 		$(divControl).hide().after("<div class=\"siz-rinc-editcontrol\">"+
 				"<a href=\"#\" onclick=\"return submit_rincian_edit("+idRincian+");\">"+
 				"<span class=\"glyphicon glyphicon-ok\"></span> Simpan</a> "+
@@ -35,7 +37,8 @@
 		$(rowIdPrefix+" .siz-n-rinc").show();
 		$(rowIdPrefix+" .siz-v-rinc").show();
 		$(rowIdPrefix+" "+tagPrefix+"n-edit").remove();
-		$(rowIdPrefix+" "+tagPrefix+"v-edit").remove();
+		$(rowIdPrefix+" "+tagPrefix+"v-container").remove();
+		//$(rowIdPrefix+" "+tagPrefix+"v-edit").remove();
 		
 		$(rowIdPrefix+" .siz-rinc-control").show();
 		$(rowIdPrefix+" .siz-rinc-editcontrol").remove();

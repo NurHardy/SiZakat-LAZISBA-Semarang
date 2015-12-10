@@ -1,7 +1,7 @@
 <?php
 /*
- * laporan perencanaan.php
- * ==> Menampilkan rekapitulasi kegiatan pada satu tahun
+ * laporan_realisasi.php
+ * ==> Menampilkan rekapitulasi rencana dan realisasi kegiatan pada satu tahun
  *
  * AM_SIZ_RA_REPORT | Laporan realisasi tahunan
  * ------------------------------------------------------------------------
@@ -13,6 +13,8 @@
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	$tahunDokumen	= $_GET['th'];
+	
+	if (empty($tahunDokumen)) $tahunDokumen = date("Y");
 	$SIZPageTitle	= "Realisasi tahun ".$tahunDokumen;
 	
 	$queryRekapPerencanaan = sprintf(

@@ -550,27 +550,13 @@
 	if (empty($SIZPageTitle)) $SIZPageTitle = getTitle();
 	
 	//========= BREADCRUMB for navigation ==============
-	$SIZBreadCrumb = "";
 	if ($_GET['s']=="home") {
-		$SIZBreadCrumb .= "<a class=\"current\" class=\"#\">";
+		$SIZBreadCrumb .= "<a class=\"current\" href=\"\">";
 		$SIZBreadCrumb .=  "<i class=\"glyphicon glyphicon-home\"></i> Home</a>";
 	} else {
 		$SIZBreadCrumb .=  "<a href=\"main.php?s=home\" title=\"Go to Home\" class=\"tip-bottom\">";
 		$SIZBreadCrumb .=  "<i class=\"glyphicon glyphicon-home\"></i> Home</a>";
 	}
-	
-	if($_GET['s'] == 'perencanaan'){
-		$breadCrumbPath[] = array("Perencanaan","main.php?s=perencanaan",false);
-	} else if ($_GET['s'] == 'transaksi') {
-		$breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",false);
-		if ($_GET['action']=='import') {
-			$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
-		} else if ($_GET['action']=='mapping-penerimaan') {
-			$breadCrumbPath[] = array("Impor","main.php?s=transaksi&action=import",false);
-			$breadCrumbPath[] = array("Map","main.php?s=transaksi&action=mapping-penerimaan",true);
-		}
-	}
-	
 	
 	foreach ($breadCrumbPath as $pathItem) {
 		$SIZBreadCrumb .= "<a href=\"".$pathItem[1]."\" ";
