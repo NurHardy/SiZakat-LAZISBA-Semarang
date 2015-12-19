@@ -51,7 +51,7 @@ function apply_priv(idUser) {
 	
 	var idDivisi = $(editElmtId+" td.ra_edit_area select.cmb_divisi").val();;
 	_ajax_send({
-		act: 'uset.setpriv',
+		act: 'user.setpriv',
 		id: idUser,
 		priv: idDivisi
 	}, function(response){
@@ -107,7 +107,10 @@ function apply_priv(idUser) {
 	?>
 	<tr id="ra_user_<?php echo $curIdUser; ?>" data-divid="<?php echo $rowUser['divisi']; ?>">
 		<td><b><?php echo $rowUser['username']; ?></b></td>
-		<td><?php echo $rowUser['nama']; ?></td>
+		<td><?php echo $rowUser['nama']; ?>
+			<div style="font-size:0.9em;">
+				<span class="glyphicon glyphicon-envelope"></span>
+				<?php echo htmlspecialchars($rowUser['email']); ?></div></td>
 		<td class="ra_edit_area"><span class="hide_on_edit ra_curdivisi"><?php echo $listDivisi[$rowUser['divisi']]; ?></span></td>
 		<td><span class="hide_on_edit">
 			<a href="#edit-priv" onclick="return edit_priv(<?php echo $curIdUser; ?>);">

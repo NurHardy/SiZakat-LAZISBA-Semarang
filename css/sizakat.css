@@ -5,6 +5,12 @@ a.red_link:hover {color:#FF0000;}
 
 .alert-icon {
 	padding-left: 64px;
+	min-height: 64px;
+}
+.alert-icon-error {
+	background-image: url('../images/icons/error.png');
+	background-repeat: no-repeat;
+	background-position: 15px 10px;
 }
 .alert-icon-warning {
 	background-image: url('../images/icons/warning.png');
@@ -16,15 +22,30 @@ a.red_link:hover {color:#FF0000;}
 	background-repeat: no-repeat;
 	background-position: 15px 10px;
 }
-
+textarea.no-hresize {
+	resize: vertical;
+	min-height:100px;
+	max-height:400px;
+}
 .show_on_edit {display:none;}
 .siz-fullwidth {width:100%;}
+.siz-divsmall {font-size:0.9em;}
 .siz-input-anggaran input[type="text"] {width:150px;}
 /* =========== SIZ MODAL DIALOG ===========- */
 #siz_overlaydlg_loading {
 	padding: 20px 10px;
 	text-align: center;
 	display:none;
+}
+
+/* =========== SIZ FORMS ================== */
+.siz-form-penerimaan {border-color:#289157;}
+.siz-form-penerimaan .widget-title {
+	height:48px;background-color: #289157; background-image:none; color:#fff;
+	box-shadow:none;
+}
+.siz-form-penerimaan .widget-title h5 {
+	font-size: 1.1em; color:#fff; text-shadow:none;
 }
 
 /* =========== SIZ TABLES ================== */
@@ -189,3 +210,20 @@ textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100
 /* ================ Style untuk AM_SIZ_MAP_PENERIMAAN ==== */
 .siz_import_map_metainfo {font-size:0.8em;}
 
+/* ================ Style untuk AM_SIZ_RA_DTLRPT ========= */
+
+.siz-akuncontainer .parent_title {
+	background-color:#EFEDF2;
+	padding: 5px;
+	margin-bottom: 5px;
+}
+.siz-akuncontainer .parent_content {
+	padding:5px;
+}
+.siz-akuncontainer {
+	
+}
+.siz-rekap-item {margin-bottom: 5px;}
+.siz-akuncontainer .div-alert {
+	color: #999; text-align: center; margin-top: 10px;
+}

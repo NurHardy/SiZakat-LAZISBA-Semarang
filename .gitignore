@@ -45,3 +45,4 @@ catatan.txt
 error_log
 ollog.log
 component/config/koneksi.php
+.private/koneksi.php

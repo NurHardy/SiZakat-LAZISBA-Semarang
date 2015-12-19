@@ -77,6 +77,9 @@ echo "</div>\n";
 					class="btn btn-danger">
 					<i class="glyphicon glyphicon-erase"></i> Hapus Dokumen</a>
 <?php } //======================== End If =================== ?>
+				<label>Cari:</label><input type="text" name="q" required />
+					<button type="submit" class="btn btn-default">
+						<span class="glyphicon glyphicon-search"></span> Cari</button>
 			</div>
 <?php if (mysqli_num_rows($resultQueryRekap) > 0) { //==================== JIKA ADA KEGIATAN ========== ?>
 			<table class="table table-bordered table-hover siz-operation-table">

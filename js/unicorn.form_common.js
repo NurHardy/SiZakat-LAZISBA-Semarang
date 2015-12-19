@@ -6,14 +6,5 @@
 
 $(document).ready(function(){
 	
-	$('input[type=checkbox],input[type=radio]').iCheck({
-    	checkboxClass: 'icheckbox_flat-blue',
-    	radioClass: 'iradio_flat-blue'
-	});
 	
-	$('select.use_select2').select2({
-		minimumResultsForSearch: 10
-	});
-    //$('.colorpicker').colorpicker();
-    $('.datepicker').datepicker();
 });

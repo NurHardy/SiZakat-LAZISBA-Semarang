@@ -1,5 +1,9 @@
 <?php
 
+// Global consts
+define("RA_MODULE_URL"	, "main.php?s=perencanaan");
+
+// Action param
 $ajaxAct = $_POST['act'];
 $errorDesc = null;
 
@@ -65,8 +69,13 @@ if ($ajaxAct == "get.rincian") {
 		));
 	}
 
+//=========== REALISASI
+} else if ($ajaxAct == "realisasi.getdata") {
+	// Get realisaasi
+	require("ajax/realisasi_getdata.php");	
+	
 //=========== USER
-} else if ($ajaxAct == "uset.setpriv") {
+} else if ($ajaxAct == "user.setpriv") {
 	require("ajax/user_setprivilege.php");
 	
 } else {

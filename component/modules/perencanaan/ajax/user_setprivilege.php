@@ -21,8 +21,18 @@
 	$dataUser = null;
 	$oldPrivilege = null;
 	
+	// Cek privilege
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == 99);
+	
+	// Set user hanya boleh dilakukan oleh administrator perencanaan
+	if (!$isAdmin) {
+		echo json_encode(array(
+				'status' => 'error',
+				'error' => "Access denied."
+		));
+		return;
+	}
 	
 	$paramComplete	= true;
 	$idUser	= intval($_POST['id']);

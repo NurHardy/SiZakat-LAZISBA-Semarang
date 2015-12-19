@@ -49,13 +49,13 @@ body {
 
 }
 #sidebar > ul > li.active {
-    background-color: #4cb649;
-	background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#4cb649), to(#272541));
+    background-color: #2EA564;
+	/*background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#4cb649), to(#272541));
 	background-image: -webkit-linear-gradient(top, #4cb649 0%, #272541 100%);
 	background-image: -moz-linear-gradient(top, #4cb649 0%, #272541 100%);
 	background-image: -ms-linear-gradient(top, #4cb649 0%, #272541 100%);
 	background-image: -o-linear-gradient(top, #4cb649 0%, #272541 100%);
-	background-image: linear-gradient(top, #4cb649 0%, #272541 100%);
+	background-image: linear-gradient(top, #4cb649 0%, #272541 100%);*/
 }
 
 #sidebar > ul > li.open.submenu > a {

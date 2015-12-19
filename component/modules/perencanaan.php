@@ -121,6 +121,9 @@
 	} else if ($actionWord == "hapus-master-kegiatan") {
 		include MODULE_NAME."/hapus_kegiatan_confirm.php";
 	/****************** User *********************/
+	} else if ($actionWord == "cari") {
+		include MODULE_NAME."/pencarian.php";
+		
 	} else if ($actionWord == "user") {
 		include MODULE_NAME."/atur_user.php";
 	

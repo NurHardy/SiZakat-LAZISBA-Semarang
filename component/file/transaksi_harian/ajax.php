@@ -7,7 +7,23 @@ require_once COMPONENT_PATH."/libraries/helper_saldo.php";
 
 if ($ajaxAct == "get.dashboard.html") {
 	require COMPONENT_PATH."/file/transaksi_harian/dashboard.php";
+} else if ($ajaxAct == "penerimaan.add") {
+	require COMPONENT_PATH."/file/transaksi_harian/functions/simpan_penerimaan.php";
 	
+	if (!empty($processError)) {
+		echo json_encode(array(
+				'status'	=> 'error',
+				'error'		=> $processError
+		));
+	} else {
+		require_once COMPONENT_PATH."/file/transaksi_harian/helper_transaksi.php";
+		//$tableHtml = generate_latest_trx_penerimaan();
+		echo json_encode(array(
+				'status'	=> 'ok',
+				'id'		=> $idTrx,
+				//'html'		=> $tableHtml
+		));
+	}
 } else if ($ajaxAct == "get.tabel.penerimaan") {
 	$idAgenda = intval($_POST['id']);
 	$queryRincian = sprintf("SELECT * FROM ra_rincian_agenda WHERE id_agenda=%d",$idAgenda);

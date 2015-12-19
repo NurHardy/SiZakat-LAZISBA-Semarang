@@ -121,3 +121,27 @@ function getHTMLRowTrxPengeluaran($rowTransaction) {
  		";
 	return $output;
 }
+
+/**
+ * Generate HTML untuk 
+ * @param number $limitCount
+ */
+function generate_latest_trx_penerimaan($limitCount = 10) {
+	global $mysqli;
+	$output = "";
+	
+	$queryLatest = "SELECT * FROM penerimaan ORDER BY tanggal DESC LIMIT 10";
+	$resultLatest = mysqli_query($mysqli, $queryLatest);
+	while ($rowTrx = mysqli_fetch_assoc($resultLatest)) {
+		$editLink = "main.php?s=transaksi&action=edit-in&id=".$rowTrx['id_penerimaan']."&ref=form-in";
+		$output .= "<tr>
+			<td>".$rowTrx['tanggal']."</td>
+			<td>".$rowTrx['id_akun']."</td>
+			<td>".$rowTrx['id_donatur']."</td>
+			<td>".to_rupiah($rowTrx['jumlah'])."</td>
+			<td><a href=\"".htmlspecialchars($editLink)."\"><i class=\"glyphicon glyphicon-pencil\"></i>&nbsp;Edit</a>-
+				<a href=\"#hapus-trx\" class=\"red_link\"><i class=\"glyphicon glyphicon-trash\"></i>&nbsp;Hapus</a></td>
+		</tr>\n";
+	}
+	return $output;
+}
