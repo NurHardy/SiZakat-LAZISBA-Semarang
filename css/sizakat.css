@@ -27,6 +27,7 @@ textarea.no-hresize {
 	min-height:100px;
 	max-height:400px;
 }
+.siz-highlight-yellow {background-color:#F2FF66;}
 .show_on_edit {display:none;}
 .siz-fullwidth {width:100%;}
 .siz-divsmall {font-size:0.9em;}
@@ -210,6 +211,13 @@ textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100
 /* ================ Style untuk AM_SIZ_MAP_PENERIMAAN ==== */
 .siz_import_map_metainfo {font-size:0.8em;}
 
+/* ================ Style untuk AM_SIZ_RA_FRMCARI ======== */
+.siz-ra-search-itemagenda {
+	box-sizing: border-box;
+	margin: 15px 0;
+	border-bottom: solid 1px #E3E1E6;
+}
+
 /* ================ Style untuk AM_SIZ_RA_DTLRPT ========= */
 
 .siz-akuncontainer .parent_title {
@@ -220,8 +228,14 @@ textarea.siz-desc-container {resize: vertical;max-height: 200px; min-height: 100
 .siz-akuncontainer .parent_content {
 	padding:5px;
 }
+.siz-akuncontainer a.title_link {
+	font-size: 1.1em;
+}
+.siz-akuncontainer .siz-akuninfo {
+	padding-left:30px;
+}
 .siz-akuncontainer {
-	
+	margin-bottom: 10px;
 }
 .siz-rekap-item {margin-bottom: 5px;}
 .siz-akuncontainer .div-alert {

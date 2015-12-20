@@ -43,6 +43,20 @@
 		}
 		// Jika tidak ada agenda, maka tidak perlu ditampilkan timeline
 		if (mysqli_num_rows($resultListKegiatan) > 0) {
+			$jumlahAnggaranBulan = 0;
+			
+			// Query rekap prioritas agenda...
+			$queryPrioritas = sprintf(
+					"SELECT SUM(jumlah_anggaran) AS jumlah, COUNT(jumlah_anggaran) AS cnt, prioritas_agenda ".
+					"FROM ra_agenda WHERE YEAR(tgl_mulai)=%d AND MONTH(tgl_mulai)=%d ".
+					"GROUP BY prioritas_agenda", $tahunDokumen, $counterBulan
+			);
+			$resultRekapPrioritas = mysqli_query($mysqli, $queryPrioritas);
+			$queryCount++;
+			if ($resultRekapPrioritas == null) {
+				echo mysqli_error($mysqli);
+			}
+			
 			$firstDate = sprintf("%04d-%02d-01", $tahunDokumen, $counterBulan);
 			$lastDayMonth	= intval(date("t", strtotime($firstDate)));
 ?>
@@ -101,10 +115,27 @@
 		echo "<td><span style='white-space:pre;'>".to_rupiah($dataKegiatan['jumlah_anggaran'])."</span></td>\n";
 		//echo "<td>-</td>\n";
 		echo "</tr>\n";
+		
+		$jumlahAnggaranBulan += $dataKegiatan['jumlah_anggaran'];
 	}
 	
 				?></tbody>
 				</table>
+			</div>
+			<div class="well well-sm" style="font-size: 12px;">
+				<b>Informasi Rekap Bulan:</b><br>
+<?php
+	if ($resultRekapPrioritas) {
+		while ($rowPrioritas = mysqli_fetch_assoc($resultRekapPrioritas)) {
+			$txtPrioritas = ($rowPrioritas['prioritas_agenda']==0?"Unset":
+					$listPrioritasHTML[$rowPrioritas['prioritas_agenda']]);
+			echo "&bull; ".$txtPrioritas.": <b>".
+					to_rupiah($rowPrioritas['jumlah'])."</b> (".
+					$rowPrioritas['cnt']." agenda)<br>";
+		}
+	}
+?>
+				<br>Jumlah Perencanaan Bulan: <b><?php echo to_rupiah($jumlahAnggaranBulan); ?></b>
 			</div>
 		</div>
 	</div>

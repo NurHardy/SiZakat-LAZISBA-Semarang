@@ -64,6 +64,8 @@
 		include MODULE_NAME."/timeline_perencanaan.php";
 	} else if ($actionWord == "tambah-dokumen") {
 		include MODULE_NAME."/simpan_dokumen_form.php";
+	} else if ($actionWord == "tambah-kegiatan-rutin") {
+		include MODULE_NAME."/tambah_kegiatan_rutin.php";
 	} else if ($actionWord == "edit-catatan-dokumen") {
 		include MODULE_NAME."/simpan_dokumen_form.php";
 	} else if ($actionWord == "export") {
@@ -87,6 +89,8 @@
 	} else if ($actionWord == "kegiatan") {
 		include MODULE_NAME."/detil_kegiatan.php";
 	} else if ($actionWord == "tambah-kegiatan") {
+		include MODULE_NAME."/simpan_kegiatan_form.php";
+	} else if ($actionWord == "edit-kegiatan") {
 		include MODULE_NAME."/simpan_kegiatan_form.php";
 		
 	// CRUD agenda

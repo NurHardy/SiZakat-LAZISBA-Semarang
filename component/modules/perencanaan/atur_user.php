@@ -11,6 +11,10 @@
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	
+	if (!$isAdmin) {
+		show_error_page("Anda tidak mempunyai otoritas untuk mengakses halaman.");
+		return;
+	}
 	$SIZPageTitle = "Atur User";
 	$breadCrumbPath[] = array("Managemen User",ra_gen_url("user"),true);
 	

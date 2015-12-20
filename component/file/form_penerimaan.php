@@ -67,9 +67,9 @@ function _debug_glitter() {
 				<form class="form-horizontal row-fluid" id="form-penerimaan"
 					action="component/server/func_input_penerimaan.php" method="POST"
 					onsubmit="return submit_penerimaan()">
-					<a href="#" onclick="_debug_glitter();return false;">
+					<!-- <a href="#" onclick="_debug_glitter();return false;">
 						<span class="glyphicon glyphicon-bell"></span> Notify!
-					</a>
+					</a> -->
 					<div class="alert alert-danger alert-icon alert-icon-error"
 						style="display:none;" id="siz-form-error"></div>
 					<div class="form-group">

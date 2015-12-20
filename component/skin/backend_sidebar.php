@@ -121,7 +121,9 @@
 				  <li <?php setActiveMenu('perencanaan');?>><a href="main.php?s=perencanaan">Perencanaan Anggaran</a></li>
 				  <li <?php setActiveMenu('perencanaan','list');?>><a href="main.php?s=perencanaan&amp;action=list">Master Kegiatan</a></li>
 				  <li <?php setActiveMenu('perencanaan','realisasi');?>><a href="main.php?s=perencanaan&amp;action=realisasi">Laporan Realisasi</a></li>
+<?php if ($_SESSION['siz_divisi'] == 99) { //--------- Jika Admin -------------- ?>
 				  <li <?php setActiveMenu('perencanaan','user');?>><a href="main.php?s=perencanaan&amp;action=user">Hak Akses</a></li>
+<?php } //-------------------------------------------------- ?>
 			</ul>
 		</li>
 		

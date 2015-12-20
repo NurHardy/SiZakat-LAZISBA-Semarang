@@ -14,6 +14,10 @@
 	
 	// Dapatkan list id-agenda yang akan dihapus
 	$listIdAgenda = $_POST['id'];
+	$listAgenda = array();
+	
+	$idKegiatan = $_POST['idk'];
+	$tahunKegiatan = $_POST['th'];
 	
 	if (!is_array($listIdAgenda)) {
 		if (is_numeric($listIdAgenda)) {
@@ -29,50 +33,52 @@
 		));
 		return;
 	}
-	if (empty($listIdAgenda)) {
+	if (empty($listIdAgenda) && empty($idKegiatan)) {
 		echo json_encode(array(
 				'status' => 'error',
 				'error' => "Argumen tidak lengkap."
 		));
 		return;
-	}
-	$listIdAgendaQuery = implode(',', $listIdAgenda);
-	$listIdAgendaQuery = trim($listIdAgendaQuery, ','); // Hapus koma terakhir
-	
-	$queryGetAgenda = sprintf(
-			"SELECT a.*, k.nama_kegiatan, k.divisi FROM ra_agenda AS a, ra_kegiatan AS k ".
-			"WHERE k.id_kegiatan=a.id_kegiatan AND (a.id_agenda IN (%s))",
-			$listIdAgendaQuery);
-	$resultGetAgenda = mysqli_query($mysqli, $queryGetAgenda);
-	if ($resultGetAgenda == null) {
-		echo json_encode(array(
-				'status' => 'error',
-				'error' => "Terjadi kesalahan internal: ".mysqli_error($mysqli)
-		));
-		return;
-	}
-	
-	// Pengecekan tiap item agenda
-	$listAgenda = array();
-	$idx = 0;
-	$isAuthorized = true;
-	while ($rowAgenda = mysqli_fetch_array($resultGetAgenda)) {
-		if (!$isAdmin) {
-			if ($rowAgenda['divisi'] != $divisiUser) {
-				$isAuthorized = false;
-				break;
-			}
+	} else if (!empty($listIdAgenda)) {
+		// Terdapat agenda yang dihapus...
+		$listIdAgendaQuery = implode(',', $listIdAgenda);
+		$listIdAgendaQuery = trim($listIdAgendaQuery, ','); // Hapus koma terakhir
+		
+		$queryGetAgenda = sprintf(
+				"SELECT a.*, k.nama_kegiatan, k.divisi FROM ra_agenda AS a, ra_kegiatan AS k ".
+				"WHERE k.id_kegiatan=a.id_kegiatan AND (a.id_agenda IN (%s))",
+				$listIdAgendaQuery);
+		$resultGetAgenda = mysqli_query($mysqli, $queryGetAgenda);
+		if ($resultGetAgenda == null) {
+			echo json_encode(array(
+					'status' => 'error',
+					'error' => "Terjadi kesalahan internal: ".mysqli_error($mysqli)
+			));
+			return;
 		}
-		$listAgenda[$idx] = $rowAgenda;
-		$idx++;
+		
+		// Pengecekan tiap item agenda
+		$idx = 0;
+		$isAuthorized = true;
+		while ($rowAgenda = mysqli_fetch_array($resultGetAgenda)) {
+			if (!$isAdmin) {
+				if ($rowAgenda['divisi'] != $divisiUser) {
+					$isAuthorized = false;
+					break;
+				}
+			}
+			$listAgenda[$idx] = $rowAgenda;
+			$idx++;
+		}
+		if (!$isAuthorized) {
+			echo json_encode(array(
+					'status' => 'error',
+					'error' => "Terdapat item agenda yang tidak berhak Anda hapus."
+			));
+			return;
+		}
 	}
-	if (!$isAuthorized) {
-		echo json_encode(array(
-				'status' => 'error',
-				'error' => "Terdapat item agenda yang tidak berhak Anda hapus."
-		));
-		return;
-	}
+	
 	
 	// Proses penghapusan...
 	mysqli_autocommit($mysqli, false);
@@ -95,6 +101,19 @@
 		}
 		$itemDeleted++;
 	}
+	
+	// Jika minta ID kegiatan dihapus dari dokumen...
+	if (!empty($idKegiatan) && !empty($tahunKegiatan)) {
+		$queryHapusCatatan = sprintf(
+				"DELETE FROM ra_catatan_kegiatan WHERE id_kegiatan=%d AND tahun=%d",
+				intval($idKegiatan), intval($tahunKegiatan)
+		);
+		$resultHapusCatatan = mysqli_query($mysqli, $queryHapusCatatan);
+		if ($resultHapusCatatan == null) {
+			$querySuccess = false; break;
+		}
+	}
+	
 	if ($querySuccess) {
 		mysqli_commit($mysqli);
 		echo json_encode(array(

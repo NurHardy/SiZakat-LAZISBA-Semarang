@@ -41,6 +41,17 @@
 		return;
 	}
 	
+	// Query rekap prioritas agenda...
+	$queryPrioritas = sprintf(
+		"SELECT SUM(jumlah_anggaran) AS jumlah, COUNT(jumlah_anggaran) AS cnt, prioritas_agenda ".
+		"FROM ra_agenda WHERE YEAR(tgl_mulai)=%d GROUP BY prioritas_agenda", $tahunDokumen
+	);
+	$resultRekapPrioritas = mysqli_query($mysqli, $queryPrioritas);
+	$queryCount++;
+	if ($resultRekapPrioritas == null) {
+		show_error_page( "Terjadi kesalahan query: ".mysqli_error($mysqli) );
+		return;
+	}
 ?>
 <div class="col-12">
 	<?php ra_print_status($namaDivisiUser); ?>
@@ -55,7 +66,10 @@
 		<div class="widget-content">
 <?php 
 echo "<div class=\"well well-sm\"><b>Catatan Dokumen:</b>\n";
-echo "<a href=\"".ra_gen_url("edit-catatan-dokumen",$tahunDokumen)."\"><span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;Edit</a><br>\n";
+
+if ($isAdmin)
+	echo "<a href=\"".ra_gen_url("edit-catatan-dokumen",$tahunDokumen)."\"><span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;Edit</a>";
+echo "<br>\n";
 if (!empty($rowDocument['catatan'])) {
 	echo htmlspecialchars($rowDocument['catatan']); 
 }
@@ -64,7 +78,7 @@ echo "</div>\n";
 			Silakan atur list kegiatan pada halaman
 			<a href="<?php echo ra_gen_url("list",$tahunDokumen); ?>">
 				<i class="glyphicon glyphicon-list"></i> Master Kegiatan</a>.
-			<div>
+			<div style="margin-bottom:10px;">
 				<a href="<?php echo htmlspecialchars(ra_gen_url("export",$tahunDokumen,"type=xlsx")); ?>"
 					class="btn btn-default">
 					<i class="glyphicon glyphicon-file"></i> Export ke Excel</a>
@@ -77,9 +91,18 @@ echo "</div>\n";
 					class="btn btn-danger">
 					<i class="glyphicon glyphicon-erase"></i> Hapus Dokumen</a>
 <?php } //======================== End If =================== ?>
-				<label>Cari:</label><input type="text" name="q" required />
-					<button type="submit" class="btn btn-default">
-						<span class="glyphicon glyphicon-search"></span> Cari</button>
+				<div class="pull-right">
+					<form action="main.php#siz-content" method="get">
+						<input type="hidden" name="s" value="perencanaan" />
+						<input type="hidden" name="action" value="cari" />
+						<input type="hidden" name="th" value="<?php echo $tahunDokumen; ?>" />
+						<label for="siz-query">Cari Rincian Agenda:</label>
+						<input type="text" name="q" required id="siz-query" required placeholder="Cari"/>
+						<button type="submit" class="btn btn-default">
+							<span class="glyphicon glyphicon-search"></span> Cari</button>
+					</form>
+				</div>
+				
 			</div>
 <?php if (mysqli_num_rows($resultQueryRekap) > 0) { //==================== JIKA ADA KEGIATAN ========== ?>
 			<table class="table table-bordered table-hover siz-operation-table">
@@ -228,6 +251,11 @@ echo "</div>\n";
 					title="Tambah kegiatan baru pada perencanaan tahunan">
 					<span class="glyphicon glyphicon-plus"></span>
 					Tambah Kegiatan</a>
+		<a href="<?php echo ra_gen_url('tambah-kegiatan-rutin', $tahunDokumen); ?>"
+				class="btn btn-default tip-right"
+				title="Tambah kegiatan rutin pada perencanaan tahunan">
+				<span class="glyphicon glyphicon-plus"></span>
+				Tambah Kegiatan Rutin</a>
 	</div>
 	
 <?php
@@ -235,13 +263,30 @@ echo "</div>\n";
 		?>
 			</table>
 			<div class="well">
-				Grand Total Anggaran Tahunan : <b><?php echo to_rupiah($grandTotalAnggaran); ?></b>
+				Grand Total Anggaran Tahunan : <b><?php echo to_rupiah($grandTotalAnggaran); ?></b><br>
+				Rekap prioritas agenda: <br>
+<?php
+	if ($resultRekapPrioritas) {
+		while ($rowPrioritas = mysqli_fetch_assoc($resultRekapPrioritas)) {
+			$txtPrioritas = ($rowPrioritas['prioritas_agenda']==0?"Unset":
+					$listPrioritasHTML[$rowPrioritas['prioritas_agenda']]);
+			echo "&bull; ".$txtPrioritas.": <b>".
+				to_rupiah($rowPrioritas['jumlah'])."</b> (".
+				$rowPrioritas['cnt']." agenda)<br>";
+		}
+	}
+?>
 			</div>
 			<a href="<?php echo ra_gen_url('tambah-kegiatan', $tahunDokumen); ?>"
-				class="btn btn-primary tip-right"
+				class="btn btn-primary tip-top"
 				title="Tambah kegiatan baru pada perencanaan tahunan">
 				<span class="glyphicon glyphicon-plus"></span>
 				Tambah Kegiatan</a>
+			<a href="<?php echo ra_gen_url('tambah-kegiatan-rutin', $tahunDokumen); ?>"
+				class="btn btn-default tip-top"
+				title="Tambah kegiatan rutin pada perencanaan tahunan">
+				<span class="glyphicon glyphicon-plus"></span>
+				Tambah Kegiatan Rutin</a>
 		</div>
 	</div>
 </div>

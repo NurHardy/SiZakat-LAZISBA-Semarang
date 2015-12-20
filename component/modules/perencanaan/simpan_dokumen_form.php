@@ -38,7 +38,20 @@
 		$breadCrumbPath[] = array("Tambah Dokumen",null,true);
 	}
 	
-	$availableYear = array(2014,2015,2016,2017,2018,2019);
+	//====== LIST tahun dokumen yang sudah ada...
+	$availableYear = array();
+	$documentExist = array();
+	$queryGetDoc = "SELECT tahun_dokumen FROM ra_dokumen";
+	$resultGetDoc = mysqli_query($mysqli, $queryGetDoc);
+	while ($rowDoc = mysqli_fetch_array($resultGetDoc)) {
+		$documentExist[] = $rowDoc['tahun_dokumen'];
+	}
+	$curYear = date('Y');
+	$ctrYear = 0;
+	for ($ctrYear = $curYear; $ctrYear <= $curYear+5; $ctrYear++) {
+		if (!in_array($ctrYear, $documentExist))
+			$availableYear[] = $ctrYear;
+	}
 	
 	if (isset($_POST['siz_submit'])) {
 		$dokTahun = ($isEditing?$tahunDokumen:intval($_POST['dok-tahun']));

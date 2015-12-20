@@ -15,6 +15,10 @@
 	$backUrl		= "javascript:backAway();";
 	$tahunDokumen	= $_GET['th'];
 	
+	$detachFromDocument = false;
+	
+	$listAgenda = array();
+	
 	require_once COMPONENT_PATH."/libraries/querybuilder.php";
 	
 	// Dapatkan list id-agenda yang akan dihapus
@@ -24,6 +28,9 @@
 	$idKegiatan = $_GET['idk'];
 	$rowKegiatan	= null;
 	if ($idKegiatan) {
+		// Menghapus ID kegiatan berarti menghapus kegiatan dari dokumen
+		$detachFromDocument = true;
+		
 		$queryCekKegiatan = sprintf("SELECT * FROM ra_kegiatan WHERE id_kegiatan=%d", $idKegiatan);
 		$resultKegiatan = mysqli_query($mysqli, $queryCekKegiatan);
 		$rowKegiatan = mysqli_fetch_assoc($resultKegiatan);
@@ -59,6 +66,7 @@
 		show_error_page( "Argumen tidak lengkap." );
 		return;
 	}
+	
 	if (!empty($listIdAgenda)) {
 		$listIdAgendaQuery = implode(',', $listIdAgenda);
 		$listIdAgendaQuery = trim($listIdAgendaQuery, ','); // Hapus koma terakhir
@@ -74,7 +82,6 @@
 		}
 		
 		// Pengecekan tiap item agenda
-		$listAgenda = array();
 		$idx = 0;
 		$isAuthorized = true;
 		while ($rowAgenda = mysqli_fetch_array($resultGetAgenda)) {
@@ -91,10 +98,6 @@
 			show_error_page( "Terdapat item agenda yang tidak berhak Anda hapus." );
 			return;
 		}
-	}
-	
-	if ($rowKegiatan) {
-		
 	}
 ?>
 <script>
@@ -197,6 +200,7 @@ function backAway(){
 			</div>
 			<div class="alert alert-danger" id="siz-alert-errors" style="display:none;"></div>
 			<div class="alert alert-success" id="siz-alert-infos" style="display:none;"></div>
+<?php if (!empty($listAgenda)) { //--------- IF not EMPTY ---------------- ?>
 			<table class="table table-bordered table-striped table-hover"
 				id="siz-list-select">
 				<thead>
@@ -222,6 +226,7 @@ function backAway(){
 					?>
 				</tbody>
 			</table>
+<?php } //------------ END IF ------------------------- ?>
 		</div>
 	</div>
 	<div class="row">
@@ -237,7 +242,11 @@ function backAway(){
 			</div>
 		</div>
 	</div>
-	<input type="hidden" name="act" value="agenda.hapus" />
+	<?php if ($detachFromDocument) { //--------- ?>
+		<input type="hidden" name="idk" value="<?php echo htmlspecialchars($idKegiatan); ?>" />
+		<input type="hidden" name="th" value="<?php echo htmlspecialchars($tahunDokumen); ?>" />
+	<?php } //------------------------ END IF -- ?>
+		<input type="hidden" name="act" value="agenda.hapus" />
 	</form>
 	</div>
 	</div>

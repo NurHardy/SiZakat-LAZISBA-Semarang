@@ -44,6 +44,20 @@
 	}
 	$dataKegiatan = mysqli_fetch_array($queryResult);
 	
+	// Query untuk catatan kegiatan
+	$queryCatatan = sprintf("SELECT * FROM ra_catatan_kegiatan WHERE id_kegiatan=%d AND tahun=%d",
+		$idKegiatan, $tahunDokumen);
+	$queryCatatanResult = mysqli_query($mysqli, $queryCatatan);
+	$queryCount++;
+	
+	$catatanKegiatan = "";
+	if ($queryCatatanResult) {
+		$rowCatatan = mysqli_fetch_assoc($queryCatatanResult);
+		if ($rowCatatan) {
+			$catatanKegiatan = $rowCatatan['catatan'];
+		}
+	}
+	
 	$divisiUser		= $_SESSION['siz_divisi'];
 	$isAdmin		= ($divisiUser == RA_ID_ADMIN);
 	$isAuthorized	= $isAdmin || ($divisiUser == $dataKegiatan['divisi']);
@@ -132,6 +146,19 @@
 	} ?></td>
 				</tr> -->
 			</table>
+<?php
+	echo "<div class=\"well well-sm\"><b>Catatan Pelaksanaan Tahun {$tahunDokumen}:</b>\n";
+	
+	if ($isAdmin || ($divisiUser == $dataKegiatan['divisi'])) {
+		echo "<a href=\"".ra_gen_url("edit-kegiatan",$tahunDokumen,"id=".$idKegiatan)."\">".
+			"<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;Edit</a>";
+	}
+	echo "<br>\n";
+	if (!empty($catatanKegiatan)) {
+		echo htmlspecialchars($catatanKegiatan);
+	}
+	echo "</div>\n";
+?>
 			<hr>
 	<div class="row">
 		<div class="col-lg-12">
@@ -172,6 +199,10 @@
 			}
 			
 			//======== Mulai div agenda
+			$prioritasAgenda = "";
+			if ($rowAgenda['prioritas_agenda'] > 0) {
+				$prioritasAgenda = $listPrioritasHTML[$rowAgenda['prioritas_agenda']];
+			}
 			echo "<div class=\"panel panel-default\" id=\"siz_agenda_".$rowAgenda['id_agenda']."\">\n";
 			echo "<div class=\"panel-heading\">";
 			echo "<i class=\"glyphicon glyphicon-calendar\"></i> ";
@@ -187,7 +218,7 @@
 			} else {
 				$strTanggalAgenda = "- undefined date -";
 			}
-			echo " <b>".$strTanggalAgenda."</b> ";
+			echo " <b>".$strTanggalAgenda."</b> ".$prioritasAgenda;
 			// Tampilan control jika user berhak
 			if ($isAuthorized) {
 				echo " | <small>";

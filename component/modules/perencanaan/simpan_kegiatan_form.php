@@ -28,7 +28,12 @@
 		$isAdmin = false;
 		$divisiUser = intval($_GET['div']);
 	}
-	$backUrl		= (empty($_GET["ref"])?ra_gen_url("rekap", $tahunDokumen):$_GET["ref"]);
+	
+	$defaultBackUrl = ($isEditing ? 
+			ra_gen_url("kegiatan", $tahunDokumen, "id=".$idKegiatan) :
+			ra_gen_url("rekap", $tahunDokumen)
+	);
+	$backUrl		= (empty($_GET["ref"])?$defaultBackUrl:$_GET["ref"]);
 	$submitError	= array();
 	$submitInfo		= null;
 	
@@ -68,15 +73,30 @@
 		
 		// Bangun query jika tidak ada error.
 		if (empty($submitError)) {
-			$querySimpan  = sprintf(
-				"INSERT INTO ra_catatan_kegiatan SET id_kegiatan=%d, tahun=%d, catatan='%s'",
-				$kegiatanId, $tahunDokumen, $mysqli->real_escape_string($kegiatanCatatan)
-			);
+			$querySimpan = "";
+			if ($isEditing) {
+				$querySimpan  = sprintf(
+						"UPDATE ra_catatan_kegiatan SET catatan='%s' WHERE id_kegiatan=%d AND tahun=%d",
+						$mysqli->real_escape_string($kegiatanCatatan), $idKegiatan, $tahunDokumen
+				);
+			} else {
+				$querySimpan  = sprintf(
+						"INSERT INTO ra_catatan_kegiatan SET id_kegiatan=%d, tahun=%d, catatan='%s'",
+						$kegiatanId, $tahunDokumen, $mysqli->real_escape_string($kegiatanCatatan)
+				);
+			}
+			
 			$qResult = $mysqli->query($querySimpan);
 			
 			if ($qResult === true) {
-				$submitInfo = "Kegiatan <b>".htmlspecialchars($mKegiatanNama)."</b> berhasil ".
-					"ditambahkan ke dokumen perencanaan ".$tahunDokumen;
+				if ($isEditing) {
+					$submitInfo = "Catatan kegiatan <b>".htmlspecialchars($kegiatanNama)."</b> ".
+						"tahun {$tahunDokumen} berhasil disimpan.";
+				} else {
+					$submitInfo = "Kegiatan <b>".htmlspecialchars($kegiatanNama)."</b> berhasil ".
+							"ditambahkan ke dokumen perencanaan ".$tahunDokumen;
+				}
+				
 				$showForm = false;
 			} else {
 				$submitError[] = "Terjadi kesalahan internal. Info: ".$mysqli->error;
@@ -129,8 +149,13 @@ if ($showForm) { //============================== FORM DITAMPILKAN === ?>
 	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3 class="panel-title">
+	<?php if ($isEditing) { //------------------ ?>
+				<span class="glyphicon glyphicon-pencil"></span>
+				Edit Catatan Kegiatan</h3></div>
+	<?php } else { //--------------------------- ?>
 				<span class="glyphicon glyphicon-plus"></span>
 				Tambah Kegiatan Ke Perencanaan</h3></div>
+	<?php } //---------------------------------- ?>
 			<div class="panel-body">
 				<div class="row">
 				  <div class="col-md-12">
@@ -165,6 +190,7 @@ if ($showForm) { //============================== FORM DITAMPILKAN === ?>
 		?></select>
 	<?php } //========================== End If ======== ?></td>
 						</tr>
+	<?php if (!$isEditing) { //================= Jika tambah baru ====== ?>
 						<tr>
 							<td>&nbsp;</td>
 							<td>
@@ -173,6 +199,7 @@ if ($showForm) { //============================== FORM DITAMPILKAN === ?>
 								?>"><span class="glyphicon glyphicon-plus"></span> Buat Kegiatan Master Baru</a>
 							</td>
 						</tr>
+	<?php } //========================== End If ======== ?></td>
 						<tr>
 							<td colspan="2">
 								<label for="kg-catatan">Catatan pelaksanaan kegiatan:</label>
@@ -198,9 +225,9 @@ if ($showForm) { //============================== FORM DITAMPILKAN === ?>
 						<span class="glyphicon glyphicon glyphicon-chevron-left"></span> Kembali</a> - 
 					<button type="submit" class="btn btn-primary"><?php
 						if ($isEditing) {
-							echo "<span class=\"glyphicon glyphicon-pencil\"></span> Simpan Master Kegiatan\n";
+							echo "<span class=\"glyphicon glyphicon-pencil\"></span> Simpan Kegiatan\n";
 						} else {
-							echo "<span class=\"glyphicon glyphicon-plus\"></span> Tambah Master Kegiatan\n";
+							echo "<span class=\"glyphicon glyphicon-plus\"></span> Tambah Kegiatan\n";
 						} ?></button>
 				</div>
 			</div>

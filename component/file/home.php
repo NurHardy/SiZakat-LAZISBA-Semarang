@@ -173,7 +173,7 @@
 	       html: html   
 	    });
 	}
-	function initPage() {
+	function init_page() {
 		loadDashboard();
 	}
 </script>

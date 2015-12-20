@@ -16,8 +16,8 @@
 	// List seluruh kegiatan yang diadakan oleh divisi
 	
 	// Init
-	$idDivisi = intval($_SESSION['siz_divisi']);
-	$isAdmin = ($idDivisi == RA_ID_ADMIN);
+	$idDivisiUser = intval($_SESSION['siz_divisi']);
+	$isAdmin = ($idDivisiUser == RA_ID_ADMIN);
 	$listMasterKegiatan = array();
 	
 	// Per divisi...
@@ -116,13 +116,16 @@ function hapus_master_kegiatan(idMastKegiatan) {
 				echo $rowKegiatan['akun_pengeluaran']." ".$rowKegiatan['namaakun']."</a></td>\n";
 				echo "	<td>".($rowKegiatan['jenis_kegiatan']==1?"Rutin Tahunan":"Eksklusif")."</td>\n";
 				echo "	<td><a href=\"".htmlspecialchars($linkKegiatan)."\"><span class=\"glyphicon glyphicon-search\"></span> Detil</a>";
-				echo "	- <a href=\"#hapus\" onclick=\"return hapus_master_kegiatan(".$idKegiatan.");\" class=\"red_link\"><span class=\"glyphicon glyphicon-trash\"></span> Hapus</a></td>\n";
-				echo "</tr>\n";
+				if ($isAdmin || ($idDivisiUser == $ctrDivisi)) {
+					echo "	- <a href=\"#hapus\" onclick=\"return hapus_master_kegiatan(".$idKegiatan.");\" ".
+						"class=\"red_link\"><span class=\"glyphicon glyphicon-trash\"></span> Hapus</a>";
+				}
+				echo "</td></tr>\n";
 			}
 			?>
 				</tbody>
 			</table>
-	<?php if ($isAdmin || ($idDivisi == $ctrDivisi)) {
+	<?php if ($isAdmin || ($idDivisiUser == $ctrDivisi)) {
 			//------- Jika Admin atau divisi yang bersangkutan --------- ?>
 			<a href="<?php echo htmlspecialchars(ra_gen_url("tambah-kegiatan-master",null,"div=".$ctrDivisi)); ?>"
 				class="btn btn-primary btn-sm tip-right" title="Buat master kegiatan baru">

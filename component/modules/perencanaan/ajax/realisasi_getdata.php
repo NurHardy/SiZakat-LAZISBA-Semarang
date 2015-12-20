@@ -84,12 +84,14 @@
 // 				$htmlOutput .= "	<div class=\"update-date\"><span class=\"update-day\">".$tglEvent."</span>".$bulanEventLbl."</div>\n";
 // 				$htmlOutput .= "</div>\n";
 				
-				$htmlOutput .= "<div class=\"siz-rekap-item\"><a href=\"".htmlspecialchars($titleLink).
+				$htmlOutput .= "<div class=\"siz-rekap-item\">\n";
+				$htmlOutput .= "<div><a href=\"".htmlspecialchars($titleLink).
 					"\"><b>".$rowAgenda['nama_kegiatan']."</b></a>";
+				$htmlOutput .= "<div class='pull-right'>".to_rupiah($rowAgenda['jumlah_anggaran'])."</div>";
 				$htmlOutput .= "<div class=\"siz-divsmall\">".
 					"<span class='glyphicon glyphicon-calendar'></span> ".
 					tanggal_indonesia($formatIdn)."</div>";
-				$htmlOutput .= "<div>".to_rupiah($rowAgenda['jumlah_anggaran'])."</div> </div>\n";
+				$htmlOutput .= "</div>\n";
 				$jmlPerencanaan += intval($rowAgenda['jumlah_anggaran']);
 			}
 		} else {
@@ -104,11 +106,13 @@
 				$unixTimeTgl = strtotime($rowTransaksi['tanggal']);
 				$formatIdn = date('j M Y', $unixTimeTgl);
 				
-				$htmlOutput .= "<div class=\"siz-rekap-item\"><b>".$rowTransaksi['keterangan']."</b>";
-				$htmlOutput .= "<div class=\"siz-divsmall\">".
+				$htmlOutput .= "<div class=\"siz-rekap-item\">\n";
+				$htmlOutput .= " <div><b>".$rowTransaksi['keterangan']."</b>";
+				$htmlOutput .= " <div class='pull-right'>".to_rupiah($rowTransaksi['jumlah'])."</div></div>";
+				$htmlOutput .= " <div class=\"siz-divsmall\">".
 					"<span class='glyphicon glyphicon-calendar'></span> ".
 					tanggal_indonesia($formatIdn)."</div>";
-				$htmlOutput .= to_rupiah($rowTransaksi['jumlah'])."</div>\n";
+				$htmlOutput .= "</div>\n";
 				$jmlRealisasi += intval($rowTransaksi['jumlah']);
 			}
 		} else {

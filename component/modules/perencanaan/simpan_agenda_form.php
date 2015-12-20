@@ -50,7 +50,10 @@
 	}
 	
 	// Cek kegiatan yang akan diproses
-	$queryKegiatan = sprintf("SELECT * FROM ra_kegiatan WHERE (id_kegiatan=%d)",$idKegiatan);
+	$queryKegiatan = sprintf(
+			"SELECT k.*, a.namaakun FROM ra_kegiatan AS k, akun AS a ".
+			"WHERE (id_kegiatan=%d) AND k.akun_pengeluaran=a.kode",
+			$idKegiatan);
 	$resultKegiatan = mysqli_query($mysqli, $queryKegiatan);
 	$queryCount++;
 	$rowKegiatan = mysqli_fetch_array($resultKegiatan);
@@ -341,7 +344,7 @@ function init_page() {
 							<td><?php
 								
 								echo "<a href=\"".htmlspecialchars("main.php?s=akun&action=detail&id=".$rowKegiatan['akun_pengeluaran'])."\">";
-								echo $rowKegiatan['akun_pengeluaran']."</a>";
+								echo $rowKegiatan['akun_pengeluaran']." ".$rowKegiatan['namaakun']."</a>";
 							?></td>
 						</tr>
 					</table>
@@ -410,7 +413,7 @@ function init_page() {
 						</tr>
 						<tr>
 							<td colspan="2">
-								<label for="ag-catatan">Catatan pelaksanaan kegiatan:</label>
+								<label for="ag-catatan">Keterangan Pelaksanaan Agenda:</label>
 								<textarea class="siz-desc-container" id="ag-catatan"
 									placeholder="Catatan Pelaksanaan Agenda" name="ag-catatan"><?php
 									echo htmlspecialchars($agCatatan);

@@ -30,11 +30,12 @@
 	// Query list akun yang kegiatannya masuk dalam bulan dan tahun rekap atau 
 	$queryGetAkun	= sprintf(
 			"SELECT lst.*, a.* FROM akun AS a, (".
-				"SELECT DISTINCT k.akun_pengeluaran AS kode ".
-				"FROM ra_agenda AS a, ra_kegiatan AS k ".
-				"WHERE a.id_kegiatan=k.id_kegiatan AND MONTH(a.tgl_mulai)=%d AND YEAR(a.tgl_mulai)=%d ".
+				"SELECT k.akun_pengeluaran AS kode ".
+					"FROM ra_agenda AS a, ra_kegiatan AS k ".
+					"WHERE a.id_kegiatan=k.id_kegiatan AND MONTH(a.tgl_mulai)=%d AND YEAR(a.tgl_mulai)=%d ".
+					"GROUP BY k.akun_pengeluaran ".
 				"UNION SELECT DISTINCT p.id_akun AS kode FROM penyaluran AS p ".
-				"WHERE MONTH(p.tanggal)=%d AND YEAR(p.tanggal)=%d ".
+					"WHERE MONTH(p.tanggal)=%d AND YEAR(p.tanggal)=%d ".
 			") AS lst WHERE lst.kode=a.kode",
 			$bulanDokumen, $tahunDokumen, $bulanDokumen, $tahunDokumen
 	);
@@ -117,8 +118,32 @@ function load_report_detail(elmt, idAccount) {
 			$rowCounter++;
 			
 			$currentKodeAkun = $rowAkun['kode'];
+			$intDanaAnggaran = 0;
+			$intDanaRealisasi = 0;
 			$totalDanaAnggaran = "";
 			$totalDanaRealisasi = "";
+			
+			// Hitung perencanaan
+			$queryPerencanaan = sprintf(
+					"SELECT k.akun_pengeluaran, lst.id_kegiatan, SUM(lst.jumlah_anggaran) AS jml_rencana ".
+					"FROM (".
+						"SELECT jumlah_anggaran, id_kegiatan FROM ra_agenda ".
+						"WHERE MONTH(tgl_mulai)=%d AND YEAR(tgl_mulai)=%d ".
+					") AS lst, ra_kegiatan AS k ".
+					"WHERE lst.id_kegiatan=k.id_kegiatan AND k.akun_pengeluaran='%s'",
+					$bulanDokumen, $tahunDokumen, $currentKodeAkun
+			);
+			$resultPerencanaan = mysqli_query($mysqli, $queryPerencanaan);
+			$queryCount++;
+			
+			if (!$resultPerencanaan) {
+				$totalDanaAnggaran = "!! Query Error !! ". mysqli_error($mysqli);
+			} else {
+				$rowSumAnggaran = mysqli_fetch_assoc($resultPerencanaan);
+				$intDanaAnggaran = $rowSumAnggaran['jml_rencana'];
+				$totalDanaAnggaran = to_rupiah($intDanaAnggaran);
+			}
+			
 			// Hitung transaksi pengeluaran
 			$queryRealisasiTrx = sprintf(
 					"SELECT SUM(jumlah) AS jml_keluar FROM penyaluran ".
@@ -132,14 +157,28 @@ function load_report_detail(elmt, idAccount) {
 				$totalDanaRealisasi = "!! Query Error !! ". mysqli_error($mysqli);
 			} else {
 				$rowSumTrx = mysqli_fetch_assoc($resultRealisasiTrx);
-				$totalDanaRealisasi = to_rupiah($rowSumTrx['jml_keluar']);
+				$intDanaRealisasi = $rowSumTrx['jml_keluar'];
+				$totalDanaRealisasi = to_rupiah($intDanaRealisasi);
 			}
 			
 ?>
 	<div class="siz-akuncontainer" id="siz-idakun-<?php echo $rowAkun['idakun']; ?>">
 		<div class="parent_title">
-			<a href="#" onclick="return load_report_detail(this, '<?php echo $currentKodeAkun; ?>');"><span class="glyphicon glyphicon-triangle-right"></span>
+			<a href="#" onclick="return load_report_detail(this, '<?php echo $currentKodeAkun; ?>');"
+				class="title_link"><span class="glyphicon glyphicon-triangle-right"></span>
 				<?php echo "<b>{$currentKodeAkun}</b> {$rowAkun['namaakun']}"; ?></a>
+			<div class="siz-akuninfo">
+				Perencanaan: <b><?php echo ($totalDanaAnggaran); ?></b> | 
+				Realisasi: <b><?php echo ($totalDanaRealisasi); ?></b> |
+				Selisih: <b><?php
+				$selisihDana = abs($intDanaAnggaran-$intDanaRealisasi);
+				if ($intDanaAnggaran >= $intDanaRealisasi) {
+					echo "<span style='color:#1F7044;'><span class='glyphicon glyphicon-plus-sign'></span> ".to_rupiah($selisihDana)."</span>";
+				} else {
+					echo "<span style='color:#f00;'><span class='glyphicon glyphicon-minus-sign'></span> ".to_rupiah($selisihDana)."</span>";
+				}
+				?></b>
+			</div>
 		</div>
 		<div class="parent_content" style="display:none;">
 			
