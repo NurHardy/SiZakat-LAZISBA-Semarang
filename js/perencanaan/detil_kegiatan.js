@@ -57,16 +57,22 @@
 				appendRincian(response.id_a, response.new_row);
 				$("#siz_agenda_"+response.id_a+" .siz-total-anggaran")
 					.html(response.t_agenda);
+				$("#siz-month-"+response.bln+" .siz-month-grandtotal")
+					.html(response.t_bulan);
 				$.gritter.add({
 					title: "Rincian berhasil ditambahkan",
-					text: "Rincian '"+response.new_row.n+"' berhasil ditambahkan"
+					text: "Rincian '"+response.new_row.n+"' berhasil ditambahkan",
+					image: 'images/icons/success.png',
+					fade_out_speed: 200
 				});
 				$("input[name=txt_rinc_n_ag_"+response.id_a+"]").val('');
 				$("input[name=txt_rinc_v_ag_"+response.id_a+"]").val('');
 			} else {
 				$.gritter.add({
 					title: 'Rincian gagal ditambahkan',
-					text: response.error
+					text: response.error,
+					image: 'images/icons/error.png',
+					fade_out_speed: 200
 				});
 			}
 			
@@ -91,15 +97,21 @@
 				updateRincian(response.new_row);
 				$("#siz_agenda_"+response.id_a+" .siz-total-anggaran")
 					.html(response.t_agenda);
+				$("#siz-month-"+response.bln+" .siz-month-grandtotal")
+					.html(response.t_bulan);
 				$.gritter.add({
 					title: "Rincian berhasil diperbaharui",
-					text: "Rincian '"+response.old_name+"' berhasil diperbaharui"
+					text: "Rincian '"+response.old_name+"' berhasil diperbaharui",
+					image: 'images/icons/success.png',
+					fade_out_speed: 200
 				});
 				cancel_edit_rincian(response.new_row.id);
 			} else {
 				$.gritter.add({
 					title: 'Rincian gagal diperaharui',
-					text: response.error
+					text: response.error,
+					image: 'images/icons/error.png',
+					fade_out_speed: 200
 				});
 			}
 			
@@ -125,9 +137,13 @@
 				var idRincian = response.old_row_id;
 				$("#siz_agenda_"+response.id_a+" .siz-total-anggaran")
 					.html(response.t_agenda);
+				$("#siz-month-"+response.bln+" .siz-month-grandtotal")
+					.html(response.t_bulan);
 				$.gritter.add({
 					title: 'Berhasil Dihapus',
-					text: "Rincian agenda kegiatan terpilih berhasil dihapus."
+					text: "Rincian agenda kegiatan terpilih berhasil dihapus.",
+					image: 'images/icons/success.png',
+					fade_out_speed: 200
 				});
 				$("#siz_rincian_"+idRincian).fadeOut(250,function(){
 					$(this).remove();
@@ -135,7 +151,9 @@
 			} else {
 				$.gritter.add({
 					title: 'Rincian gagal dihapus',
-					text: response.error
+					text: response.error,
+					image: 'images/icons/error.png',
+					fade_out_speed: 200
 				});
 			}
 			

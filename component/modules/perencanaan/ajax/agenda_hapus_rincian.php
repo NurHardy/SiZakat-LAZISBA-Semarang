@@ -14,6 +14,9 @@
 	// POST inputs
 	$idRincian		= intval($_POST['idr']);
 	$idAgenda		= -1;
+	$bulanAgenda	= 0;
+	$tahunAgenda	= 0;
+	$idKegiatan		= -1;
 	
 	// Cek input
 	if (empty($idRincian)) {
@@ -53,6 +56,10 @@
 					if (!$isAdmin && ($dataAgenda['divisi']!=$divisiUser)) {
 						$errorDesc = "Akses tidak diperbolehkan.";
 					}
+					$timeAgenda		= strtotime($dataAgenda['tgl_mulai']);
+					$bulanAgenda	= date("n", $timeAgenda);
+					$tahunAgenda	= date("Y", $timeAgenda);
+					$idKegiatan		= $dataAgenda['id_kegiatan'];
 				}
 			} else {
 				$errorDesc = "Query tidak berhasil: ".mysqli_error($mysqli);
@@ -70,12 +77,23 @@
 		
 		$resultSimpan = (IS_DEBUGGING?true:mysqli_query($mysqli, $queryHapus));
 		if ($resultSimpan) {
+			require_once COMPONENT_PATH."/libraries/querybuilder.php";
+			
 			$jumlahBaru = update_anggaran_agenda($idAgenda);
+			// Hitung jumlah agenda bulan
+			$queryHitung = sprintf(
+					"SELECT SUM(jumlah_anggaran) FROM ra_agenda ".
+					"WHERE id_kegiatan=%d AND MONTH(tgl_mulai)=%d AND YEAR(tgl_mulai)=%d"
+					, $idKegiatan, $bulanAgenda, $tahunAgenda);
+			$totalAnggaranBulan = querybuilder_getscalar($queryHitung);
+			
 			echo json_encode(array(
 					'status'		=> 'ok',
 					'id_a'			=> $idAgenda,
 					'old_row_id'	=> $idRincian,
-					't_agenda'		=> to_rupiah($jumlahBaru)
+					't_agenda'		=> to_rupiah($jumlahBaru),
+					't_bulan'		=> to_rupiah($totalAnggaranBulan),
+					'bln'			=> $bulanAgenda
 			));
 		} else {
 			echo json_encode(array(

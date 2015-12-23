@@ -3,7 +3,7 @@
  * pencarian.php
  * ==> Halaman pencarian modul perencanaan
  *
- * AM_SIZ_RA_FRMCARI | Halaman Home
+ * AM_SIZ_RA_FRMCARI | Halaman pencarian
  * ------------------------------------------------------------------------
  */
 	// Cek privilege
@@ -25,29 +25,71 @@
 	
 	//------ Proses pencarian
 	if (!empty($searchQuery)) {
+		$listIdAgendaFound = array();
+		$listAgendaFound = array();
 		$queryCari = sprintf(
-				"SELECT *, jumlah_anggaran AS anggaran_rincian FROM ra_rincian_agenda ".
+				"SELECT * FROM ra_rincian_agenda ".
 				"WHERE nama_rincian LIKE '%%%s%%'"
 				, mysqli_escape_string($mysqli, $searchQuery)
 		);
 		
 		$docSpecific = ($tahunDokumen > 0? "AND YEAR(a.tgl_mulai)=".$tahunDokumen:"");
-		$queryCariJoin = sprintf(
-				"SELECT c.*, a.*, a.jumlah_anggaran AS anggaran_agenda, k.* ".
+		/* $queryCariJoin = sprintf(
+				"(SELECT k.nama_kegiatan, c.anggaran_rincian, c.nama_rincian, a.jumlah_anggaran AS anggaran_agenda, a.tgl_mulai, k.id_kegiatan, k.divisi ".
 				"FROM (%s) AS c, ra_agenda AS a, ra_kegiatan AS k ".
-				"WHERE c.id_agenda=a.id_agenda AND a.id_kegiatan=k.id_kegiatan %s ".
+				"WHERE (c.id_agenda=a.id_agenda OR k.nama_kegiatan LIKE '%%%s%%') ".
+				"AND a.id_kegiatan=k.id_kegiatan %s ".
+				"UNION (SELECT ) "
+				"GROUP BY a.id_agenda ".
+				"ORDER BY a.tgl_mulai",
+				$queryCari, mysqli_escape_string($mysqli, $searchQuery), $docSpecific
+		); */
+		
+		$queryCariJoin1 = sprintf(
+				"SELECT a.id_agenda, k.id_kegiatan, k.nama_kegiatan, NULL AS nama_rincian, ".
+					"NULL AS anggaran_rincian, a.jumlah_anggaran AS anggaran_agenda, a.tgl_mulai, ".
+					"k.divisi, a.catatan ".
+				"FROM ra_agenda AS a, ra_kegiatan AS k ".
+				"WHERE (a.id_kegiatan=k.id_kegiatan) AND (k.nama_kegiatan LIKE '%%%s%%') %s ".
+				"ORDER BY a.tgl_mulai",
+				mysqli_escape_string($mysqli, $searchQuery), $docSpecific
+			);
+		
+		$searchResult = mysqli_query($mysqli, $queryCariJoin1);
+		$queryCount++;
+		if (!$searchResult) {
+			show_error_page("Terjadi kesalahan internal 1: ".mysqli_error($mysqli));
+			return;
+		}
+		while ($rowAgenda = mysqli_fetch_assoc($searchResult)) {
+			$listIdAgendaFound[] = $rowAgenda['id_agenda'];
+			$listAgendaFound[] = $rowAgenda;
+		}
+		
+		$queryCariJoin2 = sprintf(
+				"SELECT a.id_agenda, k.id_kegiatan, k.nama_kegiatan, c.nama_rincian, ".
+					"c.jumlah_anggaran AS anggaran_rincian, a.jumlah_anggaran AS anggaran_agenda, ".
+					"a.tgl_mulai, k.divisi, a.catatan ".
+				"FROM (%s) AS c, ra_agenda AS a, ra_kegiatan AS k ".
+				"WHERE (c.id_agenda=a.id_agenda AND a.id_kegiatan=k.id_kegiatan %s) ".
 				"GROUP BY a.id_agenda ".
 				"ORDER BY a.tgl_mulai",
 				$queryCari, $docSpecific
 		);
 		
-		$searchResult = mysqli_query($mysqli, $queryCariJoin);
+		$searchResult = mysqli_query($mysqli, $queryCariJoin2);
 		$queryCount++;
-		
 		if (!$searchResult) {
-			show_error_page("Terjadi kesalahan internal: ".mysqli_error($mysqli));
+			show_error_page("Terjadi kesalahan internal 2: ".mysqli_error($mysqli));
 			return;
 		}
+		while ($rowAgenda = mysqli_fetch_assoc($searchResult)) {
+			if (!in_array($rowAgenda['id_agenda'], $listIdAgendaFound)) {
+				$listAgendaFound[] = $rowAgenda;
+			}
+		}
+		
+		
 	}
 	
 	ra_print_status($namaDivisiUser); ?>
@@ -93,8 +135,8 @@
 				?>
 				<hr>
 <?php 
-	if (mysqli_num_rows($searchResult) > 0) {
-		while ($rowRincian = mysqli_fetch_assoc($searchResult)) {
+	if (!empty($listAgendaFound)) {
+		foreach ($listAgendaFound as $rowRincian) {
 			$unixTimeTgl = strtotime($rowRincian['tgl_mulai']);
 			$bulanAgenda = date('n', $unixTimeTgl);
 			$tahunAgenda = date('Y', $unixTimeTgl);
@@ -106,19 +148,29 @@
 			}
 			
 			$patterns = '#(^|\W)('.preg_quote($searchQuery).')($|\W)#i';
-			$htmlRincian = preg_replace($patterns, '$1<span class="siz-highlight-yellow">$2</span>$3', $rowRincian['nama_rincian']);
+			if (!empty($rowRincian['nama_rincian'])) {
+				$htmlJudul = $rowRincian['nama_kegiatan'];
+				$htmlRincian = preg_replace($patterns, '$1<span class="siz-highlight-yellow">$2</span>$3', $rowRincian['nama_rincian']);
+			} else {
+				$htmlJudul = preg_replace($patterns, '$1<span class="siz-highlight-yellow">$2</span>$3', $rowRincian['nama_kegiatan']);
+				$htmlRincian = "";
+			}
+			
+			
 			
 			$linkTarget = ra_gen_url('kegiatan',$tahunAgenda,'id='.$rowRincian['id_kegiatan']).
 				"#siz_agenda_".$rowRincian['id_agenda'];
 			echo "<div class='siz-ra-search-itemagenda'>";
  			echo "<div style='font-size:1.2em;'><a href=\"".htmlspecialchars($linkTarget)."\" target=\"_blank\">";
- 			echo "<b>".$rowRincian['nama_kegiatan']."</b></a>";
+ 			echo "<b>".$htmlJudul."</b></a>";
  			echo "<div class='siz-divsmall pull-right'><span class='glyphicon glyphicon-calendar'></span> ";
  			echo $tanggalAgenda."</div></div>";
  			echo "<div class='siz-divsmall'>Divisi <b>".$listDivisi[$rowRincian['divisi']]."</b></div>";
  			if (!empty($rowRincian['catatan']))
  				echo "<div class='well well-sm'>".htmlspecialchars($rowRincian['catatan'])."</div>";
- 			echo "&bull; ".$htmlRincian." - ".to_rupiah($rowRincian['anggaran_rincian']);
+ 			if (!empty($rowRincian['nama_rincian'])) {
+ 				echo "&bull; ".$htmlRincian." - ".to_rupiah($rowRincian['anggaran_rincian']);
+ 			}
  			echo "<div class='siz-divsmall'>Jumlah anggaran agenda: <b>".
  				to_rupiah($rowRincian['anggaran_agenda'])."</b></div>";
 			echo "</div>\n";

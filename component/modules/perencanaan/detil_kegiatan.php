@@ -180,7 +180,7 @@
 				//==== End of month
 				if ($bulanSekarang != 0) {
 					echo "<p><span class=\"glyphicon glyphicon-list-alt\"></span> ";
-					echo "Jumlah keselurhan anggaran bulan : ";
+					echo "Jumlah keseluruhan anggaran bulan : ";
 					echo "<b class=\"siz-month-grandtotal\">".to_rupiah($anggaranBulan)."</b></p>\n";
 					echo "</div>";
 				}
@@ -189,7 +189,7 @@
 				$anggaranBulan = 0;
 				$bulanSekarang = $rowAgenda['bulan'];
 				
-				echo "<div class=\"siz-container-month\">";
+				echo "<div class=\"siz-container-month\" id=\"siz-month-{$bulanSekarang}\">";
 				echo "<h3><i class=\"glyphicon glyphicon-calendar\"></i> ";
 				echo " Bulan ".$monthName[$bulanSekarang]." ".$tahunDokumen."</h3>\n";
 				
@@ -293,7 +293,7 @@
 			//==== End of month
 			if ($bulanSekarang != 0) {
 				echo "<p><span class=\"glyphicon glyphicon-list-alt\"></span> ";
-				echo "Jumlah keselurhan anggaran bulan : ";
+				echo "Jumlah keseluruhan anggaran bulan : ";
 				echo "<b class=\"siz-month-grandtotal\">".to_rupiah($anggaranBulan)."</b></p>\n";
 				echo "</div>";
 			}

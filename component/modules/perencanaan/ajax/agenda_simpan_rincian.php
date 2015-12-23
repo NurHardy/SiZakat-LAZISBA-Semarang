@@ -17,6 +17,10 @@
 	$nilaiRinc	= trim($_POST['nilaiRinc']);
 	$idAgenda	= -1; // Khusus tambah rincian
 	
+	$idKegiatan = -1; // Id kegiatan agenda
+	$blnAgenda = 0;
+	$thnAgenda = 0;
+	
 	$isEditing	= ($idRincian > 0);
 	
 	if (!$isEditing) {
@@ -79,6 +83,10 @@
 				if (!$isAdmin && ($dataAgenda['divisi']!=$divisiUser)) {
 					$errorDesc = "Akses tidak diperbolehkan.";
 				}
+				$timeAgenda		= strtotime($dataAgenda['tgl_mulai']);
+				$bulanAgenda	= date("n", $timeAgenda);
+				$tahunAgenda	= date("Y", $timeAgenda);
+				$idKegiatan		= $dataAgenda['id_kegiatan'];
 			}
 		} else {
 			$errorDesc = "Query tidak berhasil. Error: ".mysqli_error($mysqli);
@@ -112,6 +120,12 @@
 			}
 			
 			$jumlahBaru = update_anggaran_agenda($idAgenda);
+			// Hitung jumlah agenda bulan
+			$queryHitung = sprintf(
+					"SELECT SUM(jumlah_anggaran) FROM ra_agenda ".
+					"WHERE id_kegiatan=%d AND MONTH(tgl_mulai)=%d AND YEAR(tgl_mulai)=%d"
+					, $idKegiatan, $bulanAgenda, $tahunAgenda);
+			$totalAnggaranBulan = querybuilder_getscalar($queryHitung);
 			
 			echo json_encode(array(
 					'status'	=> 'ok',
@@ -121,10 +135,11 @@
 							'v'		=> to_rupiah($nilaiRinc),
 							'vn'	=> $nilaiRinc
 					),
+					'bln'		=> $bulanAgenda,
 					'old_name'	=> htmlspecialchars($oldRincName),
 					'id_a'		=> $idAgenda,
 					't_agenda'	=> to_rupiah($jumlahBaru), // Total anggaran Agenda
-					't_bulan'	=> 'Rp. 0', // TODO: Total anggaran bulan
+					't_bulan'	=> to_rupiah($totalAnggaranBulan), // Total anggaran bulan
 					't_total'	=> 'Rp. 0', // Total anggaran kegiatan
 			));
 		} else {

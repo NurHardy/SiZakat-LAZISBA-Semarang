@@ -62,7 +62,9 @@ function apply_priv(idUser) {
 		if (response.status == 'ok') {
 			$.gritter.add({
 				title: "Pembaruan Berhasil",
-				text: "Setting hak akses berhasil diperbarui.."
+				text: "Setting hak akses berhasil diperbarui..",
+				image: 'images/icons/success.png',
+				fade_out_speed: 200
 			});
 			$(editElmtId).data("divid", idDivisi);
 			$(editElmtId+" .ra_curdivisi").html(response.new_priv);
@@ -70,7 +72,9 @@ function apply_priv(idUser) {
 		} else {
 			$.gritter.add({
 				title: 'Terjadi kesalahan',
-				text: response.error
+				text: response.error,
+				image: 'images/icons/error.png',
+				fade_out_speed: 200
 			});
 		}
 	}, "Menyimpan...", AJAX_URL);

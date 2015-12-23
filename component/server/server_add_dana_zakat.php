@@ -35,7 +35,8 @@
 		
 				
 		//-------------------------------------------------------------------------------------------------------------
-		if($jumlah > $total){
+		//if($jumlah > $total){
+		if(false){
 			$_SESSION['error'] = "Saldo anda tidak mencukupi untuk melakukan penyaluran, Total saldo = ".$total."";
 			//echo mysql_error();
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_dana_zakat_s\">";

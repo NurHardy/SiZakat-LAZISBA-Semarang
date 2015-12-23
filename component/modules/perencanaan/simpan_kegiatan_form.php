@@ -14,6 +14,11 @@
 	$tahunDokumen	= intval((isset($_GET['th'])?$_GET['th']:date("Y")));
 	$formActionUrl	= $_SERVER['REQUEST_URI']; // Aksi ke script ini lagi.
 	
+	$SIZPageTitle = "Tambah Kegiatan";
+	$breadCrumbPath[] = array("Tahun ".$tahunDokumen,ra_gen_url("rekap",$tahunDokumen),false);
+	$breadCrumbPath[] = array("Tambah Kegiatan",null,true);
+	
+	
 	// Cek Dokumen
 	if (!ra_cek_dokumen($tahunDokumen)) return;
 	

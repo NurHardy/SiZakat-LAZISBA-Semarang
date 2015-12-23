@@ -247,12 +247,12 @@ echo "</div>\n";
 	<div class="siz-dok-empty">
 		<img src="images/icons/info.png" alt="INFO:" /> Belum ada kegiatan ditambahkan.<br>
 		<a href="<?php echo ra_gen_url('tambah-kegiatan', $tahunDokumen); ?>"
-					class="btn btn-primary btn-sm tip-right"
+					class="btn btn-primary btn-sm tip-bottom"
 					title="Tambah kegiatan baru pada perencanaan tahunan">
 					<span class="glyphicon glyphicon-plus"></span>
 					Tambah Kegiatan</a>
 		<a href="<?php echo ra_gen_url('tambah-kegiatan-rutin', $tahunDokumen); ?>"
-				class="btn btn-default tip-right"
+				class="btn btn-default tip-bottom"
 				title="Tambah kegiatan rutin pada perencanaan tahunan">
 				<span class="glyphicon glyphicon-plus"></span>
 				Tambah Kegiatan Rutin</a>

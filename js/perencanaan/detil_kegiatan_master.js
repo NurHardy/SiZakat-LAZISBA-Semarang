@@ -62,14 +62,18 @@
 					.html(response.t_kegiatan);
 				$.gritter.add({
 					title: "Rincian awal berhasil ditambahkan",
-					text: "Rincian awal '"+response.new_row.n+"' berhasil ditambahkan"
+					text: "Rincian awal '"+response.new_row.n+"' berhasil ditambahkan",
+					image: 'images/icons/success.png',
+					fade_out_speed: 200
 				});
 				$("input[name=txt_nama_rincian]").val('');
 				$("input[name=txt_anggaran_rincian]").val('');
 			} else {
 				$.gritter.add({
 					title: 'Rincian awal gagal ditambahkan',
-					text: response.error
+					text: response.error,
+					image: 'images/icons/error.png',
+					fade_out_speed: 200
 				});
 			}
 			
@@ -95,13 +99,17 @@
 				$(".siz-total-rinc-awal").html(response.t_kegiatan);
 				$.gritter.add({
 					title: "Rincian awal berhasil diperbaharui",
-					text: "Rincian '"+response.old_name+"' berhasil diperbaharui"
+					text: "Rincian '"+response.old_name+"' berhasil diperbaharui",
+					image: 'images/icons/success.png',
+					fade_out_speed: 200
 				});
 				cancel_edit_rincian(response.new_row.id);
 			} else {
 				$.gritter.add({
 					title: 'Rincian gagal diperaharui',
-					text: response.error
+					text: response.error,
+					image: 'images/icons/error.png',
+					fade_out_speed: 200
 				});
 			}
 			
@@ -127,7 +135,9 @@
 				$(".siz-total-rinc-awal").html(response.t_kegiatan);
 				$.gritter.add({
 					title: 'Berhasil Dihapus',
-					text: "Rincian awal kegiatan terpilih berhasil dihapus."
+					text: "Rincian awal kegiatan terpilih berhasil dihapus.",
+					image: 'images/icons/success.png',
+					fade_out_speed: 200
 				});
 				$("#siz_mast_rincian_"+idRincian).fadeOut(250,function(){
 					$(this).remove();
@@ -135,7 +145,9 @@
 			} else {
 				$.gritter.add({
 					title: 'Rincian awal gagal dihapus',
-					text: response.error
+					text: response.error,
+					image: 'images/icons/error.png',
+					fade_out_speed: 200
 				});
 			}
 			
