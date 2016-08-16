@@ -1,0 +1,21 @@
+	DATABASE STRUCTURE LOG
+	SIZAKAT LAZISBA Semarang
+===================================
+	Informatika UNDIP
+	
+==> 27 Januari 2016
+	o Log Created
+	o Tabel 'penerimaan' tambah kolom 'tgl_update'
+		ALTER TABLE `penerimaan` ADD `tgl_update` DATETIME NULL DEFAULT NULL
+	
+	o Tabel 'penyaluran', tambah kolom:
+		ALTER TABLE `penyaluran` ADD `tgl_entry` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+		ADD `tgl_update` DATETIME NULL DEFAULT NULL
+		
+	o Tabel 'penerimaan' tambah 2 kolom:
+		ALTER TABLE `penerimaan` ADD `id_creator` INT NOT NULL ,
+		ADD `id_editor` INT NULL DEFAULT NULL 
+		
+	o Tabel 'penyaluran' tambah 2 kolom:
+		ALTER TABLE `penyaluran` ADD `id_creator` INT NOT NULL ,
+		ADD `id_editor` INT NULL DEFAULT NULL 

@@ -9,10 +9,11 @@
 		$jenis_transaksi = clear_injection($_POST['jenis_transaksi']);
 		//$rekening 		= clear_injection($_POST['rekening']);
 		//$mustahik 		= clear_injection($_POST['mustahik']);
-		$amilin 		= clear_injection($_POST['amilin']);
-		$jumlah 		= clear_injection($_POST['jumlah']);
+		$amilin 	= clear_injection($_POST['amilin']);
+		$jumlah 	= clear_injection($_POST['jumlah']);
 		$ket 		= clear_injection($_POST['keterangan']);
 		$pers 		= clear_injection($_POST['sumber']);
+		$noNota 	= clear_injection($_POST['no_nota']);
 
 		//-------------------------------------------------------------------------------------------------------------
 		$q = mysqli_query($mysqli, "SELECT * FROM persamaan_akun WHERE id_persamaan = '$pers' ");
@@ -42,10 +43,10 @@
 			echo "<meta http-equiv=\"refresh\" content=\"0; url=../../main.php?s=form_dana_zakat_s\">";
 		}else{
 		
-			$sql = mysqli_query($mysqli, "
-				INSERT INTO penyaluran (id_penyaluran,tanggal,id_akun,jumlah,keterangan,id_teller,id_persamaan) VALUES 
-				('','$tgl','$jenis_transaksi','$jumlah','$ket','$amilin','$pers')
-			");
+			$sql = mysqli_query($mysqli, 
+				"INSERT INTO penyaluran (id_penyaluran,tanggal,no_nota,id_akun,jumlah,keterangan,id_teller,id_persamaan,tgl_entry,id_creator) VALUES ".
+				"('','$tgl','$noNota','$jenis_transaksi','$jumlah','$ket','$amilin','$pers','".date('Y-m-d H:i:s')."',".$_SESSION['iduser'].")"
+			);
 			
 			if($sql){
 				$_SESSION['success'] = "Data Transaksi Penyaluran Berhasil Ditambah"; 

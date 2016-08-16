@@ -155,7 +155,7 @@
 					<div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Kategori Donasi</label>
 						<div class="controls span8">
-							<select name='jenis' data-placeholder='Pilih Kategori Waktu Donasi' required='required'>
+							<select class="siz-use-select2" name='jenis' data-placeholder='Pilih Kategori Waktu Donasi' required='required'>
 								<option></option>
 								<option value='66' <?php echo ((ISSET($jns)) && ($jns == '66'))?"selected":"";?>>Tidak Tetap</option>
 								<option value='1' <?php echo ((ISSET($jns)) && ($jns == '1'))?"selected":"";?>>Bulanan</option>

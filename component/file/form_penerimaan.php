@@ -1,26 +1,105 @@
 <?php
+/*
+ * form_penerimaan.php
+ * ==> Tampilan form menyimpan penerimaan
+ *
+ * AM_SIZ_FRMTRXPENERIMAAN | Tampilan form tambah transaksi penerimaan
+ * ------------------------------------------------------------------------
+ */
+
+	$SIZPageTitle = "Tambah Transaksi Penerimaan";
 	$breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",false);
 	$breadCrumbPath[] = array("Tambah Penerimaan","main.php?s=form_penerimaan",true);
 
+	require_once COMPONENT_PATH.'/libraries/querybuilder.php';
 	require_once COMPONENT_PATH.'/file/transaksi_harian/helper_transaksi.php';
 	
 	$currentUserId = $_SESSION['iduser'];
 	$currentDate = date("Y-m-d");
+	
+	$queryPenerimaanHariIni = sprintf(
+		"SELECT SUM(jumlah) AS jumlah FROM penerimaan WHERE tanggal='%s'",
+		$currentDate
+	);
+	$queryPengeluaranHariIni = sprintf(
+		"SELECT SUM(jumlah) AS jumlah FROM penyaluran WHERE tanggal='%s'",
+		$currentDate
+	);
+	
+	$jumlahPenerimaanHariIni = querybuilder_getscalar($queryPenerimaanHariIni);
+	$jumlahPengeluaranHariIni = querybuilder_getscalar($queryPengeluaranHariIni);
+	
+	$listBank = array();
+	
+	// Opsi cash
+	$listBank[] = array('id'=>0, 'name'=>'Cash', 'rek'=>'-', 'logo'=> null);
+	
+	$queryBank = mysqli_query ( $mysqli, "SELECT * FROM bank" );
+	while ( $rowBank = mysqli_fetch_array ( $queryBank ) ) {
+		$listBank[] = array(
+				'id'	=> $rowBank['id_bank'],
+				'text'	=> $rowBank['bank'],
+				'rek'	=> $rowBank['no_rekening'],
+				'logo'	=> $rowBank['logo']
+		);
+	}
 ?>
 <link rel="stylesheet" href="css/jquery.gritter.css" />
 <script src="js/jquery.gritter.min.js"></script>
+<script src="js/sizakat/select2_formatter.js"></script>
 <script>
 var AJAX_URL = "main.php?s=ajax&m=transaksi";
+var AJAX_SUGGEST_URL = "<?php echo $ajaxSuggestUrl; ?>";
+var AJAX_SUGGEST_ACT = "<?php echo $ajaxSuggestAct; ?>";
+
 var currentDate = "<?php echo $currentDate; ?>";
 var currentUser = "<?php echo $currentUserId; ?>";
+
+function init_page() {
+	var GLOBAL_DELAY = 250;
+	var bankList = <?php echo json_encode($listBank); ?>
+	
+	$('select.select2_donatur').select2({
+	    ajax: {
+	        // The number of milliseconds to wait for the user to stop typing before
+	        // issuing the ajax request.
+	        type: 'post',
+	        delay: GLOBAL_DELAY,
+	        dataType: 'json',
+	        url: 'main.php?s=ajax&m=user',
+	        data: function (params) {
+	          var queryParameters = {
+	            q: params.term,
+	            act: 'get.user.donatur'
+	          };
+	          return queryParameters;
+	        },
+	        processResults: function (data) {
+	          return {
+	            results: data
+	          };
+	        },
+	      },
+	      minimumInputLength: 3,
+	      templateResult: formatItemDonatur
+	});
+	$('select#select_bank').select2({
+		data: bankList,
+	    templateResult: formatItemBank,
+	    minimumResultsForSearch: 10
+	});
+}
+
 function reset_form() {
 	$("#siz-form-error").hide();
 	$("#form-penerimaan").find("input[type=text], textarea").val("");
 	$(".siz-use-select2").each(function(){
 		$(this).select2("val", "");
 	});
+	$('select.select2_donatur').select2("val", "");
+	$('select#select_bank').select2("val", "0");
 	$("#siz-tanggal").val(currentDate);
-	$("#siz-petugas").val(currentUser);
+	$("#siz-petugas").select2("val", currentUser);
 	
 }
 function submit_penerimaan() {
@@ -28,7 +107,9 @@ function submit_penerimaan() {
 	_ajax_send(formData,
 	function(response){
 		if (response.status == 'ok') {
-			//reset_form();
+			reset_form();
+			$("#siz-today-income").html(response.today_trx.income);
+			$("#siz-today-outcome").html(response.today_trx.outcome);
 			$("#tbl-last-trx tbody").html(response.html);
 			scrollTo("#form-penerimaan");
 			$.gritter.add({
@@ -106,6 +187,9 @@ function _debug_glitter() {
 							<input type="text" id="siz-no-nota" pattern="^[0-9-\s]+$"
 								class="form-control input-small" name="notrans"
 								style='width: 80%;' />
+							<span class="help-block">
+								Nomor nota harus terdiri atas strip atau angka.
+							</span>
 						</div>
 					</div>
 
@@ -131,22 +215,25 @@ function _debug_glitter() {
 
 					<div class="form-row control-group row-fluid form-group"
 						id="field_muzakki" style="display: block;">
-						<label class="control-label span3" for="siz-muzakki">Muzakki</label>
+						<label class="control-label span3" for="siz-muzakki">Diterima dari</label>
 						<div class="controls span5">
 							<select name='muzakki' id="siz-muzakki"
-								class="form-control input-small siz-use-select2"
+								class="form-control input-small select2_donatur"
 								style='width: 80%;' data-placeholder="-- Pilih Muzakki --"
 								required='required'>
 								<option></option>
 					<?php
-					$q3 = mysqli_query ( $mysqli, "SELECT * FROM user WHERE level = 1" );
+					/* $q3 = mysqli_query ( $mysqli, "SELECT * FROM user WHERE level = 1" );
 					while ( $p3 = mysqli_fetch_array ( $q3 ) ) {
 						echo "
 								<option value='$p3[id_user]'>$p3[id_user] - $p3[nama]</option>
 								";
-					}
+					} */
 					?>
 					</select>
+							<span class="help-block"><a href="main.php?s=form_muzakki" target="_blank">
+									<span class="glyphicon glyphicon-plus"></span> Tambah Donatur baru
+							</a></span>
 						</div>
 					</div>
 
@@ -174,16 +261,16 @@ function _debug_glitter() {
 						id="field_bank">
 						<label class="control-label span3" for="normal-field">Bank</label>
 						<div class="controls span5">
-							<select name='bank' id='select_bank' class="form-control input-small siz-use-select2"
+							<select name='bank' id='select_bank' class="form-control input-small"
 								style='width: 80%;' data-placeholder="-- Pilih Bank --">
 								<option value='0'>Cash</option>
 					 <?php
-						$q3 = mysqli_query ( $mysqli, "SELECT * FROM bank" );
-						while ( $p3 = mysqli_fetch_array ( $q3 ) ) {
-							echo "
-								<option value='$p3[id_bank]'>$p3[bank] - $p3[no_rekening]</option>
-								";
-						}
+// 						$q3 = mysqli_query ( $mysqli, "SELECT * FROM bank" );
+// 						while ( $p3 = mysqli_fetch_array ( $q3 ) ) {
+// 							echo "
+// 								<option value='$p3[id_bank]'>$p3[bank] - $p3[no_rekening]</option>
+// 								";
+// 						}
 						?> 
 					</select>
 						</div>
@@ -207,7 +294,8 @@ function _debug_glitter() {
 						<label class="control-label span3" for="siz-ket">Keterangan</label>
 						<div class="controls span8">
 							<textarea name="keterangan" class="span8 no-hresize"
-								style='width: 80%;' id="siz-ket"></textarea>
+								style='width: 80%;' id="siz-ket" placeholder="Keterangan (opsional)"
+							></textarea>
 						</div>
 					</div>
 
@@ -259,16 +347,16 @@ function _debug_glitter() {
 	<ul class="stat-boxes">
 		<li style="width:100%">
 			<div class="right" style="text-align: center;width:100%;">
-				<strong style='color:#459D1C;'><?php 
-					echo 0;
+				<strong style='color:#459D1C;' id="siz-today-income"><?php 
+					echo to_rupiah($jumlahPenerimaanHariIni);
 				?></strong>
 				Transaksi Penerimaan Hari Ini
 			</div>
 		</li>
 		<li style="width:100%">
 			<div class="right" style="text-align: center;width:100%;">
-				<strong style='color:#BA1E20;'><?php 
-					echo 0;
+				<strong style='color:#BA1E20;' id="siz-today-outcome"><?php 
+					echo to_rupiah($jumlahPengeluaranHariIni);
 				?></strong>
 				Transaksi Pengeluaran Hari Ini
 			</div>

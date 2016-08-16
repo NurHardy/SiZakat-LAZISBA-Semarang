@@ -6,7 +6,7 @@
  * AM_SIZ_RA_EXPORTLOADER | Export Loader
  * ------------------------------------------------------------------------
  */
-
+		
 	// Cek privilege
 	if (!ra_check_privilege()) exit;
 
@@ -19,6 +19,10 @@
 		show_error_page("Tahun tidak valid.");
 		return;
 	}
+	$SIZPageTitle = "Ekspor Dokumen Perencanaan";
+	$breadCrumbPath[] = array("Tahun ".$tahunDokumen,ra_gen_url("rekap",$tahunDokumen),false);
+	$breadCrumbPath[] = array("Ekspor",null,true);
+	
 	$typeDokumen = $_GET['type'];
 	
 	if ($typeDokumen=="pdf") {

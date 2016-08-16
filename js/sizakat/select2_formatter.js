@@ -3,6 +3,7 @@
  * -----------------
  * Digunakan pada:
  * o AM_SIZ_MAP_PENERIMAAN | Halaman mapping penerimaan
+ * o AM_SIZ_FRMTRXPENERIMAAN | Halaman form penerimaan
  */
 
 //Fungsi templating untuk select2 akun
@@ -39,7 +40,7 @@ function formatItemBank (elmtAkun) {
 	var elmtOutput = (
 	 '<div>' + elmtAkun.text + '</div>' +
 	 '<div style="font-size:0.8em;"><span class="glyphicon glyphicon-triangle-right"></span> Rek: ' + 
-	 	elmtAkun.rek + '</div>'
+	 	(elmtAkun.rek?elmtAkun.rek:'-') + '</div>'
 	);
 	return $(elmtOutput);
 };

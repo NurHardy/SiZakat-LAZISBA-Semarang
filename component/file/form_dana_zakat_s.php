@@ -2,10 +2,23 @@
 	$breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",false);
 	$breadCrumbPath[] = array("Tambah Pengeluaran","main.php?s=form_dana_zakat_s",true);
 	
+	require_once COMPONENT_PATH.'/libraries/querybuilder.php';
 	require_once COMPONENT_PATH.'/file/transaksi_harian/helper_transaksi.php';
 
 	$currentUserId = $_SESSION['iduser'];
 	$currentDate = date("Y-m-d");
+	
+	$queryPenerimaanHariIni = sprintf(
+			"SELECT SUM(jumlah) AS jumlah FROM penerimaan WHERE tanggal='%s'",
+			$currentDate
+	);
+	$queryPengeluaranHariIni = sprintf(
+			"SELECT SUM(jumlah) AS jumlah FROM penyaluran WHERE tanggal='%s'",
+			$currentDate
+	);
+	
+	$jumlahPenerimaanHariIni = querybuilder_getscalar($queryPenerimaanHariIni);
+	$jumlahPengeluaranHariIni = querybuilder_getscalar($queryPengeluaranHariIni);
 ?>
 <link rel="stylesheet" href="css/jquery.gritter.css" />
 <script src="js/jquery.gritter.min.js"></script>
@@ -96,23 +109,23 @@ function submit_pengeluaran() {
 							}
 						?>
 					</div>
+										  
 					  <div class="form-row control-group row-fluid">
-											  
-					  <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">Tanggal Transaksi</label>
+						<label class="control-label span3" for="siz-tanggal">Tanggal Transaksi</label>
 						<div class="controls span3">
-						  <input type="text" data-date-format="yyyy-mm-dd"
+						  <input type="text" data-date-format="yyyy-mm-dd" id="siz-tanggal"
 						  	value="<?php echo date('Y-m-d');?>" class="datepicker form-control input-small tgl"
 						  	name="tgl" required="required" style='width: 150px;'/>
 						</div>
 					  </div>
 					  
-					 <!-- <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">No Transaksi</label>
+					 <div class="form-row control-group row-fluid">
+						<label class="control-label span3" for="siz-nota">No Nota/Transaksi</label>
 						<div class="controls span5">
-						  <input type="text" id="normal-field" class="form-control input-small" name="no_transaksi" value="" required="required" style='width:80%;'>
+						  <input type="text" id="siz-nota" class="form-control input-small"
+						  	name="no_nota" value="" style='width:80%;' placeholder="Nomor nota (jika ada)">
 						</div>
-					  </div> -->
+					  </div>
 					  
 					  <div class="form-row control-group row-fluid">
 						<label class="control-label span3" for="normal-field">Jenis Transaksi</label>
@@ -120,8 +133,8 @@ function submit_pengeluaran() {
 							<select name="jenis_transaksi" class='jenis siz-use-select2' style='width:80%;' data-placeholder='--Pilih Jenis--' required="required">
 							<option></option>
 							<?php
-								include "component/config/koneksi.php";
-								$sql = mysqli_query($mysqli, "SELECT * FROM akun Where (Jenis = '2') AND (idakun NOT IN (SELECT idParent FROM akun))");
+								include_once "component/config/koneksi.php";
+								$sql = mysqli_query($mysqli, "SELECT * FROM akun WHERE (jenis = '2') AND (idakun NOT IN (SELECT idParent FROM akun))");
 								// echo ((is_object($mysqli)) ? mysqli_error($mysqli) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false));
 								while( $pecah = mysqli_fetch_array($sql)) {
 									echo "<option value=\"".$pecah['kode']."\">".$pecah['kode']." - ".$pecah['namaakun']."</option>";
@@ -132,10 +145,10 @@ function submit_pengeluaran() {
 					  </div>
 					  
 					  <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">Keterangan</label>
+						<label class="control-label span3" for="siz-keterangan">Keterangan</label>
 						<div class="controls span8">
 							<input name="keterangan" class="span8 form-control" style='width:80%;' required
-								/>
+								id="siz-keterangan"/>
 						</div>
 					  </div>
 					  <!-- 
@@ -149,24 +162,8 @@ function submit_pengeluaran() {
 					  </div>
 					   -->
 					  
-					<!-- <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">Mustahik</label>
-						<div class="controls span5">
-						<select name="mustahik" style='width:80%;' data-placeholder='-Pilih Jenis-' required="required">
-							<option ></option>
-							<?php
-							//	include "component/config/koneksi.php";
-							//	$sql = mysql_query("SELECT * FROM Mustahik");
-							//	while( $pecah = mysql_fetch_array($sql)){
-							//		echo"<option value=\"$pecah[IdMustahik]\">$pecah[IdMustahik] - $pecah[Nama]</option>";
-							//	}
-							?>
-						</select>
-						</div>
-					  </div> -->
-					  
 					 <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">Amilin</label>
+						<label class="control-label span3" for="normal-field">Amilin/PJ</label>
 						<div class="controls span5">
 						  <select name="amilin" style='width:80%;' data-placeholder='-- Pilih Penanggung Jawab --'
 						  	required="required" class="siz-use-select2">
@@ -185,7 +182,7 @@ function submit_pengeluaran() {
 					  </div>
 						  
 					  <div class="form-row control-group row-fluid">
-						<label class="control-label span3" for="normal-field">Jumlah Penyaluran</label>
+						<label class="control-label span3" for="siz-jumlah">Jumlah Penyaluran</label>
 						<div class="controls span5">
 						  <div class="input-group">
 							  <span class="input-group-addon">Rp.</span>
@@ -194,14 +191,38 @@ function submit_pengeluaran() {
 							  	placeholder="Nominal Transaksi"/>
 							</div>
 						</div>
-					  </div>
-
 					  </div>	 
 				
 					<div class="form-actions">
-						<button type="submit" name="save" class="btn btn-primary btn-small">Simpan</button>
+						<button type="submit" name="save" class="btn btn-primary btn-small">
+							<span class="glyphicon glyphicon-ok"></span> Simpan</button>
 					</div>
 					</form>
 				</div>
 			</div>						
 		</div>
+<div class="col-md-4" style="text-align: center;">					
+	<ul class="stat-boxes">
+		<li style="width:100%">
+			<div class="right" style="text-align: center;width:100%;">
+				<strong style='color:#459D1C;' id="siz-today-income"><?php 
+					echo to_rupiah($jumlahPenerimaanHariIni);
+				?></strong>
+				Transaksi Penerimaan Hari Ini
+			</div>
+		</li>
+		<li style="width:100%">
+			<div class="right" style="text-align: center;width:100%;">
+				<strong style='color:#BA1E20;' id="siz-today-outcome"><?php 
+					echo to_rupiah($jumlahPengeluaranHariIni);
+				?></strong>
+				Transaksi Pengeluaran Hari Ini
+			</div>
+			<hr>
+		</li>
+	</ul>
+	<a href="main.php?s=form_penerimaan" class="btn btn-success btn-block">
+		<span class="glyphicon glyphicon-plus"></span> Transaksi Penerimaan
+		<span class="glyphicon glyphicon-chevron-right"></span> 
+	</a>
+</div>	

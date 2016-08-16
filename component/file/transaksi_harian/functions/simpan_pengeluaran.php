@@ -1,8 +1,8 @@
 <?php
 // Output: TODO
 //---------------------------
-// Proses menyimpan data transaksi penerimaan
-// Note: field input sesuai dengan AM_SIZ_FRMPENERIMAAN
+// Proses menyimpan data transaksi pengeluaran
+// Note: field input sesuai dengan AM_SIZ_FRMPENGELUARAN
 
 	$processError	= null;
 	$newDataTrx		= null;
@@ -24,7 +24,7 @@
 		$ketTrx			= null;
 		$idBankTrx		= 0;
 		$tahunRamadhan	= 0;
-		$dataAkun		= null; // Row data akun penerimaan
+		$dataAkun		= null; // Row data akun pengeluaran
 		
 		$tglTrx		= trim($_POST['tanggal']);
 		$noNota		= trim($_POST['notrans']);
@@ -46,9 +46,9 @@
 		$trxData ['keterangan'] = $ketTrx;
 		$trxData ['id_trx']	= $trxId;
 		
-		//== Cek record penerimaan
+		//== Cek record pengeluaran
 		if ($isEditing && ($processError == null)) {
-			$queryCheck = sprintf("SELECT * FROM penerimaan WHERE id_penerimaan=%d", $trxId);
+			$queryCheck = sprintf("SELECT * FROM penyaluran WHERE id_penyaluran=%d", $trxId);
 			$resultCheck = mysqli_query($mysqli, $queryCheck);
 			
 			// Record tidak ditemukan
@@ -97,9 +97,9 @@
 		//== Cek kode akun
 		if ($processError == null) {
 			$dataAkun = cek_kode_akun($kodeAkunTrx);
-			// Jika bukan akun penerimaan, maka dipermasalahkan...
+			// Jika bukan akun pengeluaran, maka dipermasalahkan...
 			if ($dataAkun['jenis'] != 1) {
-				$processError = "Akun penerimaan tidak valid.";
+				$processError = "Akun pengeluaran tidak valid.";
 			}
 		}
 		
@@ -176,9 +176,9 @@
 			$querySet = querybuilder_generate_set($updateFields);
 			// Jalankan query
 			if ($isEditing) {
-				$querySimpan = "UPDATE penerimaan SET ".$querySet." WHERE id_penerimaan=".$trxId;
+				$querySimpan = "UPDATE penyaluran SET ".$querySet." WHERE id_penyaluran=".$trxId;
 			} else {
-				$querySimpan = "INSERT INTO penerimaan SET ".$querySet;
+				$querySimpan = "INSERT INTO penyaluran SET ".$querySet;
 			}
 			 
 			$resultSimpan = mysqli_query($mysqli, $querySimpan);

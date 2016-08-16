@@ -10,6 +10,7 @@ if ($ajaxAct == "get.dashboard.html") {
 } else if ($ajaxAct == "penerimaan.add") {
 	require COMPONENT_PATH."/file/transaksi_harian/functions/simpan_penerimaan.php";
 	
+	header('Content-Type: application/json');
 	if (!empty($processError)) {
 		echo json_encode(array(
 				'status'	=> 'error',
@@ -17,10 +18,30 @@ if ($ajaxAct == "get.dashboard.html") {
 		));
 	} else {
 		require_once COMPONENT_PATH."/file/transaksi_harian/helper_transaksi.php";
+		require_once COMPONENT_PATH.'/libraries/querybuilder.php';
+		
+		$currentUserId = $_SESSION['iduser'];
+		$currentDate = date("Y-m-d");
+		
+		$queryPenerimaanHariIni = sprintf(
+				"SELECT SUM(jumlah) AS jumlah FROM penerimaan WHERE tanggal='%s'",
+				$currentDate
+		);
+		$queryPengeluaranHariIni = sprintf(
+				"SELECT SUM(jumlah) AS jumlah FROM penyaluran WHERE tanggal='%s'",
+				$currentDate
+		);
+		
+		$jumlahPenerimaanHariIni = querybuilder_getscalar($queryPenerimaanHariIni);
+		$jumlahPengeluaranHariIni = querybuilder_getscalar($queryPengeluaranHariIni);
 		//$tableHtml = generate_latest_trx_penerimaan();
 		echo json_encode(array(
 				'status'	=> 'ok',
 				'id'		=> $idTrx,
+				'today_trx'	=> array(
+					'income' => to_rupiah($jumlahPenerimaanHariIni),
+					'outcome' => to_rupiah($jumlahPengeluaranHariIni)
+				)
 				//'html'		=> $tableHtml
 		));
 	}
@@ -37,6 +58,7 @@ if ($ajaxAct == "get.dashboard.html") {
 			'txt_jumlah'	=> to_rupiah($rowRincian['jumlah_anggaran'])
 		);
 	}
+	header('Content-Type: application/json');
 	echo json_encode(array(
 		'status' => 'ok',
 		'length' => count($jsonResult),
@@ -61,6 +83,7 @@ if ($ajaxAct == "get.dashboard.html") {
 			);
 		}
 	}
+	header('Content-Type: application/json');
 	echo json_encode($jsonResult);
 //============ IMPOR TRANSAKSI ==========
 } else if ($ajaxAct == "get.stagepenerimaan.form") {
@@ -78,6 +101,7 @@ if ($ajaxAct == "get.dashboard.html") {
 } else if ($ajaxAct == "flush.stage") {
 	require COMPONENT_PATH."/file/transaksi_harian/import/load_core.php";
 } else {
+	header('Content-Type: application/json');
 	echo json_encode(array(
 			'status' => 'error',
 			'error'	=> 'Unrecognized action.'

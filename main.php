@@ -18,9 +18,13 @@
 	
 	//================= AJAX HANDLER ====
 	if ($_GET['s']=='ajax') {
-		if (!isset($_SESSION['username']))
-			die("Access denied.");
-		
+		if (!isset($_SESSION['username'])) {
+			header('Content-Type: application/json');
+			echo json_encode(array(
+				'status'	=> 'error',
+				'error'		=> 'Access denied.'
+			));
+		}
 		if ($_GET['m'] == 'perencanaan') {
 			include COMPONENT_PATH."/modules/perencanaan/ajax.php";
 		} else if ($_GET['m'] == 'transaksi') {
@@ -30,7 +34,11 @@
 		} else if ($_GET['m'] == 'user') {
 			include COMPONENT_PATH."/file/user/ajax.php";
 		} else {
-			die("Module not found!");
+			header('Content-Type: application/json');
+			echo json_encode(array(
+				'status'	=> 'error',
+				'error'		=> 'Module not found!'
+			));
 		}
 		exit;
 	}

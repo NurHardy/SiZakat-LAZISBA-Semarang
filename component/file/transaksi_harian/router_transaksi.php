@@ -5,11 +5,13 @@ require_once COMPONENT_PATH."/libraries/helper_saldo.php";
 $breadCrumbPath[] = array("Transaksi Harian","main.php?s=transaksi",$isHome);
 
 //================ EDIT TRANSAKSI ===========
-if ($actionWord=="edit-out") { 
+if ($actionWord=="edit-out") { // Edit transaksi pengeluaran
+	$isEditing = true;
+	include COMPONENT_PATH."/file/transaksi_harian/form_edit_pengeluaran.php";
 	
 } else if ($actionWord=="edit-in") { // Edit transaksi penerimaan
 	$isEditing = true;
-	include COMPONENT_PATH."/file/transaksi_harian/form_penerimaan.php";
+	include COMPONENT_PATH."/file/transaksi_harian/form_edit_penerimaan.php";
 	
 //================ Import transaksi
 } else if ($actionWord=="import") {
